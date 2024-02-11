@@ -14,7 +14,6 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     [SerializeField] private float maxWalkSpeed = 7f;
     [SerializeField] private float maxSprintSpeed = 10f;
-    private float maxCrouchSpeed = 3f;
     [SerializeField] Transform moveDirectionOrientation;
     [SerializeField] Rigidbody playerRigidBody;
     [SerializeField] Transform playerMiddlePoint;
@@ -34,7 +33,12 @@ public class PlayerCharacterMovement : MonoBehaviour {
     private RaycastHit slopeHit;
     private float jumpTimer = 0f;
 
-    private void Awake() {
+    private float maxCrouchSpeed = 3f;
+    private float crouchYScale = 0.5f;
+    private float startYScale;
+
+
+    private void Start() {
         playerRigidBody = GetComponent<Rigidbody>();
 
         playerInputActions = new PlayerInputActions();
@@ -43,6 +47,8 @@ public class PlayerCharacterMovement : MonoBehaviour {
         playerInputActions.Player.Jump.performed += Jump_performed;
 
         currentMoveState = MoveState.Walking;
+
+        startYScale = transform.localScale.y;
     }
 
     private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
@@ -62,7 +68,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
         SpeedControl();
 
-        Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
+        //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
         //Debug.Log(jumpTimer);
     }
 
@@ -70,6 +76,13 @@ public class PlayerCharacterMovement : MonoBehaviour {
         HandleMovementStates();
 
         MovePlayerCharacter();
+
+        if (currentMoveState == MoveState.Crouching) {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+        }
+        else {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
     }
 
     private void MovePlayerCharacter() {
@@ -128,6 +141,10 @@ public class PlayerCharacterMovement : MonoBehaviour {
     private void HandleMovementStates() {
         if (playerInputActions.Player.Sprint.IsPressed()) {
             currentMoveState = MoveState.Sprinting;
+        }
+        else if (playerInputActions.Player.Crouch.IsPressed()) {
+            // sprinting will intentionally override crouching
+            currentMoveState = MoveState.Crouching;
         }
         else {
             currentMoveState = MoveState.Walking;
