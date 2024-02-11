@@ -139,7 +139,8 @@ public class PlayerCharacterMovement : MonoBehaviour {
     }
 
     private void HandleMovementStates() {
-        if (playerInputActions.Player.Sprint.IsPressed()) {
+        Vector3 playerMoveInput = playerInputActions.Player.Movement.ReadValue<Vector3>();
+        if (playerInputActions.Player.Sprint.IsPressed() && playerMoveInput.z >= 1) {
             currentMoveState = MoveState.Sprinting;
         }
         else if (playerInputActions.Player.Crouch.IsPressed()) {
