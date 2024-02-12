@@ -10,32 +10,35 @@ public class PlayerCharacterMovement : MonoBehaviour {
         Crouching,
     }
 
-    private MoveState currentMoveState;
-
     [SerializeField] private float maxWalkSpeed = 7f;
     [SerializeField] private float maxSprintSpeed = 10f;
     [SerializeField] Transform moveDirectionOrientation;
     [SerializeField] Rigidbody playerRigidBody;
-    [SerializeField] Transform playerMiddlePoint;
+    [SerializeField] Transform movementRaycastLocation;
+
+    [SerializeField] private LayerMask walkableLayer;
+
+    [SerializeField] private float maxSlopeAngle = 50;
+    [SerializeField] private float groundDrag = 10f;
+
+    [SerializeField] private float jumpForce = 16f;
+    [SerializeField] private float airMovementSpeedMultiplier = 0.25f;
+
+    [SerializeField] private float maxCrouchSpeed = 3f;
+    [SerializeField] private float crouchYScale = 0.5f;
+    [SerializeField] private float playerHeight = 2f;
 
     private PlayerInputActions playerInputActions;
-
-    private float playerHeight = 2f;
-    [SerializeField] private LayerMask walkableLayer;
+    private MoveState currentMoveState;
+    
     private bool isGrounded = true;
-    private float groundDrag = 10f;
     private float currentMoveSpeedMax = 7f;
-
-    private float jumpForce = 16f;
     private bool jumping = false;
-
-    private float maxSlopeAngle = 50;
     private RaycastHit slopeHit;
     private float jumpTimer = 0f;
-
-    private float maxCrouchSpeed = 3f;
-    private float crouchYScale = 0.5f;
     private float startYScale;
+
+    [SerializeField] private float raycastRange;
 
 
     private void Start() {
@@ -60,7 +63,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
     }
 
     private void Update() {
-        isGrounded = Physics.Raycast(playerMiddlePoint.transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, walkableLayer);
+        isGrounded = Physics.CheckSphere(movementRaycastLocation.transform.position, 0.3f, walkableLayer);
 
         SetPlayerRigidBodyDrag();
 
@@ -69,7 +72,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
         SpeedControl();
 
         //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
-        //Debug.Log(jumpTimer);
+        //Debug.Log(isGrounded);
     }
 
     private void FixedUpdate() {
@@ -106,22 +109,23 @@ public class PlayerCharacterMovement : MonoBehaviour {
         if (isGrounded) {
             playerRigidBody.AddForce(playerMoveDirection * currentMoveSpeedMax * 20f, ForceMode.Force);
         }
+        else {
+            playerRigidBody.AddForce(playerMoveDirection * currentMoveSpeedMax * airMovementSpeedMultiplier * 20f, ForceMode.Force);
+        }
         
     }
 
     private void SpeedControl() {
-        if (isGrounded) {
-            if (CheckIfPlayerOnSlope() && !jumping) {
-                if (playerRigidBody.velocity.magnitude > currentMoveSpeedMax) {
-                    playerRigidBody.velocity = playerRigidBody.velocity.normalized * currentMoveSpeedMax;
-                }
+        if (CheckIfPlayerOnSlope() && !jumping) {
+            if (playerRigidBody.velocity.magnitude > currentMoveSpeedMax) {
+                playerRigidBody.velocity = playerRigidBody.velocity.normalized * currentMoveSpeedMax;
             }
-            else {
-                Vector3 currentPlayerVelocity = new Vector3(playerRigidBody.velocity.x, 0f, playerRigidBody.velocity.z);
-                if (currentPlayerVelocity.magnitude > currentMoveSpeedMax) {
-                    Vector3 limitedSpeed = currentPlayerVelocity.normalized * currentMoveSpeedMax;
-                    playerRigidBody.velocity = new Vector3(limitedSpeed.x, playerRigidBody.velocity.y, limitedSpeed.z);
-                }
+        }
+        else {
+            Vector3 currentPlayerVelocity = new Vector3(playerRigidBody.velocity.x, 0f, playerRigidBody.velocity.z);
+            if (currentPlayerVelocity.magnitude > currentMoveSpeedMax) {
+                Vector3 limitedSpeed = currentPlayerVelocity.normalized * currentMoveSpeedMax;
+                playerRigidBody.velocity = new Vector3(limitedSpeed.x, playerRigidBody.velocity.y, limitedSpeed.z);
             }
         }
     }
@@ -131,7 +135,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
     }
 
     private bool CheckIfPlayerOnSlope() {
-        if (Physics.Raycast(playerMiddlePoint.transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f)) {
+        if (Physics.Raycast(movementRaycastLocation.transform.position, Vector3.down, out slopeHit, raycastRange)) {
             float angleOfGround = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angleOfGround < maxSlopeAngle && angleOfGround != 0;
         }
