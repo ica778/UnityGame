@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCharacterMovement : MonoBehaviour {
+
+    public static PlayerCharacterMovement Instance { get; private set; }
 
     private enum MoveState {
         Walking,
@@ -26,11 +29,11 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     [SerializeField] private float maxCrouchSpeed = 3f;
     [SerializeField] private float crouchYScale = 0.5f;
-    [SerializeField] private float playerHeight = 2f;
 
     private PlayerInputActions playerInputActions;
     private MoveState currentMoveState;
-    
+    private Vector3 playerMoveDirectionVector;
+
     private bool isGrounded = true;
     private float currentMoveSpeedMax = 7f;
     private bool jumping = false;
@@ -40,6 +43,18 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     [SerializeField] private float raycastRange;
 
+    [SerializeField] private Transform playerStepRaycast;
+    [SerializeField] private GameObject stepRaycastUpper;
+    [SerializeField] private GameObject stepRaycastLower;
+    private float stepHeight = 0.5f;
+    private float stepSmooth = 4f;
+    private float stepRaycastRange = 0.5f;
+
+    private void Awake() {
+        Instance = this;
+
+
+    }
 
     private void Start() {
         playerRigidBody = GetComponent<Rigidbody>();
@@ -54,31 +69,31 @@ public class PlayerCharacterMovement : MonoBehaviour {
         startYScale = transform.localScale.y;
     }
 
-    private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        if (isGrounded && !jumping) {
-            Jump();
-            jumpTimer = 0.5f;
-            jumping = true;
-        }
-    }
-
     private void Update() {
+        stepRaycastUpper.transform.position = new Vector3(stepRaycastUpper.transform.position.x, stepHeight, stepRaycastUpper.transform.position.z);
+
+
         isGrounded = Physics.CheckSphere(movementRaycastLocation.transform.position, 0.3f, walkableLayer);
 
-        SetPlayerRigidBodyDrag();
+        playerStepRaycast.transform.position = movementRaycastLocation.transform.position;
 
-        HandleJumping();
 
-        SpeedControl();
 
         //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
         //Debug.Log(isGrounded);
     }
 
     private void FixedUpdate() {
+        
+
         HandleMovementStates();
 
+        SetPlayerRigidBodyDrag();
+        HandleJumping();
+        SpeedControl();
+
         MovePlayerCharacter();
+        ClimbStep();
 
         if (currentMoveState == MoveState.Crouching) {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
@@ -86,18 +101,19 @@ public class PlayerCharacterMovement : MonoBehaviour {
         else {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
+        //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
     }
 
     private void MovePlayerCharacter() {
         Vector3 playerMoveInput = playerInputActions.Player.Movement.ReadValue<Vector3>();
 
         // get movement in camera direction independent of camera's y angle
-        Vector3 playerMoveDirection = moveDirectionOrientation.forward * playerMoveInput.z + moveDirectionOrientation.right * playerMoveInput.x;
-        playerMoveDirection.y = 0f;
-        playerMoveDirection = playerMoveDirection.normalized;
+        playerMoveDirectionVector = moveDirectionOrientation.forward * playerMoveInput.z + moveDirectionOrientation.right * playerMoveInput.x;
+        playerMoveDirectionVector.y = 0f;
+        playerMoveDirectionVector = playerMoveDirectionVector.normalized;
 
         if (CheckIfPlayerOnSlope()) {
-            playerMoveDirection = Vector3.ProjectOnPlane(playerMoveDirection, slopeHit.normal).normalized;
+            playerMoveDirectionVector = Vector3.ProjectOnPlane(playerMoveDirectionVector, slopeHit.normal).normalized;
 
             if (playerRigidBody.velocity.y > 0f) {
                 playerRigidBody.AddForce(Vector3.down * 20f, ForceMode.Force);
@@ -107,10 +123,10 @@ public class PlayerCharacterMovement : MonoBehaviour {
         playerRigidBody.useGravity = !CheckIfPlayerOnSlope();
 
         if (isGrounded) {
-            playerRigidBody.AddForce(playerMoveDirection * currentMoveSpeedMax * 20f, ForceMode.Force);
+            playerRigidBody.AddForce(playerMoveDirectionVector * currentMoveSpeedMax * 20f, ForceMode.Force);
         }
         else {
-            playerRigidBody.AddForce(playerMoveDirection * currentMoveSpeedMax * airMovementSpeedMultiplier * 20f, ForceMode.Force);
+            playerRigidBody.AddForce(playerMoveDirectionVector * currentMoveSpeedMax * airMovementSpeedMultiplier * 20f, ForceMode.Force);
         }
         
     }
@@ -127,6 +143,14 @@ public class PlayerCharacterMovement : MonoBehaviour {
                 Vector3 limitedSpeed = currentPlayerVelocity.normalized * currentMoveSpeedMax;
                 playerRigidBody.velocity = new Vector3(limitedSpeed.x, playerRigidBody.velocity.y, limitedSpeed.z);
             }
+        }
+    }
+
+    private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        if (isGrounded && !jumping) {
+            Jump();
+            jumpTimer = 0.5f;
+            jumping = true;
         }
     }
 
@@ -184,6 +208,32 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
         if (jumpTimer > 0f) {
             jumpTimer -= Time.deltaTime;
+        }
+    }
+
+    public Vector3 GetMovementVector() {
+        return this.playerMoveDirectionVector;
+    }
+
+    private void ClimbStep() {
+        Vector3 playerMoveDirection = GetMovementVector();
+
+        if (Physics.Raycast(stepRaycastLower.transform.position, playerMoveDirection, stepRaycastRange, walkableLayer)) {
+            if (!Physics.Raycast(stepRaycastUpper.transform.position, playerMoveDirection, stepRaycastRange + 0.1f, walkableLayer)) {
+                playerRigidBody.position += new Vector3(0f, stepSmooth * Time.deltaTime, 0f);
+            }
+        }
+
+        if (Physics.Raycast(stepRaycastLower.transform.position, playerMoveDirection + new Vector3(1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
+            if (!Physics.Raycast(stepRaycastUpper.transform.position, playerMoveDirection + new Vector3(1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
+                playerRigidBody.position += new Vector3(0f, stepSmooth * Time.deltaTime, 0f);
+            }
+        }
+
+        if (Physics.Raycast(stepRaycastLower.transform.position, playerMoveDirection + new Vector3(-1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
+            if (!Physics.Raycast(stepRaycastUpper.transform.position, playerMoveDirection + new Vector3(-1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
+                playerRigidBody.position += new Vector3(0f, stepSmooth * Time.deltaTime, 0f);
+            }
         }
     }
 
