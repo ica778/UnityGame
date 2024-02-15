@@ -974,7 +974,7 @@ GameObject:
   m_Component:
   - component: {fileID: 416519178}
   m_Layer: 0
-  m_Name: MovementRaycastLocation
+  m_Name: FeetRaycastLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1410,9 +1410,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxWalkSpeed: 7
   maxSprintSpeed: 10
-  moveDirectionOrientation: {fileID: 637081918}
+  maxCrouchSpeed: 3
+  playerLookDirection: {fileID: 637081918}
   playerRigidBody: {fileID: 917834782}
-  movementRaycastLocation: {fileID: 416519178}
+  feetRaycastLocation: {fileID: 416519178}
   walkableLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1420,9 +1421,8 @@ MonoBehaviour:
   groundDrag: 10
   jumpForce: 16
   airMovementSpeedMultiplier: 0.25
-  maxCrouchSpeed: 3
   crouchYScale: 0.5
-  raycastRange: 0.4
+  checkSlopeRaycastRange: 0.5
   playerStepRaycast: {fileID: 91146483}
   stepRaycastUpper: {fileID: 1333059051}
   stepRaycastLower: {fileID: 492504474}
@@ -1889,7 +1889,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1439062578}
   m_Layer: 0
-  m_Name: PlayerCharacterCameraTarget
+  m_Name: PlayerCharacterCameraMount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

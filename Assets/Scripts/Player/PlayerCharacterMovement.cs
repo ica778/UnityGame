@@ -4,9 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCharacterMovement : MonoBehaviour {
-
-    public static PlayerCharacterMovement Instance { get; private set; }
-
     private enum MoveState {
         Walking,
         Sprinting,
@@ -15,9 +12,11 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     [SerializeField] private float maxWalkSpeed = 7f;
     [SerializeField] private float maxSprintSpeed = 10f;
-    [SerializeField] Transform moveDirectionOrientation;
+    [SerializeField] private float maxCrouchSpeed = 3f;
+
+    [SerializeField] Transform playerLookDirection;
     [SerializeField] Rigidbody playerRigidBody;
-    [SerializeField] Transform movementRaycastLocation;
+    [SerializeField] Transform feetRaycastLocation;
 
     [SerializeField] private LayerMask walkableLayer;
 
@@ -26,35 +25,30 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     [SerializeField] private float jumpForce = 16f;
     [SerializeField] private float airMovementSpeedMultiplier = 0.25f;
-
-    [SerializeField] private float maxCrouchSpeed = 3f;
+    
     [SerializeField] private float crouchYScale = 0.5f;
 
     private PlayerInputActions playerInputActions;
     private MoveState currentMoveState;
     private Vector3 playerMoveDirectionVector;
+    private Vector3 playerMoveVector;
 
     private bool isGrounded = true;
+    private bool isOnSlope = false;
     private float currentMoveSpeedMax = 7f;
     private bool jumping = false;
     private RaycastHit slopeHit;
     private float jumpTimer = 0f;
-    private float startYScale;
+    private float playerCapsuleStartYScale;
 
-    [SerializeField] private float raycastRange;
+    [SerializeField] private float checkSlopeRaycastRange = 0.5f;
 
     [SerializeField] private Transform playerStepRaycast;
     [SerializeField] private GameObject stepRaycastUpper;
     [SerializeField] private GameObject stepRaycastLower;
     private float stepHeight = 0.5f;
-    private float stepSmooth = 4f;
+    private float stepSmooth = 2f;
     private float stepRaycastRange = 0.5f;
-
-    private void Awake() {
-        Instance = this;
-
-
-    }
 
     private void Start() {
         playerRigidBody = GetComponent<Rigidbody>();
@@ -66,53 +60,41 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
         currentMoveState = MoveState.Walking;
 
-        startYScale = transform.localScale.y;
+        playerCapsuleStartYScale = transform.localScale.y;
     }
 
     private void Update() {
+        playerMoveVector = playerInputActions.Player.Movement.ReadValue<Vector3>();
+
         stepRaycastUpper.transform.position = new Vector3(stepRaycastUpper.transform.position.x, stepHeight, stepRaycastUpper.transform.position.z);
 
+        playerStepRaycast.transform.position = feetRaycastLocation.transform.position;
 
-        isGrounded = Physics.CheckSphere(movementRaycastLocation.transform.position, 0.3f, walkableLayer);
+        CheckIfPlayerIsGrounded();
+        CheckIfPlayerOnSlope();
 
-        playerStepRaycast.transform.position = movementRaycastLocation.transform.position;
-
-
-
-        //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
-        //Debug.Log(isGrounded);
+        HandleMovementStates();
+        SetPlayerRigidBodyDrag();
+        HandleJumping();
     }
 
     private void FixedUpdate() {
-        
-
-        HandleMovementStates();
-
-        SetPlayerRigidBodyDrag();
-        HandleJumping();
         SpeedControl();
-
         MovePlayerCharacter();
         ClimbStep();
+        Crouching();
 
-        if (currentMoveState == MoveState.Crouching) {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        }
-        else {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
         //Debug.Log("SPEED: " + playerRigidBody.velocity.magnitude);
+        //Debug.Log(isGrounded + " | " + isOnSlope);
     }
 
     private void MovePlayerCharacter() {
-        Vector3 playerMoveInput = playerInputActions.Player.Movement.ReadValue<Vector3>();
-
         // get movement in camera direction independent of camera's y angle
-        playerMoveDirectionVector = moveDirectionOrientation.forward * playerMoveInput.z + moveDirectionOrientation.right * playerMoveInput.x;
+        playerMoveDirectionVector = playerLookDirection.forward * playerMoveVector.z + playerLookDirection.right * playerMoveVector.x;
         playerMoveDirectionVector.y = 0f;
         playerMoveDirectionVector = playerMoveDirectionVector.normalized;
 
-        if (CheckIfPlayerOnSlope()) {
+        if (isOnSlope) {
             playerMoveDirectionVector = Vector3.ProjectOnPlane(playerMoveDirectionVector, slopeHit.normal).normalized;
 
             if (playerRigidBody.velocity.y > 0f) {
@@ -120,7 +102,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
             }
         }
 
-        playerRigidBody.useGravity = !CheckIfPlayerOnSlope();
+        playerRigidBody.useGravity = !isOnSlope;
 
         if (isGrounded) {
             playerRigidBody.AddForce(playerMoveDirectionVector * currentMoveSpeedMax * 20f, ForceMode.Force);
@@ -132,7 +114,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
     }
 
     private void SpeedControl() {
-        if (CheckIfPlayerOnSlope() && !jumping) {
+        if (isOnSlope && !jumping) {
             if (playerRigidBody.velocity.magnitude > currentMoveSpeedMax) {
                 playerRigidBody.velocity = playerRigidBody.velocity.normalized * currentMoveSpeedMax;
             }
@@ -158,12 +140,18 @@ public class PlayerCharacterMovement : MonoBehaviour {
         playerRigidBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
-    private bool CheckIfPlayerOnSlope() {
-        if (Physics.Raycast(movementRaycastLocation.transform.position, Vector3.down, out slopeHit, raycastRange)) {
+    private void CheckIfPlayerIsGrounded() {
+        isGrounded = Physics.CheckSphere(feetRaycastLocation.transform.position, 0.3f, walkableLayer);
+    }
+
+    private void CheckIfPlayerOnSlope() {
+        if (Physics.Raycast(feetRaycastLocation.transform.position, Vector3.down, out slopeHit, checkSlopeRaycastRange)) {
             float angleOfGround = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angleOfGround < maxSlopeAngle && angleOfGround != 0;
+            isOnSlope = angleOfGround < maxSlopeAngle && angleOfGround != 0;
         }
-        return false;
+        else {
+            isOnSlope = false;
+        }
     }
 
     private void HandleMovementStates() {
@@ -202,7 +190,7 @@ public class PlayerCharacterMovement : MonoBehaviour {
     }
 
     private void HandleJumping() {
-        if (jumpTimer <= 0 && (isGrounded || CheckIfPlayerOnSlope())) {
+        if (jumpTimer <= 0 && (isGrounded || isOnSlope)) {
             jumping = false;
         }
 
@@ -234,6 +222,15 @@ public class PlayerCharacterMovement : MonoBehaviour {
             if (!Physics.Raycast(stepRaycastUpper.transform.position, playerMoveDirection + new Vector3(-1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
                 playerRigidBody.position += new Vector3(0f, stepSmooth * Time.deltaTime, 0f);
             }
+        }
+    }
+
+    private void Crouching() {
+        if (currentMoveState == MoveState.Crouching) {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+        }
+        else {
+            transform.localScale = new Vector3(transform.localScale.x, playerCapsuleStartYScale, transform.localScale.z);
         }
     }
 
