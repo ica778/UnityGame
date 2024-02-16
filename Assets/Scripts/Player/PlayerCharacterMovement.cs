@@ -50,7 +50,9 @@ public class PlayerCharacterMovement : MonoBehaviour {
     private float stepSmooth = 2f;
     private float stepRaycastRange = 0.5f;
 
-    private void Start() {
+    private void Awake() {
+        stepRaycastUpper.transform.position = new Vector3(stepRaycastUpper.transform.position.x, stepHeight, stepRaycastUpper.transform.position.z);
+
         playerRigidBody = GetComponent<Rigidbody>();
 
         playerInputActions = new PlayerInputActions();
@@ -65,8 +67,6 @@ public class PlayerCharacterMovement : MonoBehaviour {
 
     private void Update() {
         playerMoveVector = playerInputActions.Player.Movement.ReadValue<Vector3>();
-
-        stepRaycastUpper.transform.position = new Vector3(stepRaycastUpper.transform.position.x, stepHeight, stepRaycastUpper.transform.position.z);
 
         playerStepRaycast.transform.position = feetRaycastLocation.transform.position;
 
