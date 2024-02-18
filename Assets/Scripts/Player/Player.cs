@@ -9,17 +9,17 @@ public class Player : MonoBehaviour {
     private float playerCameraHeight = 1.65f;
     private float playerCapsuleHeight;
 
-    private MeshRenderer capsuleMeshRenderer;
+    private CapsuleCollider capsuleCollider;
 
     private void Start() {
-        capsuleMeshRenderer = rigidBodyCapsule.GetComponent<MeshRenderer>();
+        capsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
     }
 
     private void Update() {
-        KeepPlayerObjectsAligned();
+        KeepPlayerAlignedToRigidBody();
     }
 
-    private void KeepPlayerObjectsAligned() {
-        transform.position = new Vector3(playerRigidBody.position.x, playerRigidBody.position.y - capsuleMeshRenderer.bounds.extents.y, playerRigidBody.position.z);
+    private void KeepPlayerAlignedToRigidBody() {
+        transform.position = new Vector3(playerRigidBody.position.x, playerRigidBody.position.y - (capsuleCollider.height / 2f), playerRigidBody.position.z);
     }
 }

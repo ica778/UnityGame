@@ -19,7 +19,7 @@ public class HandlePlayerController : MonoBehaviour {
     [SerializeField] private GameObject rigidBodyCapsule;
     private CapsuleCollider rigidBodyCapsuleCollider;
     private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
-    private float rigidBodyCapsuleColliderCrouchingHeight = 1.0f;
+    private float rigidBodyCapsuleColliderCrouchingHeight = 1.3f;
 
     private float maxWalkSpeed = 7f;
     private float maxSprintSpeed = 10f;
@@ -50,7 +50,7 @@ public class HandlePlayerController : MonoBehaviour {
 
     private float stepHeight = 0.4f;
     private float stepForce = 2f;
-    private float stepRaycastRange = 0.5f;
+    private float stepRaycastRange = 1f;
 
     private void Awake() {
         currentMoveState = MoveState.Walking;
@@ -77,7 +77,7 @@ public class HandlePlayerController : MonoBehaviour {
         HandlePlayerMovement();
         SpeedControl();
 
-        Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
+        //Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
     }
 
     private void SetMoveState(MoveState moveState) {
@@ -104,13 +104,14 @@ public class HandlePlayerController : MonoBehaviour {
         }
     }
 
+    //TODO: fix crouching
     private void ChangeToCrouchStance() {
-        playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - (playerCameraHeight / 2.0f), playerCamera.transform.position.z);
+        playerCamera.transform.position -= new Vector3(0f, 0.5f, 0f);
         rigidBodyCapsuleCollider.height = rigidBodyCapsuleColliderCrouchingHeight;
     }
 
     private void ChangeToStandingStance() {
-        playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + (playerCameraHeight / 2.0f), playerCamera.transform.position.z);
+        playerCamera.transform.position += new Vector3(0f, 0.5f, 0f);
         rigidBodyCapsuleCollider.height = rigidBodyCapsuleColliderStandingHeight;
     }
 
@@ -228,6 +229,7 @@ public class HandlePlayerController : MonoBehaviour {
         }
     }
 
+    //TODO: Fix step climbing
     private void ClimbStep(Vector3 moveVector) {
         Vector3 stepRaycastLowerPosition = groundPoint.transform.position;
         Vector3 stepRaycastUpperPosition = new Vector3(stepRaycastLowerPosition.x, stepRaycastLowerPosition.y + stepHeight, stepRaycastLowerPosition.z);
