@@ -13,6 +13,7 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnCrouchAction;
     public event EventHandler OnSprintStartedAction;
     public event EventHandler OnSprintCancelledAction;
+    public event EventHandler OnPauseAction;
 
     private void Awake() {
         Instance = this;
@@ -24,6 +25,11 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Crouch.performed += Crouch_performed;
         playerInputActions.Player.Sprint.started += Sprint_started;
         playerInputActions.Player.Sprint.canceled += Sprint_canceled;
+        playerInputActions.Player.Pause.performed += Pause_performed;
+    }
+
+    private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnPauseAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Sprint_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
@@ -47,12 +53,27 @@ public class GameInput : MonoBehaviour {
         Cursor.visible = false;
     }
 
+    public void UnlockCursor() {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public float GetMouseX() {
-        return playerInputActions.Player.MouseX.ReadValue<float>() * Time.deltaTime;
+        if (Cursor.lockState == CursorLockMode.Locked) {
+            return playerInputActions.Player.MouseX.ReadValue<float>() * Time.deltaTime;
+        }
+        else {
+            return 0f;
+        }
     }
 
     public float GetMouseY() {
-        return playerInputActions.Player.MouseY.ReadValue<float>() * Time.deltaTime;
+        if (Cursor.lockState == CursorLockMode.Locked) {
+            return playerInputActions.Player.MouseY.ReadValue<float>() * Time.deltaTime;
+        }
+        else {
+            return 0f;
+        }
     }
 
     public float GetMoveForward() {
