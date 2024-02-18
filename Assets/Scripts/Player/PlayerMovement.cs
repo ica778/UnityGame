@@ -21,9 +21,9 @@ public class HandlePlayerController : MonoBehaviour {
     private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
     private float rigidBodyCapsuleColliderCrouchingHeight = 1.3f;
 
-    private float maxWalkSpeed = 7f;
-    private float maxSprintSpeed = 10f;
-    private float maxCrouchSpeed = 3f;
+    private float maxWalkSpeed = 2f;
+    private float maxSprintSpeed = 4f;
+    private float maxCrouchSpeed = 0.75f;
     private float moveForce = 200f;
     private float notGroundedMoveSpeedMultiplier = 0.1f;
     private float groundDrag = 10f;
@@ -48,11 +48,12 @@ public class HandlePlayerController : MonoBehaviour {
     private float jumpTimer;
     private float jumpTimerCooldown = 0.5f;
 
-    private float stepHeight = 0.4f;
-    private float stepForce = 2f;
-    private float stepRaycastRange = 1f;
+    private float stepRaycastDistance = 0.2f;
+    private float stepHeight = 2f;
+    private float stepRaycastRange = 0.6f;
 
     private void Awake() {
+        currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
         rigidBodyCapsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
     }
@@ -104,7 +105,6 @@ public class HandlePlayerController : MonoBehaviour {
         }
     }
 
-    //TODO: fix crouching
     private void ChangeToCrouchStance() {
         playerCamera.transform.position -= new Vector3(0f, 0.5f, 0f);
         rigidBodyCapsuleCollider.height = rigidBodyCapsuleColliderCrouchingHeight;
@@ -229,26 +229,23 @@ public class HandlePlayerController : MonoBehaviour {
         }
     }
 
-    //TODO: Fix step climbing
     private void ClimbStep(Vector3 moveVector) {
         Vector3 stepRaycastLowerPosition = groundPoint.transform.position;
-        Vector3 stepRaycastUpperPosition = new Vector3(stepRaycastLowerPosition.x, stepRaycastLowerPosition.y + stepHeight, stepRaycastLowerPosition.z);
+        Vector3 stepRaycastUpperPosition = new Vector3(stepRaycastLowerPosition.x, stepRaycastLowerPosition.y + stepRaycastDistance, stepRaycastLowerPosition.z);
 
         if (Physics.Raycast(stepRaycastLowerPosition, moveVector, stepRaycastRange, walkableLayer)) {
             if (!Physics.Raycast(stepRaycastUpperPosition, moveVector, stepRaycastRange + 0.1f, walkableLayer)) {
-                playerRigidBody.position += new Vector3(0f, stepForce, 0f);
+                playerRigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
             }
         }
-
-        if (Physics.Raycast(stepRaycastLowerPosition, moveVector + new Vector3(1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
+        else if (Physics.Raycast(stepRaycastLowerPosition, moveVector + new Vector3(1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
             if (!Physics.Raycast(stepRaycastUpperPosition, moveVector + new Vector3(1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
-                playerRigidBody.position += new Vector3(0f, stepForce, 0f);
+                playerRigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
             }
         }
-
-        if (Physics.Raycast(stepRaycastLowerPosition, moveVector + new Vector3(-1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
+        else if (Physics.Raycast(stepRaycastLowerPosition, moveVector + new Vector3(-1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
             if (!Physics.Raycast(stepRaycastUpperPosition, moveVector + new Vector3(-1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
-                playerRigidBody.position += new Vector3(0f, stepForce, 0f);
+                playerRigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
             }
         }
     }
