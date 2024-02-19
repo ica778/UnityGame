@@ -20,10 +20,12 @@ public class HandlePlayerController : NetworkBehaviour {
     [SerializeField] private GameObject virtualCamera;
     private CinemachineVirtualCamera cinemachineVirtualCamera;
 
-    [SerializeField] private GameObject rigidBodyCapsule;
-    private CapsuleCollider rigidBodyCapsuleCollider;
+    [SerializeField] private GameObject rigidBodyStandingCapsule;
+    [SerializeField] private GameObject rigidBodyCrouchingCapsule;
+    private CapsuleCollider rigidBodyStandingCapsuleCollider;
+    private CapsuleCollider rigidBodyCrouchingCapsuleCollider;
     private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
-    private float rigidBodyCapsuleColliderCrouchingHeight = 1.3f;
+    private float rigidBodyCapsuleColliderCrouchingHeight = 1.2f;
 
     private float maxWalkSpeed = 2f;
     private float maxSprintSpeed = 4f;
@@ -86,7 +88,9 @@ public class HandlePlayerController : NetworkBehaviour {
 
         currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
-        rigidBodyCapsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
+        rigidBodyStandingCapsuleCollider = rigidBodyStandingCapsule.GetComponent<CapsuleCollider>();
+        rigidBodyCrouchingCapsuleCollider = rigidBodyCrouchingCapsule.GetComponent<CapsuleCollider>();
+        //rigidBodyCrouchingCapsule.SetActive(false);
 
         GameInput.Instance.LockCursor();
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
@@ -141,13 +145,15 @@ public class HandlePlayerController : NetworkBehaviour {
     }
 
     private void ChangeToCrouchStance() {
-        playerCamera.transform.position -= new Vector3(0f, 0.5f, 0f);
-        rigidBodyCapsuleCollider.height = rigidBodyCapsuleColliderCrouchingHeight;
+        rigidBodyStandingCapsule.SetActive(false);
+        rigidBodyCrouchingCapsule.SetActive(true);
+        playerCamera.transform.position -= new Vector3(0f, 0.8f, 0f);
     }
 
     private void ChangeToStandingStance() {
-        playerCamera.transform.position += new Vector3(0f, 0.5f, 0f);
-        rigidBodyCapsuleCollider.height = rigidBodyCapsuleColliderStandingHeight;
+        rigidBodyStandingCapsule.SetActive(true);
+        rigidBodyCrouchingCapsule.SetActive(false);
+        playerCamera.transform.position += new Vector3(0f, 0.8f, 0f);
     }
 
 
