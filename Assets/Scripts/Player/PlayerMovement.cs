@@ -1,8 +1,10 @@
+using Cinemachine;
+using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandlePlayerController : MonoBehaviour {
+public class HandlePlayerController : NetworkBehaviour {
 
     private enum MoveState {
         Walking,
@@ -15,6 +17,8 @@ public class HandlePlayerController : MonoBehaviour {
     [SerializeField] private Rigidbody playerRigidBody;
     [SerializeField] private Transform groundPoint;
     [SerializeField] private LayerMask walkableLayer;
+    [SerializeField] private GameObject virtualCamera;
+    private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     [SerializeField] private GameObject rigidBodyCapsule;
     private CapsuleCollider rigidBodyCapsuleCollider;
@@ -37,7 +41,7 @@ public class HandlePlayerController : MonoBehaviour {
     private float mouseX;
     private float mouseY;
     
-    private float playerCameraHeight = 1.65f;
+    //private float playerCameraHeight = 1.65f;
     private Quaternion playerHeading;
 
     private bool isGrounded = true;
@@ -53,12 +57,37 @@ public class HandlePlayerController : MonoBehaviour {
     private float stepRaycastRange = 0.6f;
 
     private void Awake() {
+        /*
         currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
         rigidBodyCapsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
+        */
     }
 
     private void Start() {
+        /*
+        GameInput.Instance.LockCursor();
+        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
+        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
+        */
+    }
+
+    public override void OnStartClient() {
+        cinemachineVirtualCamera = virtualCamera.GetComponent<CinemachineVirtualCamera>();
+        if (!base.IsOwner) {
+            cinemachineVirtualCamera.Priority = 0;
+            return;
+        }
+        else {
+            cinemachineVirtualCamera.Priority = 10;
+        }
+
+        currentMaxMoveSpeed = maxWalkSpeed;
+        currentMoveState = MoveState.Walking;
+        rigidBodyCapsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
+
         GameInput.Instance.LockCursor();
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
@@ -67,6 +96,9 @@ public class HandlePlayerController : MonoBehaviour {
     }
 
     private void Update() {
+        if (!base.IsOwner) {
+            return;
+        }
         CheckIfPlayerIsGrounded();
         CheckIfPlayerIsOnSlope();
         HandleJumpingCooldown();
@@ -74,6 +106,9 @@ public class HandlePlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        if (!base.IsOwner) {
+            return;
+        }
         HandleGroundedRigidBodyDrag();
         HandlePlayerMovement();
         SpeedControl();
