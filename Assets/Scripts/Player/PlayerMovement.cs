@@ -19,8 +19,8 @@ public class PlayerMovement : NetworkBehaviour {
 
     [SerializeField] private GameObject rigidBodyStandingCapsule;
     [SerializeField] private GameObject rigidBodyCrouchingCapsule;
-    private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
-    private float rigidBodyCapsuleColliderCrouchingHeight = 1.2f;
+    //private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
+    //private float rigidBodyCapsuleColliderCrouchingHeight = 1.2f;
 
     private float maxWalkSpeed = 2f;
     private float maxSprintSpeed = 4f;
