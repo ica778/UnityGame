@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandlePlayerController : NetworkBehaviour {
+public class PlayerMovement : NetworkBehaviour {
 
     private enum MoveState {
         Walking,
@@ -12,18 +12,13 @@ public class HandlePlayerController : NetworkBehaviour {
         Crouching,
     }
 
-    [SerializeField] private float lookSensitivity = 500f;
-    [SerializeField] private Transform playerCamera;
-    [SerializeField] private Rigidbody playerRigidBody;
     [SerializeField] private Transform groundPoint;
     [SerializeField] private LayerMask walkableLayer;
-    [SerializeField] private GameObject virtualCamera;
-    private CinemachineVirtualCamera cinemachineVirtualCamera;
+    [SerializeField] private Transform cameraPosition;
+    private Rigidbody playerRigidBody;
 
     [SerializeField] private GameObject rigidBodyStandingCapsule;
     [SerializeField] private GameObject rigidBodyCrouchingCapsule;
-    private CapsuleCollider rigidBodyStandingCapsuleCollider;
-    private CapsuleCollider rigidBodyCrouchingCapsuleCollider;
     private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
     private float rigidBodyCapsuleColliderCrouchingHeight = 1.2f;
 
@@ -40,10 +35,6 @@ public class HandlePlayerController : NetworkBehaviour {
     private float checkSlopeRaycastRange = 0.5f;
     private RaycastHit slopeHit;
 
-    private float mouseX;
-    private float mouseY;
-    
-    //private float playerCameraHeight = 1.65f;
     private Quaternion playerHeading;
 
     private bool isGrounded = true;
@@ -59,44 +50,30 @@ public class HandlePlayerController : NetworkBehaviour {
     private float stepRaycastRange = 0.6f;
 
     private void Awake() {
-        /*
-        currentMaxMoveSpeed = maxWalkSpeed;
-        currentMoveState = MoveState.Walking;
-        rigidBodyCapsuleCollider = rigidBodyCapsule.GetComponent<CapsuleCollider>();
-        */
+
     }
 
     private void Start() {
-        /*
-        GameInput.Instance.LockCursor();
-        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
-        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
-        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
-        GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
-        */
+
     }
 
     public override void OnStartClient() {
-        cinemachineVirtualCamera = virtualCamera.GetComponent<CinemachineVirtualCamera>();
         if (!base.IsOwner) {
-            cinemachineVirtualCamera.Priority = 0;
             return;
         }
-        else {
-            cinemachineVirtualCamera.Priority = 10;
-        }
+
+        playerRigidBody = GetComponent<Rigidbody>();
 
         currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
-        rigidBodyStandingCapsuleCollider = rigidBodyStandingCapsule.GetComponent<CapsuleCollider>();
-        rigidBodyCrouchingCapsuleCollider = rigidBodyCrouchingCapsule.GetComponent<CapsuleCollider>();
-        //rigidBodyCrouchingCapsule.SetActive(false);
 
         GameInput.Instance.LockCursor();
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
+
+        PlayerCameraController.Instance.SetCameraTarget(cameraPosition);
     }
 
     private void Update() {
@@ -106,7 +83,6 @@ public class HandlePlayerController : NetworkBehaviour {
         CheckIfPlayerIsGrounded();
         CheckIfPlayerIsOnSlope();
         HandleJumpingCooldown();
-        HandleCameraMovement();
     }
 
     private void FixedUpdate() {
@@ -147,13 +123,13 @@ public class HandlePlayerController : NetworkBehaviour {
     private void ChangeToCrouchStance() {
         rigidBodyStandingCapsule.SetActive(false);
         rigidBodyCrouchingCapsule.SetActive(true);
-        playerCamera.transform.position -= new Vector3(0f, 0.8f, 0f);
+        cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
     }
 
     private void ChangeToStandingStance() {
         rigidBodyStandingCapsule.SetActive(true);
         rigidBodyCrouchingCapsule.SetActive(false);
-        playerCamera.transform.position += new Vector3(0f, 0.8f, 0f);
+        cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
     }
 
 
@@ -195,17 +171,8 @@ public class HandlePlayerController : NetworkBehaviour {
         }
     }
 
-    private void HandleCameraMovement() {
-        mouseX -= GameInput.Instance.GetMouseY() * lookSensitivity;
-        mouseX = Mathf.Clamp(mouseX, -90f, 90f);
-
-        mouseY += GameInput.Instance.GetMouseX() * lookSensitivity;
-
-        playerHeading = Quaternion.Euler(mouseX, mouseY, 0);
-        playerCamera.transform.rotation = playerHeading;
-    }
-
     private void HandlePlayerMovement() {
+        Transform playerCamera = PlayerCameraController.Instance.GetCameraTransform();
         Vector3 moveVector = GameInput.Instance.GetMoveForward() * playerCamera.forward + GameInput.Instance.GetMoveRight() * playerCamera.right;
         moveVector.y = 0f;
         moveVector.Normalize();
