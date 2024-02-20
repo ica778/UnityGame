@@ -73,7 +73,7 @@ public class PlayerMovement : NetworkBehaviour {
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
 
-        PlayerCameraController.Instance.SetCameraTarget(cameraPosition);
+        PlayerCameraController.LocalInstance.SetCameraTarget(cameraPosition);
     }
 
     private void Update() {
@@ -172,7 +172,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void HandlePlayerMovement() {
-        Transform playerCamera = PlayerCameraController.Instance.GetCameraTransform();
+        Transform playerCamera = PlayerCameraController.LocalInstance.GetCameraTransform();
         Vector3 moveVector = GameInput.Instance.GetMoveForward() * playerCamera.forward + GameInput.Instance.GetMoveRight() * playerCamera.right;
         moveVector.y = 0f;
         moveVector.Normalize();

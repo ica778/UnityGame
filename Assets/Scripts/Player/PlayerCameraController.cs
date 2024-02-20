@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class PlayerCameraController : NetworkBehaviour {
 
-    public static PlayerCameraController Instance { get; private set; }
+    public static PlayerCameraController LocalInstance { get; private set; }
     
     [SerializeField] private GameObject virtualCamera;
     private float lookSensitivity = 20f;
@@ -20,8 +20,15 @@ public class PlayerCameraController : NetworkBehaviour {
     private Transform cameraTarget;
     private bool hasTarget = false;
 
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            return;
+        }
+        LocalInstance = this;
+    }
+
     private void Awake() {
-        Instance = this;
+
     }
 
     public override void OnStartClient() {
@@ -43,9 +50,7 @@ public class PlayerCameraController : NetworkBehaviour {
         }
 
         HandleCameraMovement();
-        if (hasTarget) {
-            transform.position = cameraTarget.transform.position;
-        }
+        FollowCameraTarget();
     }
 
     private void HandleCameraMovement() {
@@ -56,6 +61,12 @@ public class PlayerCameraController : NetworkBehaviour {
 
         playerHeading = Quaternion.Euler(mouseX, mouseY, 0);
         transform.rotation = playerHeading;
+    }
+
+    private void FollowCameraTarget() {
+        if (hasTarget) {
+            transform.position = cameraTarget.transform.position;
+        }
     }
 
     public Transform GetCameraTransform() {
