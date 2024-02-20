@@ -29,6 +29,7 @@ public class PlayerMovement : NetworkBehaviour {
     private float notGroundedMoveSpeedMultiplier = 0.1f;
     private float groundDrag = 10f;
     private float currentMaxMoveSpeed = 7f;
+    private Vector3 moveVector;
     private MoveState currentMoveState;
 
     private float maxSlopeAngle = 45f;
@@ -120,15 +121,16 @@ public class PlayerMovement : NetworkBehaviour {
         }
     }
 
+    // TODO: MAKE CROUCHING SYNC ACROSS PLAYERS
     private void ChangeToCrouchStance() {
-        rigidBodyStandingCapsule.SetActive(false);
-        rigidBodyCrouchingCapsule.SetActive(true);
+        rigidBodyStandingCapsule.gameObject.SetActive(false);
+        rigidBodyCrouchingCapsule.gameObject.SetActive(true);
         cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
     }
 
     private void ChangeToStandingStance() {
-        rigidBodyStandingCapsule.SetActive(true);
-        rigidBodyCrouchingCapsule.SetActive(false);
+        rigidBodyStandingCapsule.gameObject.SetActive(true);
+        rigidBodyCrouchingCapsule.gameObject.SetActive(false);
         cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
     }
 
@@ -173,7 +175,7 @@ public class PlayerMovement : NetworkBehaviour {
 
     private void HandlePlayerMovement() {
         Transform playerCamera = PlayerCameraController.LocalInstance.GetCameraTransform();
-        Vector3 moveVector = GameInput.Instance.GetMoveForward() * playerCamera.forward + GameInput.Instance.GetMoveRight() * playerCamera.right;
+        moveVector = GameInput.Instance.GetMoveForward() * playerCamera.forward + GameInput.Instance.GetMoveRight() * playerCamera.right;
         moveVector.y = 0f;
         moveVector.Normalize();
 
@@ -256,5 +258,19 @@ public class PlayerMovement : NetworkBehaviour {
                 playerRigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
             }
         }
+    }
+
+    public bool IsWalking() {
+        if (currentMoveState == MoveState.Walking && moveVector != Vector3.zero) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsSprinting() {
+        if (currentMoveState == MoveState.Sprinting && moveVector != Vector3.zero) {
+            return true;
+        }
+        return false;
     }
 }
