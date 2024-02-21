@@ -36,8 +36,6 @@ public class PlayerMovement : NetworkBehaviour {
     private float checkSlopeRaycastRange = 0.5f;
     private RaycastHit slopeHit;
 
-    private Quaternion playerHeading;
-
     private bool isGrounded = true;
     private bool isOnSlope = false;
 
