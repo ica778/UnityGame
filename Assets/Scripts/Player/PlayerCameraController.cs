@@ -77,4 +77,12 @@ public class PlayerCameraController : NetworkBehaviour {
         cameraTarget = target;
         hasTarget = true;
     }
+
+    public Quaternion GetCameraQuaternion() {
+        return playerHeading;
+    }
+
+    public Quaternion GetCameraQuaternionOnlyYAxis() {
+        return new Quaternion(0f, playerHeading.y, 0f, playerHeading.w);
+    }
 }
