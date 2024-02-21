@@ -46,7 +46,7 @@ public class PlayerMovement : NetworkBehaviour {
     private float jumpTimer;
     private float jumpTimerCooldown = 0.5f;
 
-    private float stepRaycastDistance = 0.2f;
+    private float stepRaycastDistance = 0.4f;
     private float stepHeight = 2f;
     private float stepRaycastRange = 0.6f;
 
@@ -94,7 +94,7 @@ public class PlayerMovement : NetworkBehaviour {
         HandlePlayerMovement();
         SpeedControl();
 
-        //Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
+        Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
     }
 
     private void SetMoveState(MoveState moveState) {
@@ -202,7 +202,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
     
     private void CheckIfPlayerIsGrounded() {
-        isGrounded = Physics.CheckSphere(groundPoint.transform.position, 0.3f, walkableLayer);
+        isGrounded = Physics.CheckSphere(groundPoint.transform.position, 0.4f, walkableLayer);
     }
 
     private void HandleGroundedRigidBodyDrag() {
