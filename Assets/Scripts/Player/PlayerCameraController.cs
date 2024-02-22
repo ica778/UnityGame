@@ -50,6 +50,13 @@ public class PlayerCameraController : NetworkBehaviour {
         }
 
         HandleCameraMovement();
+    }
+
+    private void FixedUpdate() {
+        if (!IsOwner) { 
+            return; 
+        }
+
         FollowCameraTarget();
     }
 

@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 2823343200897787269}
   - component: {fileID: 6264871663625840131}
   m_Layer: 0
-  m_Name: RigidBodyStandingCapsule
+  m_Name: StandingCapsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -477,8 +477,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   cameraPosition: {fileID: 3377963034221982641}
-  rigidBodyStandingCapsule: {fileID: 1916160239405611279}
-  rigidBodyCrouchingCapsule: {fileID: 8753304081717252357}
+  standingCapsule: {fileID: 1916160239405611279}
+  crouchingCapsule: {fileID: 8753304081717252357}
 --- !u!114 &8210041151956649488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,7 +622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6681067021121226863}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -942,12 +942,12 @@ GameObject:
   - component: {fileID: 7152951263906801106}
   - component: {fileID: 1349024690983105407}
   m_Layer: 0
-  m_Name: RigidBodyCrouchingCapsule
+  m_Name: CrouchingCapsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3299609401825320640
 Transform:
   m_ObjectHideFlags: 0
@@ -988,7 +988,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.4
   m_Height: 1.2

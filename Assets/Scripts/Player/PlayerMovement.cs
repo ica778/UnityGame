@@ -17,10 +17,10 @@ public class PlayerMovement : NetworkBehaviour {
     [SerializeField] private Transform cameraPosition;
     private Rigidbody playerRigidBody;
 
-    [SerializeField] private GameObject rigidBodyStandingCapsule;
-    [SerializeField] private GameObject rigidBodyCrouchingCapsule;
-    //private float rigidBodyCapsuleColliderStandingHeight = 2.0f;
-    //private float rigidBodyCapsuleColliderCrouchingHeight = 1.2f;
+    [SerializeField] private GameObject standingCapsule;
+    [SerializeField] private GameObject crouchingCapsule;
+    private CapsuleCollider standingCapsuleCollider;
+    private CapsuleCollider crouchingCapsuleCollider;
 
     private float maxWalkSpeed = 2f;
     private float maxSprintSpeed = 4f;
@@ -62,6 +62,8 @@ public class PlayerMovement : NetworkBehaviour {
         }
 
         playerRigidBody = GetComponent<Rigidbody>();
+        standingCapsuleCollider = standingCapsule.GetComponent<CapsuleCollider>();
+        crouchingCapsuleCollider = crouchingCapsule.GetComponent<CapsuleCollider>();
 
         currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
@@ -79,6 +81,7 @@ public class PlayerMovement : NetworkBehaviour {
         if (!base.IsOwner) {
             return;
         }
+
         CheckIfPlayerIsGrounded();
         CheckIfPlayerIsOnSlope();
         HandleJumpingCooldown();
@@ -88,6 +91,7 @@ public class PlayerMovement : NetworkBehaviour {
         if (!base.IsOwner) {
             return;
         }
+
         HandleGroundedRigidBodyDrag();
         HandlePlayerMovement();
         SpeedControl();
@@ -121,14 +125,14 @@ public class PlayerMovement : NetworkBehaviour {
 
     // TODO: MAKE CROUCHING SYNC ACROSS PLAYERS
     private void ChangeToCrouchStance() {
-        rigidBodyStandingCapsule.gameObject.SetActive(false);
-        rigidBodyCrouchingCapsule.gameObject.SetActive(true);
+        standingCapsuleCollider.enabled = false;
+        crouchingCapsuleCollider.enabled = true;
         cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
     }
 
     private void ChangeToStandingStance() {
-        rigidBodyStandingCapsule.gameObject.SetActive(true);
-        rigidBodyCrouchingCapsule.gameObject.SetActive(false);
+        standingCapsuleCollider.enabled = true;
+        crouchingCapsuleCollider.enabled = false;
         cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
     }
 
