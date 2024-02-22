@@ -27,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour {
     private float maxCrouchSpeed = 0.75f;
     private float moveForce = 200f;
     private float notGroundedMoveSpeedMultiplier = 0.1f;
-    private float groundDrag = 10f;
+    private float groundDrag = 15f;
     private float currentMaxMoveSpeed = 7f;
     private Vector3 moveVector;
     private MoveState currentMoveState;
