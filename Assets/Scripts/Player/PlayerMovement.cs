@@ -24,7 +24,7 @@ public class PlayerMovement : NetworkBehaviour {
     private CapsuleCollider crouchingCapsuleCollider;
 
     private float maxWalkSpeed = 2f;
-    private float maxSprintSpeed = 4f;
+    private float maxSprintSpeed = 6f;
     private float maxCrouchSpeed = 0.75f;
     private float moveForce = 200f;
     private float notGroundedMoveSpeedMultiplier = 0.1f;
@@ -40,8 +40,8 @@ public class PlayerMovement : NetworkBehaviour {
     private bool isGrounded = true;
     private bool isOnSlope = false;
 
-    private float jumpForce = 16f;
-    private bool jumping = false;
+    private float jumpForce = 12f;
+    private bool isJumping = false;
     private float jumpTimer;
     private float jumpTimerCooldown = 0.5f;
 
@@ -159,10 +159,11 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
-        if (isGrounded && !jumping) {
+        if (isGrounded && !isJumping) {
+            isGrounded = false;
             Jump();
             jumpTimer = jumpTimerCooldown;
-            jumping = true;
+            isJumping = true;
         }
     }
     private void Jump() {
@@ -171,7 +172,7 @@ public class PlayerMovement : NetworkBehaviour {
 
     private void HandleJumpingCooldown() {
         if (jumpTimer <= 0 && (isGrounded || isOnSlope)) {
-            jumping = false;
+            isJumping = false;
         }
 
         if (jumpTimer > 0f) {
@@ -212,7 +213,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void HandleGroundedRigidBodyDrag() {
-        if (isGrounded) {
+        if (isGrounded && !isJumping) {
             playerRigidBody.drag = groundDrag;
         }
         else {
@@ -231,7 +232,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void SpeedControl() {
-        if (isOnSlope && !jumping) {
+        if (isOnSlope && !isJumping) {
             if (playerRigidBody.velocity.magnitude > currentMaxMoveSpeed) {
                 playerRigidBody.velocity = playerRigidBody.velocity.normalized * currentMaxMoveSpeed;
             }
