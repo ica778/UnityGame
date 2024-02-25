@@ -128,6 +128,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     public void ToggleRigidBodyForCrouchState() {
+        // checks for standingCapsuleCollider instead of currentMoveState because currentMoveState is not guaranteed set by this function
         if (standingCapsuleCollider.enabled) {
             standingCapsuleCollider.enabled = false;
             crouchingCapsuleCollider.enabled = true;
