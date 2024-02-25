@@ -1,5 +1,6 @@
 using Cinemachine;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,20 +54,18 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void Start() {
-
-    }
-
-    public override void OnStartClient() {
-        if (!base.IsOwner) {
-            return;
-        }
-
         playerRigidBody = GetComponent<Rigidbody>();
         standingCapsuleCollider = standingCapsule.GetComponent<CapsuleCollider>();
         crouchingCapsuleCollider = crouchingCapsule.GetComponent<CapsuleCollider>();
 
         currentMaxMoveSpeed = maxWalkSpeed;
         currentMoveState = MoveState.Walking;
+    }
+
+    public override void OnStartClient() {
+        if (!base.IsOwner) {
+            return;
+        }
 
         GameInput.Instance.LockCursor();
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
@@ -96,46 +95,50 @@ public class PlayerMovement : NetworkBehaviour {
         HandlePlayerMovement();
         SpeedControl();
 
-        Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
+        //Debug.Log(isGrounded + " | " + isOnSlope + " | " + playerRigidBody.velocity.magnitude);
     }
 
     private void SetMoveState(MoveState moveState) {
         switch (moveState) {
             case MoveState.Walking:
                 if (currentMoveState == MoveState.Crouching) {
-                    ChangeToStandingStance();
+                    ToggleCrouchState();
                 }
                 currentMoveState = MoveState.Walking;
                 currentMaxMoveSpeed = maxWalkSpeed;
                 break;
             case MoveState.Sprinting:
                 if (currentMoveState == MoveState.Crouching) {
-                    ChangeToStandingStance();
+                    ToggleCrouchState();
                 }
                 currentMoveState = MoveState.Sprinting;
                 currentMaxMoveSpeed = maxSprintSpeed;
                 break;
             case MoveState.Crouching:
-                ChangeToCrouchStance();
+                ToggleCrouchState();
                 currentMoveState = MoveState.Crouching;
                 currentMaxMoveSpeed = maxCrouchSpeed;
                 break;
         }
     }
 
-    // TODO: MAKE CROUCHING SYNC ACROSS PLAYERS
-    private void ChangeToCrouchStance() {
-        standingCapsuleCollider.enabled = false;
-        crouchingCapsuleCollider.enabled = true;
-        cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
+    private void ToggleCrouchState() {
+        ToggleRigidBodyForCrouchState();
+        ToggleCrouchingServerRpc(base.ObjectId);
     }
 
-    private void ChangeToStandingStance() {
-        standingCapsuleCollider.enabled = true;
-        crouchingCapsuleCollider.enabled = false;
-        cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
+    public void ToggleRigidBodyForCrouchState() {
+        if (standingCapsuleCollider.enabled) {
+            standingCapsuleCollider.enabled = false;
+            crouchingCapsuleCollider.enabled = true;
+            cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
+        }
+        else {
+            standingCapsuleCollider.enabled = true;
+            crouchingCapsuleCollider.enabled = false;
+            cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
+        }
     }
-
 
     private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
         SetMoveState(MoveState.Sprinting);
@@ -274,5 +277,16 @@ public class PlayerMovement : NetworkBehaviour {
             return true;
         }
         return false;
+    }
+
+    [ServerRpc]
+    private void ToggleCrouchingServerRpc(int playerId) {
+        ToggleCrouchingObserversRpc(playerId);
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    private void ToggleCrouchingObserversRpc(int playerId) {
+        Player player = PlayerManager.Instance.GetPlayer(playerId);
+        player.GetPlayerMovement().ToggleRigidBodyForCrouchState();
     }
 }
