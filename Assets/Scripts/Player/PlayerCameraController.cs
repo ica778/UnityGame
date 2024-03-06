@@ -85,11 +85,11 @@ public class PlayerCameraController : NetworkBehaviour {
         hasTarget = true;
     }
 
-    public Quaternion GetCameraQuaternion() {
-        return playerHeading;
-    }
-
     public Quaternion GetCameraQuaternionOnlyYAxis() {
         return new Quaternion(0f, playerHeading.y, 0f, playerHeading.w);
+    }
+
+    public Vector3 GetLookDirectionVector() {
+        return virtualCamera.transform.forward;
     }
 }

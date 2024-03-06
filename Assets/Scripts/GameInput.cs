@@ -14,6 +14,7 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnSprintStartedAction;
     public event EventHandler OnSprintCancelledAction;
     public event EventHandler OnPauseAction;
+    public event EventHandler OnInteractAction;
 
     private void Awake() {
         Instance = this;
@@ -26,6 +27,12 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Sprint.started += Sprint_started;
         playerInputActions.Player.Sprint.canceled += Sprint_canceled;
         playerInputActions.Player.Pause.performed += Pause_performed;
+
+        playerInputActions.Player.Interact.performed += Interact_performed;
+    }
+
+    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnInteractAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {

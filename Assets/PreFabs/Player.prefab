@@ -71,11 +71,11 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 9
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 13579426787111593128
+  <AssetPathHash>k__BackingField: 16332767852147405753
 --- !u!114 &2476288708210685873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,6 +92,10 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCharacter: {fileID: 4893921292933606643}
+  cameraPosition: {fileID: 3377963034221982641}
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &1916160239405611279
 GameObject:
   m_ObjectHideFlags: 0
