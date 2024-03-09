@@ -15,6 +15,7 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnSprintCancelledAction;
     public event EventHandler OnPauseAction;
     public event EventHandler OnInteractAction;
+    public event EventHandler OnInventoryAction;
 
     private void Awake() {
         Instance = this;
@@ -29,6 +30,11 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Pause.performed += Pause_performed;
 
         playerInputActions.Player.Interact.performed += Interact_performed;
+        playerInputActions.Player.Inventory.performed += Inventory_performed;
+    }
+
+    private void Inventory_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnInventoryAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {

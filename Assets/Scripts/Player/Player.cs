@@ -35,7 +35,7 @@ public class Player : NetworkBehaviour {
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
         if (currentInteractableObject.transform) {
-            Debug.Log("TESTING INTERACTABLE OBJECT FOUND");
+            Debug.Log("TESTING INTERACTABLE ITEM FOUND");
         }
     }
 
