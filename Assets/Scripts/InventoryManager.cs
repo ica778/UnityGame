@@ -48,6 +48,10 @@ public class InventoryManager : MonoBehaviour {
         selectedSlotIndex = slotIndex;
     }
 
+    public bool AddItem(int ID) {
+        return AddItem(ItemDatabase.Instance.GetItem(ID));
+    }
+
     public bool AddItem(ItemSO item) {
         for (int i = 0; i < inventorySlots.Length; i++) {
             InventorySlot currentInventorySlot = inventorySlots[i];

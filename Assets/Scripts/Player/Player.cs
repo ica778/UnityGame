@@ -36,6 +36,12 @@ public class Player : NetworkBehaviour {
     private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
         if (currentInteractableObject.transform) {
             Debug.Log("TESTING INTERACTABLE ITEM FOUND");
+            GroundLoot groundLoot = currentInteractableObject.transform.GetComponent<GroundLoot>();
+
+            if (groundLoot) {
+                InventoryManager.Instance.AddItem(groundLoot.GetID());
+            }
+
         }
     }
 
