@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour {
 
     private void Start() {
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
+        playerMovement = GetComponentInChildren<PlayerMovement>();
 
         Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
     }
@@ -26,8 +27,6 @@ public class Player : NetworkBehaviour {
         if (!base.IsOwner) {
             return;
         }
-
-        playerMovement = GetComponentInChildren<PlayerMovement>();
 
         GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
         GameInput.Instance.OnDropAction += GameInput_OnDropAction;
