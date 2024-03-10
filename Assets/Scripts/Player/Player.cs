@@ -2,6 +2,7 @@ using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Player : NetworkBehaviour {
 
@@ -12,6 +13,8 @@ public class Player : NetworkBehaviour {
     private PlayerMovement playerMovement;
     private float interactDistance = 5f;
     private RaycastHit currentInteractableObject;
+
+    [SerializeField] private float dropItemDistance = 1.3f;
 
     private void Start() {
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
@@ -30,12 +33,14 @@ public class Player : NetworkBehaviour {
         GameInput.Instance.OnDropAction += GameInput_OnDropAction;
     }
 
-    private void GameInput_OnDropAction(object sender, System.EventArgs e) {
-        Debug.Log("TESTING DROP ITEM");
-    }
+    
 
     private void Update() {
         HighlightInteractableObject();
+    }
+
+    private void GameInput_OnDropAction(object sender, System.EventArgs e) {
+        DropItem();
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
@@ -50,6 +55,23 @@ public class Player : NetworkBehaviour {
         }
     }
 
+    // TODO: MAKE DROPPING MORE RELIABLE IF OBSTACLE IN FRONT OF PLAYER
+    private void DropItem() {
+        ItemSO item = InventoryManager.Instance.GetSelectedItem(true);
+        if (item) {
+            Vector3 dropItemPosition = cameraPosition.transform.position + PlayerCameraController.LocalInstance.GetCameraTransform().forward;
+            
+            DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition);
+        }
+        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DropItemServerRpc(GameObject groundLootItemToDrop, Vector3 dropItemPosition) {
+        GameObject item = Instantiate(groundLootItemToDrop, dropItemPosition, Quaternion.identity);
+        Spawn(item);
+    }
+
     private void PickupGroundLoot(GroundLoot groundLoot) {
         bool addedItemSuccessfully = InventoryManager.Instance.AddItem(groundLoot.GetItem());
 
@@ -58,7 +80,7 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void DespawnItemObjectServerRpc(GameObject gameObjectToDespawn) {
         ServerManager.Despawn(gameObjectToDespawn, DespawnType.Destroy);
     }

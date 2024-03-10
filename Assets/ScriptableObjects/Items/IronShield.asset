@@ -17,3 +17,5 @@ MonoBehaviour:
   itemType: 2
   stackable: 1
   maxStackCount: 5
+  groundLootPrefab: {fileID: 4040383118171899540, guid: 0538536192e08184084937bba7560c0c,
+    type: 3}

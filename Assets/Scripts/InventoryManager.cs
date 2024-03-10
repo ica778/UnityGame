@@ -80,13 +80,12 @@ public class InventoryManager : MonoBehaviour {
         inventoryItem.InitialiseItem(item);
     }
 
-    // TODO: CHECK IF DESTROY IS RIGHT FOR YOUR GAME DESIGN
-    public ItemSO GetSelectedItem(bool use) {
+    public ItemSO GetSelectedItem(bool decrement) {
         InventorySlot inventorySlot = inventorySlots[selectedSlotIndex];
         InventoryItem inventoryItemInSlot = inventorySlot.GetComponentInChildren<InventoryItem>();
         if (inventoryItemInSlot) {
             ItemSO item = inventoryItemInSlot.GetItem();
-            if (use) {
+            if (decrement) {
                 inventoryItemInSlot.SetCount(inventoryItemInSlot.GetCount() - 1);
                 if (inventoryItemInSlot.GetCount() <= 0) {
                     Destroy(inventoryItemInSlot.gameObject);
@@ -95,7 +94,7 @@ public class InventoryManager : MonoBehaviour {
                     inventoryItemInSlot.UpdateCount();
                 }
             }
-            return inventoryItemInSlot.GetItem();
+            return item;
         }
         return null;
     }

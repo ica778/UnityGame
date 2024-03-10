@@ -15,6 +15,7 @@ public class ItemSO : ScriptableObject {
     [SerializeField] ItemType itemType;
     [SerializeField] private bool stackable = false;
     [SerializeField] private int maxStackCount;
+    [SerializeField] private GameObject groundLootPrefab;
 
     public string GetItemName() {
         return itemName;
@@ -37,5 +38,9 @@ public class ItemSO : ScriptableObject {
             return maxStackCount;
         }
         return -1;
+    }
+
+    public GameObject GetGroundLootPrefab() {
+        return groundLootPrefab;
     }
 }
