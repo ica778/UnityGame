@@ -44,10 +44,23 @@ public class Player : NetworkBehaviour {
             GroundLoot groundLoot = currentInteractableObject.transform.GetComponent<GroundLoot>();
 
             if (groundLoot) {
-                InventoryManager.Instance.AddItem(groundLoot.GetItem());
+                PickupGroundLoot(groundLoot);
             }
 
         }
+    }
+
+    private void PickupGroundLoot(GroundLoot groundLoot) {
+        bool addedItemSuccessfully = InventoryManager.Instance.AddItem(groundLoot.GetItem());
+
+        if (addedItemSuccessfully) {
+            DespawnItemObjectServerRpc(currentInteractableObject.transform.gameObject);
+        }
+    }
+
+    [ServerRpc]
+    private void DespawnItemObjectServerRpc(GameObject gameObjectToDespawn) {
+        ServerManager.Despawn(gameObjectToDespawn, DespawnType.Destroy);
     }
 
     private void HighlightInteractableObject() {
