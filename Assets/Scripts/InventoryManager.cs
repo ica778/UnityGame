@@ -8,7 +8,6 @@ public class InventoryManager : MonoBehaviour {
 
     [SerializeField] private InventorySlot[] inventorySlots;
     [SerializeField] private GameObject inventoryItemPrefab;
-    [SerializeField] private int maxStackCount = 5;
 
     private int selectedSlotIndex;
 
@@ -52,7 +51,12 @@ public class InventoryManager : MonoBehaviour {
         for (int i = 0; i < inventorySlots.Length; i++) {
             InventorySlot currentInventorySlot = inventorySlots[i];
             InventoryItem currentInventoryItem = currentInventorySlot.GetComponentInChildren<InventoryItem>();
-            if (currentInventoryItem && currentInventoryItem.GetItem() == item && currentInventoryItem.IsStackable() && currentInventoryItem.GetCount() < maxStackCount) {
+            if (
+                currentInventoryItem && 
+                currentInventoryItem.GetItem() == item && 
+                currentInventoryItem.IsStackable() && 
+                currentInventoryItem.GetCount() < currentInventoryItem.GetMaxStackCount()
+             ){
                 currentInventoryItem.SetCount(currentInventoryItem.GetCount() + 1);
                 currentInventoryItem.UpdateCount();
                 return true;

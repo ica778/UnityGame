@@ -14,6 +14,7 @@ public class ItemSO : ScriptableObject {
     [SerializeField] private Sprite sprite;
     [SerializeField] ItemType itemType;
     [SerializeField] private bool stackable = false;
+    [SerializeField] private int maxStackCount;
 
     public string GetItemName() {
         return itemName;
@@ -29,5 +30,12 @@ public class ItemSO : ScriptableObject {
 
     public Sprite GetSprite() {
         return sprite;
+    }
+
+    public int GetMaxStackCount() {
+        if (stackable) {
+            return maxStackCount;
+        }
+        return -1;
     }
 }

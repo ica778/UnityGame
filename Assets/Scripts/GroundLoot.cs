@@ -5,7 +5,17 @@ using UnityEngine;
 public class GroundLoot : MonoBehaviour {
     [SerializeField] private ItemSO item;
 
+    private int count;
+
     public ItemSO GetItem() {
         return item;
+    }
+
+    public void SetCount(int count) {
+        this.count = count;
+    }
+
+    public int GetCount() {
+        return count;
     }
 }

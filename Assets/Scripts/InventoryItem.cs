@@ -30,6 +30,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
+        countText.raycastTarget = false;
     }
 
     public void OnDrag(PointerEventData eventData) {
@@ -39,6 +40,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData) {
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
+        countText.raycastTarget = true;
     }
     
     public Transform GetParentAfterDrag() {
@@ -63,5 +65,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public bool IsStackable() {
         return item.IsStackable();
+    }
+
+    public int GetMaxStackCount() {
+        return item.GetMaxStackCount();
     }
 }
