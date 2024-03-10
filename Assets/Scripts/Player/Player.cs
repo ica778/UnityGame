@@ -26,7 +26,12 @@ public class Player : NetworkBehaviour {
 
         playerMovement = GetComponentInChildren<PlayerMovement>();
 
-        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction; ;
+        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
+        GameInput.Instance.OnDropAction += GameInput_OnDropAction;
+    }
+
+    private void GameInput_OnDropAction(object sender, System.EventArgs e) {
+        Debug.Log("TESTING DROP ITEM");
     }
 
     private void Update() {
@@ -39,7 +44,7 @@ public class Player : NetworkBehaviour {
             GroundLoot groundLoot = currentInteractableObject.transform.GetComponent<GroundLoot>();
 
             if (groundLoot) {
-                InventoryManager.Instance.AddItem(groundLoot.GetID());
+                InventoryManager.Instance.AddItem(groundLoot.GetItem());
             }
 
         }

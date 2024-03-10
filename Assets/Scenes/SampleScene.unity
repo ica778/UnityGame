@@ -1068,7 +1068,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96f6f0e22597fe4f9fc9d0437320a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
   item: {fileID: 11400000, guid: 8baed8fa2d9904743b31efa75bd35949, type: 2}
 --- !u!1 &148429803
 GameObject:
@@ -3199,7 +3198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96f6f0e22597fe4f9fc9d0437320a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   item: {fileID: 11400000, guid: 32e20f5e2bc27714c907285f42c76f3d, type: 2}
 --- !u!54 &704634557
 Rigidbody:
@@ -7892,53 +7890,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af4bac96e0fe0dc4c9ba7140e04c8dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1776664714
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1776664716}
-  - component: {fileID: 1776664715}
-  m_Layer: 0
-  m_Name: ItemDatabase
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1776664715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776664714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dcba9dac47b6ce42863447f215486ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  items:
-  - {fileID: 11400000, guid: 8baed8fa2d9904743b31efa75bd35949, type: 2}
-  - {fileID: 11400000, guid: 32e20f5e2bc27714c907285f42c76f3d, type: 2}
---- !u!4 &1776664716
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776664714}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1820709316 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3116784773652796361, guid: 2ecea4f96bfa52e4fb312918717c011f,
@@ -10430,5 +10381,4 @@ SceneRoots:
   - {fileID: 7443408887097688460}
   - {fileID: 667200848}
   - {fileID: 1763516419}
-  - {fileID: 1776664716}
   - {fileID: 395996188}
