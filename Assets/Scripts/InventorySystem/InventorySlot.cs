@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IDropHandler {
@@ -20,13 +22,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
         image.color = notSelectedColor;
     }
 
-
-    // TODO: MAKE IT SWAP ITEMS IF ITEM DROPPED ON TOP OF OCCUPIED INVENTORY SLOT
     public void OnDrop(PointerEventData eventData) {
-        if (transform.childCount == 0) {
-            GameObject dropped = eventData.pointerDrag;
-            InventoryItem inventoryItem = dropped.GetComponent<InventoryItem>();
-            inventoryItem.SetParentAfterDrag(transform);
+        GameObject dropped = eventData.pointerDrag;
+        InventoryItem inventoryItem = dropped.GetComponent<InventoryItem>();
+        inventoryItem.SetParentAfterDrag(transform);
+        if (transform.childCount > 0) {
+            transform.GetComponentInChildren<InventoryItem>().transform.SetParent(inventoryItem.GetParentBeforeDrag());
         }
     }
 }

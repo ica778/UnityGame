@@ -11,6 +11,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField] private TextMeshProUGUI countText;
 
     private ItemSO item;
+    private Transform parentBeforeDrag;
     private Transform parentAfterDrag;
     private int count = 1;
 
@@ -26,6 +27,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
+        parentBeforeDrag = transform.parent;
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
@@ -41,6 +43,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
         countText.raycastTarget = true;
+    }
+
+    public Transform GetParentBeforeDrag() { 
+        return parentBeforeDrag; 
     }
     
     public Transform GetParentAfterDrag() {

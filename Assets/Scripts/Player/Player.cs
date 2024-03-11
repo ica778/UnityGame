@@ -14,8 +14,6 @@ public class Player : NetworkBehaviour {
     private float interactDistance = 5f;
     private RaycastHit currentInteractableObject;
 
-    [SerializeField] private float dropItemDistance = 1.3f;
-
     private void Start() {
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
         playerMovement = GetComponentInChildren<PlayerMovement>();

@@ -116,3 +116,4 @@ MonoBehaviour:
   image: {fileID: 7342236921682146807}
   selectedColor: {r: 1, g: 0.88722074, b: 0, a: 1}
   notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
+  val: {fileID: 5004447272947167088}
