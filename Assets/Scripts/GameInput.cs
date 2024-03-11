@@ -17,6 +17,8 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnInteractAction;
     public event EventHandler OnInventoryAction;
     public event EventHandler OnDropAction;
+    public event EventHandler OnScrollUpAction;
+    public event EventHandler OnScrollDownAction;
 
     private void Awake() {
         Instance = this;
@@ -33,6 +35,18 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Interact.performed += Interact_performed;
         playerInputActions.Player.Inventory.performed += Inventory_performed;
         playerInputActions.Player.Drop.performed += Drop_performed;
+
+        playerInputActions.Player.Scrolling.performed += Scrolling_performed;
+    }
+
+    private void Scrolling_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        float scrollValue = playerInputActions.Player.Scrolling.ReadValue<float>();
+        if (scrollValue > 0f) {
+            OnScrollUpAction?.Invoke(this, EventArgs.Empty);
+        }
+        else if (scrollValue < 0f) {
+            OnScrollDownAction?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void Drop_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
