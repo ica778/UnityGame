@@ -9,6 +9,7 @@ public class Player : NetworkBehaviour {
     [SerializeField] private GameObject playerCharacter;
     [SerializeField] private Transform cameraPosition;
     [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private LayerMask walkableLayer;
 
     private PlayerMovement playerMovement;
     private float interactDistance = 5f;
@@ -42,7 +43,6 @@ public class Player : NetworkBehaviour {
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
         if (currentInteractableObject.transform) {
-            Debug.Log("TESTING INTERACTABLE ITEM FOUND");
             GroundLoot groundLoot = currentInteractableObject.transform.GetComponent<GroundLoot>();
 
             if (groundLoot) {
@@ -52,20 +52,23 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    // TODO: MAKE DROPPING MORE RELIABLE IF OBSTACLE IN FRONT OF PLAYER
     private void DropItem() {
         ItemSO item = InventoryManager.Instance.GetSelectedItem(true);
         if (item) {
-            Vector3 dropItemPosition = cameraPosition.transform.position + PlayerCameraController.LocalInstance.GetCameraTransform().forward;
-            
-            DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition);
+            Vector3 dropItemPosition = cameraPosition.transform.position + (PlayerCameraController.LocalInstance.GetCameraTransform().forward * 1.5f);
+            if (!Physics.Raycast(cameraPosition.transform.position, PlayerCameraController.LocalInstance.GetCameraTransform().forward, 1.5f, walkableLayer)) {
+                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerCameraController.LocalInstance.GetCameraQuaternionOnlyYAxis());
+            }
+            else {
+                dropItemPosition = cameraPosition.transform.position;
+                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerCameraController.LocalInstance.GetCameraQuaternionOnlyYAxis());
+            }
         }
-        
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void DropItemServerRpc(GameObject groundLootItemToDrop, Vector3 dropItemPosition) {
-        GameObject item = Instantiate(groundLootItemToDrop, dropItemPosition, Quaternion.identity);
+    private void DropItemServerRpc(GameObject groundLootItemToDrop, Vector3 dropItemPosition, Quaternion quaternion) {
+        GameObject item = Instantiate(groundLootItemToDrop, dropItemPosition, quaternion);
         Spawn(item);
     }
 

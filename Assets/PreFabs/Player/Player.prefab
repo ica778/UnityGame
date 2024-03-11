@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4112985450594287979}
   - component: {fileID: 4792983976827827601}
   - component: {fileID: 2476288708210685873}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,6 +96,9 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 128
+  walkableLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1916160239405611279
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +110,7 @@ GameObject:
   - component: {fileID: 7816464621863413040}
   - component: {fileID: 2823343200897787269}
   - component: {fileID: 6264871663625840131}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: StandingCapsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +174,7 @@ GameObject:
   - component: {fileID: 4438663708829272551}
   - component: {fileID: 3949708214341656159}
   - component: {fileID: 4449972573531667668}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +258,7 @@ GameObject:
   - component: {fileID: 7541197020287113932}
   - component: {fileID: 28643678371593130}
   - component: {fileID: 5125515345514605534}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1504473467093562317}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3377963034221982641}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,7 +415,7 @@ GameObject:
   - component: {fileID: 4465865589352571631}
   - component: {fileID: 1139247380235733064}
   - component: {fileID: 8210041151956649488}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,7 +545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8422777586962352701}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -575,7 +578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2849844433517637507}
   - component: {fileID: 2258005710186723555}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -648,7 +651,7 @@ GameObject:
   - component: {fileID: 8876804267105334431}
   - component: {fileID: 8822625497158774132}
   - component: {fileID: 473712988646955410}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -743,7 +746,7 @@ GameObject:
   - component: {fileID: 4407691907636801052}
   - component: {fileID: 5670722183898491098}
   - component: {fileID: 7556298483187118246}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -829,7 +832,7 @@ GameObject:
   - component: {fileID: 5220087816515759343}
   - component: {fileID: 3521916825876690042}
   - component: {fileID: 1506340452738421455}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Standing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -982,7 +985,7 @@ GameObject:
   - component: {fileID: 3299609401825320640}
   - component: {fileID: 7152951263906801106}
   - component: {fileID: 1349024690983105407}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CrouchingCapsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
