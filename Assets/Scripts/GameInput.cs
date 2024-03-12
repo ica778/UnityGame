@@ -19,6 +19,7 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnDropAction;
     public event EventHandler OnScrollUpAction;
     public event EventHandler OnScrollDownAction;
+    public event EventHandler OnLeftClickPressedAction;
 
     private void Awake() {
         Instance = this;
@@ -37,6 +38,11 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Drop.performed += Drop_performed;
 
         playerInputActions.Player.Scrolling.performed += Scrolling_performed;
+        playerInputActions.Player.LeftClick.performed += LeftClick_performed;
+    }
+
+    private void LeftClick_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnLeftClickPressedAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Scrolling_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {

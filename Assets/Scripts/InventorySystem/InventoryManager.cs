@@ -20,10 +20,18 @@ public class InventoryManager : MonoBehaviour {
     private void Start() {
         GameInput.Instance.OnScrollUpAction += GameInput_OnScrollUpAction;
         GameInput.Instance.OnScrollDownAction += GameInput_OnScrollDownAction;
+        GameInput.Instance.OnLeftClickPressedAction += GameInput_OnLeftClickPressedAction;
     }
 
     private void Update() {
 
+    }
+
+    private void GameInput_OnLeftClickPressedAction(object sender, System.EventArgs e) {
+        ItemSO equippedItem = GetSelectedItem(false);
+        if (equippedItem) {
+            Debug.Log("TESTING: USING ITEM " + equippedItem.GetItemName());
+        }
     }
 
     private void GameInput_OnScrollUpAction(object sender, System.EventArgs e) {
@@ -94,12 +102,12 @@ public class InventoryManager : MonoBehaviour {
         inventoryItem.InitialiseItem(item);
     }
 
-    public ItemSO GetSelectedItem(bool decrement) {
+    public ItemSO GetSelectedItem(bool decrementItemCount) {
         InventorySlot inventorySlot = inventorySlots[selectedSlotIndex];
         InventoryItem inventoryItemInSlot = inventorySlot.GetComponentInChildren<InventoryItem>();
         if (inventoryItemInSlot) {
             ItemSO item = inventoryItemInSlot.GetItem();
-            if (decrement) {
+            if (decrementItemCount) {
                 inventoryItemInSlot.SetCount(inventoryItemInSlot.GetCount() - 1);
                 if (inventoryItemInSlot.GetCount() <= 0) {
                     Destroy(inventoryItemInSlot.gameObject);

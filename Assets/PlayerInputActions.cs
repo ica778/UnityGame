@@ -134,6 +134,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d96c8dc-8c5d-4b7d-817b-bba234f8456a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -312,6 +321,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Scrolling"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""21b515f1-dcb8-446d-8b6c-7865a5dcce0d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -332,6 +352,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         m_Player_Scrolling = m_Player.FindAction("Scrolling", throwIfNotFound: true);
+        m_Player_LeftClick = m_Player.FindAction("LeftClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -405,6 +426,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_Drop;
     private readonly InputAction m_Player_Scrolling;
+    private readonly InputAction m_Player_LeftClick;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -421,6 +443,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
         public InputAction @Drop => m_Wrapper.m_Player_Drop;
         public InputAction @Scrolling => m_Wrapper.m_Player_Scrolling;
+        public InputAction @LeftClick => m_Wrapper.m_Player_LeftClick;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -466,6 +489,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Scrolling.started += instance.OnScrolling;
             @Scrolling.performed += instance.OnScrolling;
             @Scrolling.canceled += instance.OnScrolling;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -506,6 +532,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Scrolling.started -= instance.OnScrolling;
             @Scrolling.performed -= instance.OnScrolling;
             @Scrolling.canceled -= instance.OnScrolling;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -537,5 +566,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInventory(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
         void OnScrolling(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
     }
 }
