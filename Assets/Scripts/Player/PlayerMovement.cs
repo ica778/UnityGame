@@ -182,7 +182,7 @@ public class PlayerMovement : NetworkBehaviour {
 
     private void HandlePlayerMovement() {
         Transform playerCamera = PlayerCameraController.LocalInstance.GetCameraTransform();
-        moveVector = GameInput.Instance.GetMoveForward() * playerCamera.forward + GameInput.Instance.GetMoveRight() * playerCamera.right;
+        moveVector = GameInput.Instance.GetMoveVector().y * playerCamera.forward + GameInput.Instance.GetMoveVector().x * playerCamera.right;
         moveVector.y = 0f;
         moveVector.Normalize();
 

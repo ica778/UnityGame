@@ -61,10 +61,10 @@ public class PlayerCameraController : NetworkBehaviour {
     }
 
     private void HandleCameraMovement() {
-        mouseX -= GameInput.Instance.GetMouseY() * lookSensitivity;
+        mouseX -= GameInput.Instance.GetLookY() * lookSensitivity;
         mouseX = Mathf.Clamp(mouseX, -90f, 90f);
 
-        mouseY += GameInput.Instance.GetMouseX() * lookSensitivity;
+        mouseY += GameInput.Instance.GetLookX() * lookSensitivity;
 
         playerHeading = Quaternion.Euler(mouseX, mouseY, 0);
         transform.rotation = playerHeading;

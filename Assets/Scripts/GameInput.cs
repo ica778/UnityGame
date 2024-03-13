@@ -97,29 +97,25 @@ public class GameInput : MonoBehaviour {
         Cursor.visible = true;
     }
 
-    public float GetMouseX() {
+    // TODO: CONFIRM IF Time.deltaTime IS NEEDED
+    public float GetLookX() {
         if (Cursor.lockState == CursorLockMode.Locked) {
-            return playerInputActions.Player.MouseX.ReadValue<float>() * Time.deltaTime;
+            return playerInputActions.Player.Look.ReadValue<Vector2>().x * Time.deltaTime;
         }
         else {
             return 0f;
         }
     }
 
-    public float GetMouseY() {
+    public float GetLookY() {
         if (Cursor.lockState == CursorLockMode.Locked) {
-            return playerInputActions.Player.MouseY.ReadValue<float>() * Time.deltaTime;
+            return playerInputActions.Player.Look.ReadValue<Vector2>().y * Time.deltaTime;
         }
         else {
             return 0f;
         }
     }
-
-    public float GetMoveForward() {
-        return playerInputActions.Player.MoveForward.ReadValue<float>();
-    }
-
-    public float GetMoveRight() {
-        return playerInputActions.Player.MoveRight.ReadValue<float>();
+    public Vector2 GetMoveVector() {
+        return playerInputActions.Player.Move.ReadValue<Vector2>();
     }
 }
