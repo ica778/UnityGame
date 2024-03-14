@@ -44,19 +44,12 @@ public class PlayerCameraController : NetworkBehaviour {
         GameInput.Instance.LockCursor();
     }
 
-    private void Update() {
-        if (!IsOwner) {
-            return;
-        }
-
-        HandleCameraMovement();
-    }
-
     private void FixedUpdate() {
         if (!IsOwner) { 
             return; 
         }
 
+        HandleCameraMovement();
         FollowCameraTarget();
     }
 
