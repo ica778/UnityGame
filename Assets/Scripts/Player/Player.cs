@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour {
 
         Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
     }
-    /*
+    
     public override void OnStartClient() {
         if (!base.IsOwner) {
             return;
@@ -90,7 +90,7 @@ public class Player : NetworkBehaviour {
             //Debug.Log("Interactable Object Detected");
         }
     }
-    */
+    
     public PlayerMovement GetPlayerMovement() {
         return playerMovement;
     }

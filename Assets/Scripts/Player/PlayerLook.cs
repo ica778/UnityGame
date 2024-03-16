@@ -9,6 +9,8 @@ public class PlayerLook : NetworkBehaviour {
 
     [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform orientation;
+    [SerializeField] private GameObject virtualCamera;
+    private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     private float lookSensitivity = 20f;
 
@@ -24,6 +26,18 @@ public class PlayerLook : NetworkBehaviour {
         }
 
         Instance = this;
+    }
+
+    public override void OnStartClient() {
+        cinemachineVirtualCamera = virtualCamera.GetComponent<CinemachineVirtualCamera>();
+        if (!base.IsOwner) {
+            cinemachineVirtualCamera.Priority = 0;
+            return;
+        }
+        else {
+            cinemachineVirtualCamera.Priority = 10;
+        }
+
         GameInput.Instance.LockCursor();
     }
 
@@ -54,6 +68,15 @@ public class PlayerLook : NetworkBehaviour {
     public Quaternion GetCameraQuaternionOnlyYAxis() {
         return Quaternion.Euler(0, yRotation, 0);
     }
+
+    public Vector3 GetLookDirectionVector() {
+        return orientation.transform.forward;
+    }
+
+    public Transform GetCameraTransform() {
+        return gameObject.transform;
+    }
+
 }
 
 /*

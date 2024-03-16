@@ -53,8 +53,8 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 2476288708210685873}
   - {fileID: 1139247380235733064}
-  - {fileID: 8210041151956649488}
   - {fileID: 4569117884133962869}
+  - {fileID: 6763290468664997910}
   - {fileID: 473712988646955410}
   - {fileID: 2229417435511697251}
   - {fileID: 2567524272177143564}
@@ -392,8 +392,8 @@ GameObject:
   - component: {fileID: 4768512807192680011}
   - component: {fileID: 4465865589352571631}
   - component: {fileID: 1139247380235733064}
-  - component: {fileID: 8210041151956649488}
   - component: {fileID: 4569117884133962869}
+  - component: {fileID: 6763290468664997910}
   m_Layer: 8
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -469,7 +469,25 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   orientation: {fileID: 5573906998609297149}
---- !u!114 &8210041151956649488
+--- !u!114 &4569117884133962869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4893921292933606643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c267a9d57e7ca428354dba8e76fdd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 4792983976827827601}
+  _networkObjectCache: {fileID: 4792983976827827601}
+  playerCamera: {fileID: 8876804267105334431}
+  orientation: {fileID: 5573906998609297149}
+  virtualCamera: {fileID: 4688808042333508043}
+--- !u!114 &6763290468664997910
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -481,14 +499,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
-    Position: 0
-    Rotation: 0
+    Position: 1
+    Rotation: 1
     Scale: 0
   _interpolation: 2
   _extrapolation: 2
@@ -504,7 +522,7 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
-  _synchronizeRotation: 0
+  _synchronizeRotation: 1
   _rotationSnapping:
     X: 0
     Y: 0
@@ -514,23 +532,6 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!114 &4569117884133962869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4893921292933606643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1c267a9d57e7ca428354dba8e76fdd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 3
-  _addedNetworkObject: {fileID: 4792983976827827601}
-  _networkObjectCache: {fileID: 4792983976827827601}
-  playerCamera: {fileID: 8876804267105334431}
-  orientation: {fileID: 5573906998609297149}
 --- !u!1 &5391942852846886770
 GameObject:
   m_ObjectHideFlags: 0

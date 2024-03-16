@@ -34,6 +34,10 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void Update() {
+        if (!base.IsOwner) {
+            return;
+        }
+
         UpdateIsGroundedState();
         UpdateMoveDirection();
         if (isGrounded) {
@@ -44,6 +48,10 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void FixedUpdate() {
+        if (!base.IsOwner) {
+            return;
+        }
+
         MovePlayer();
     }
 
