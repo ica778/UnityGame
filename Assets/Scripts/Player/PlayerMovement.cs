@@ -113,6 +113,18 @@ public class PlayerMovement : NetworkBehaviour {
         }
     }
 
+    // TODO: implement these
+    public bool IsWalking() {
+        if (moveDirection != Vector3.zero) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsSprinting() {
+        return false;
+    }
+
     /*
     private enum MoveState {
         Walking,
