@@ -27,10 +27,21 @@ public class PlayerMovement : NetworkBehaviour {
     private RaycastHit slopeHit;
 
     private void Start() {
+        if (!Owner.IsLocalClient) {
+            return;
+        }
+
+        GameInput.Instance.LockCursor();
+        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.freezeRotation = true;
+    }
 
-        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+    public override void OnStartClient() {
+        if (!base.IsOwner) {
+            return;
+        }
     }
 
     private void Update() {
@@ -45,6 +56,9 @@ public class PlayerMovement : NetworkBehaviour {
         }
         UpdateSlopeMoveDirection();
         UpdateRigidBodyDrag();
+
+        // TODO: FIND A BETTER WAY TO ACTIVATE INTERPOLATION THAN THIS
+        rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     private void FixedUpdate() {
