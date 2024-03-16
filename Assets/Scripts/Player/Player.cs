@@ -21,7 +21,7 @@ public class Player : NetworkBehaviour {
 
         Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
     }
-
+    /*
     public override void OnStartClient() {
         if (!base.IsOwner) {
             return;
@@ -55,13 +55,13 @@ public class Player : NetworkBehaviour {
     private void DropItem() {
         ItemSO item = InventoryManager.Instance.GetSelectedItem(true);
         if (item) {
-            Vector3 dropItemPosition = cameraPosition.transform.position + (PlayerCameraController.LocalInstance.GetCameraTransform().forward * 1.5f);
-            if (!Physics.Raycast(cameraPosition.transform.position, PlayerCameraController.LocalInstance.GetCameraTransform().forward, 1.5f, walkableLayer)) {
-                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerCameraController.LocalInstance.GetCameraQuaternionOnlyYAxis());
+            Vector3 dropItemPosition = cameraPosition.transform.position + (PlayerLook.Instance.GetCameraTransform().forward * 1.5f);
+            if (!Physics.Raycast(cameraPosition.transform.position, PlayerLook.Instance.GetCameraTransform().forward, 1.5f, walkableLayer)) {
+                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerLook.Instance.GetCameraQuaternionOnlyYAxis());
             }
             else {
                 dropItemPosition = cameraPosition.transform.position;
-                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerCameraController.LocalInstance.GetCameraQuaternionOnlyYAxis());
+                DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerLook.Instance.GetCameraQuaternionOnlyYAxis());
             }
         }
     }
@@ -86,11 +86,11 @@ public class Player : NetworkBehaviour {
     }
 
     private void HighlightInteractableObject() {
-        if (Physics.Raycast(cameraPosition.position, PlayerCameraController.LocalInstance.GetLookDirectionVector(), out currentInteractableObject, interactDistance, interactableLayer)) {
+        if (Physics.Raycast(cameraPosition.position, PlayerLook.Instance.GetLookDirectionVector(), out currentInteractableObject, interactDistance, interactableLayer)) {
             //Debug.Log("Interactable Object Detected");
         }
     }
-
+    */
     public PlayerMovement GetPlayerMovement() {
         return playerMovement;
     }

@@ -6,7 +6,106 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour {
+    [SerializeField] private Transform groundPoint;
+    [SerializeField] private LayerMask walkableLayer;
+    [SerializeField] private Transform orientation;
+    private Rigidbody rigidBody;
 
+    private float groundDrag = 15f;
+
+    private float moveForceMultiplier = 200f;
+    private float moveForceNotGroundedMultiplier = 0.1f;
+
+    private float jumpForce = 15f;
+
+    private Vector3 moveDirection;
+    private Vector3 slopeMoveDirection;
+
+    private bool isGrounded;
+    private bool isOnSlope;
+
+    private RaycastHit slopeHit;
+
+    private void Start() {
+        rigidBody = GetComponent<Rigidbody>();
+        rigidBody.freezeRotation = true;
+
+        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+    }
+
+    private void Update() {
+        UpdateIsGroundedState();
+        UpdateMoveDirection();
+        if (isGrounded) {
+            UpdateIsOnSlopeState();
+        }
+        UpdateSlopeMoveDirection();
+        UpdateRigidBodyDrag();
+    }
+
+    private void FixedUpdate() {
+        MovePlayer();
+    }
+
+    private void UpdateMoveDirection() {
+        moveDirection = orientation.forward * GameInput.Instance.GetMoveVector().y + orientation.right * GameInput.Instance.GetMoveVector().x;
+    }
+
+    private void UpdateSlopeMoveDirection() {
+        slopeMoveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
+    }
+
+    private void UpdateRigidBodyDrag() {
+        if (isGrounded) {
+            rigidBody.drag = groundDrag;
+        }
+        else {
+            rigidBody.drag = 0;
+        }
+    }
+
+    private void UpdateIsGroundedState() {
+        isGrounded = Physics.CheckSphere(groundPoint.position, 0.4f, walkableLayer);
+    }
+
+    private void UpdateIsOnSlopeState() {
+        if (Physics.Raycast(groundPoint.position, Vector3.down, out slopeHit, 0.4f, walkableLayer)) {
+            if (slopeHit.normal != Vector3.up) {
+                isOnSlope = true;
+                return;
+            }
+            else {
+                isOnSlope = false;
+                return;
+            }
+        }
+        isOnSlope = false;
+    }
+
+    private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
+        Jump();
+    }
+
+    private void Jump() {
+        if (isGrounded) {
+            rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0, rigidBody.velocity.z);
+            rigidBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private void MovePlayer() {
+        if (isGrounded && !isOnSlope) {
+            rigidBody.AddForce(moveDirection.normalized * moveForceMultiplier, ForceMode.Acceleration);
+        }
+        else if (isGrounded && isOnSlope) {
+            rigidBody.AddForce(slopeMoveDirection.normalized * moveForceMultiplier, ForceMode.Acceleration);
+        }
+        else if (!isGrounded) {
+            rigidBody.AddForce(moveDirection.normalized * moveForceMultiplier * moveForceNotGroundedMultiplier, ForceMode.Acceleration);
+        }
+    }
+
+    /*
     private enum MoveState {
         Walking,
         Sprinting,
@@ -73,7 +172,7 @@ public class PlayerMovement : NetworkBehaviour {
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
 
-        PlayerCameraController.LocalInstance.SetCameraTarget(cameraPosition);
+        PlayerLook.LocalInstance.SetCameraTarget(cameraPosition);
     }
 
     private void Update() {
@@ -181,18 +280,13 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void HandlePlayerMovement() {
-        Transform playerCamera = PlayerCameraController.LocalInstance.GetCameraTransform();
+        Transform playerCamera = PlayerLook.LocalInstance.GetCameraTransform();
         moveVector = GameInput.Instance.GetMoveVector().y * playerCamera.forward + GameInput.Instance.GetMoveVector().x * playerCamera.right;
         moveVector.y = 0f;
         moveVector.Normalize();
 
         if (isOnSlope) {
             moveVector = Vector3.ProjectOnPlane(moveVector, slopeHit.normal).normalized;
-            /*
-            if (playerRigidBody.velocity.y > 0f) {
-                playerRigidBody.AddForce(Vector3.down * 20f, ForceMode.Force);
-            }
-            */
         }
 
         playerRigidBody.useGravity = !isOnSlope;
@@ -291,4 +385,5 @@ public class PlayerMovement : NetworkBehaviour {
         Player player = PlayerManager.Instance.GetPlayer(playerId);
         player.GetPlayerMovement().ToggleRigidBodyForCrouchState();
     }
+    */
 }

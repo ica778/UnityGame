@@ -14,7 +14,7 @@ public class PlayerVisual : NetworkBehaviour {
 
         MakePlayerCharacterInvisibleToOwnCamera();
 
-        transform.rotation = PlayerCameraController.LocalInstance.GetCameraQuaternionOnlyYAxis();
+        transform.rotation = PlayerLook.Instance.GetCameraQuaternionOnlyYAxis();
     }
 
     private void MakePlayerCharacterInvisibleToOwnCamera() {

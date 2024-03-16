@@ -29,7 +29,7 @@ public class PlayerAnimator : NetworkBehaviour {
             return;
         }
 
-        animator.SetBool(IS_WALKING, playerMovement.IsWalking());
-        animator.SetBool(IS_SPRINTING, playerMovement.IsSprinting());
+        //animator.SetBool(IS_WALKING, playerMovement.IsWalking());
+        //animator.SetBool(IS_SPRINTING, playerMovement.IsSprinting());
     }
 }
