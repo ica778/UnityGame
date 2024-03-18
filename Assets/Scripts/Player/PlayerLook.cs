@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerLook : NetworkBehaviour {
     public static PlayerLook Instance { get; private set; }
 
-    [SerializeField] private Transform playerCamera;
+    [SerializeField] private Transform playerCameraHolder;
     [SerializeField] private Transform orientation;
     [SerializeField] private GameObject virtualCamera;
     private CinemachineVirtualCamera cinemachineVirtualCamera;
@@ -61,7 +61,7 @@ public class PlayerLook : NetworkBehaviour {
     }
 
     private void RotateCamera() {
-        playerCamera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
+        playerCameraHolder.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.transform.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
@@ -70,11 +70,11 @@ public class PlayerLook : NetworkBehaviour {
     }
 
     public Vector3 GetLookDirectionVector() {
-        return orientation.transform.forward;
+        return playerCameraHolder.transform.forward;
     }
 
     public Transform GetCameraTransform() {
-        return gameObject.transform;
+        return playerCameraHolder.transform;
     }
 
 }

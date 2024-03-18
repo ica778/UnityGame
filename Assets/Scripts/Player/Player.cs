@@ -7,7 +7,7 @@ using static UnityEditor.Progress;
 public class Player : NetworkBehaviour {
 
     [SerializeField] private GameObject playerCharacter;
-    [SerializeField] private Transform cameraPosition;
+    [SerializeField] private Transform playerCameraHolder;
     [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private LayerMask walkableLayer;
 
@@ -55,12 +55,12 @@ public class Player : NetworkBehaviour {
     private void DropItem() {
         ItemSO item = InventoryManager.Instance.GetSelectedItem(true);
         if (item) {
-            Vector3 dropItemPosition = cameraPosition.transform.position + (PlayerLook.Instance.GetCameraTransform().forward * 1.5f);
-            if (!Physics.Raycast(cameraPosition.transform.position, PlayerLook.Instance.GetCameraTransform().forward, 1.5f, walkableLayer)) {
+            Vector3 dropItemPosition = PlayerLook.Instance.GetCameraTransform().position + (PlayerLook.Instance.GetLookDirectionVector() * 1.5f);
+            if (!Physics.Raycast(PlayerLook.Instance.GetCameraTransform().position, PlayerLook.Instance.GetLookDirectionVector(), 1.5f, walkableLayer)) {
                 DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerLook.Instance.GetCameraQuaternionOnlyYAxis());
             }
             else {
-                dropItemPosition = cameraPosition.transform.position;
+                dropItemPosition = PlayerLook.Instance.GetCameraTransform().position;
                 DropItemServerRpc(item.GetGroundLootPrefab(), dropItemPosition, PlayerLook.Instance.GetCameraQuaternionOnlyYAxis());
             }
         }
@@ -86,7 +86,7 @@ public class Player : NetworkBehaviour {
     }
 
     private void HighlightInteractableObject() {
-        if (Physics.Raycast(cameraPosition.position, PlayerLook.Instance.GetLookDirectionVector(), out currentInteractableObject, interactDistance, interactableLayer)) {
+        if (Physics.Raycast(PlayerLook.Instance.GetCameraTransform().position, PlayerLook.Instance.GetLookDirectionVector(), out currentInteractableObject, interactDistance, interactableLayer)) {
             //Debug.Log("Interactable Object Detected");
         }
     }
