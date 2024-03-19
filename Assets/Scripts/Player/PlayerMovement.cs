@@ -27,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour {
     private float maxCrouchSpeed = 3f;
     private MoveState currentMoveState = MoveState.Walking;
     private bool isJumping = false;
-    private float jumpTimerCooldown = 0.5f;
+    private float jumpTimerCooldown = 0.25f;
     private float jumpTimer;
 
     private float groundDrag = 15f;
@@ -40,7 +40,11 @@ public class PlayerMovement : NetworkBehaviour {
     private Vector3 slopeMoveDirection;
 
     private bool isGrounded;
-    private bool isOnSlope;
+    private bool isOnWalkableAngle;
+    private float maxWalkableAngle = 45f;
+    // MAKE SURE THESE TWO FLOATS ARE THE SAME, MAYBE COMBINE THEM LATER ON
+    private float isGroundedRaycastRange = 0.4f;
+    private float walkableAngleRaycastRange = 0.4f;
     private RaycastHit slopeHit;
 
     private float stepRaycastDistance = 0.4f;
@@ -73,7 +77,7 @@ public class PlayerMovement : NetworkBehaviour {
 
         UpdateIsGroundedState();
         UpdateMoveDirection();
-        UpdateIsOnSlopeState();
+        UpdateIsOnWalkableAngleState();
         UpdateIsJumpingState();
         UpdateSlopeMoveDirection();
         UpdateRigidBodyDrag();
@@ -89,7 +93,7 @@ public class PlayerMovement : NetworkBehaviour {
             return;
         }
 
-        ToggleGravityIfOnSlope();
+        ToggleGravityIfOnWalkableAngle();
         MovePlayer();
         if (moveDirection != Vector3.zero) {
             ClimbStep();
@@ -106,7 +110,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void UpdateRigidBodyDrag() {
-        if (isGrounded && !isJumping) {
+        if (isOnWalkableAngle && !isJumping) {
             rigidBody.drag = groundDrag;
         }
         else {
@@ -115,21 +119,22 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void UpdateIsGroundedState() {
-        isGrounded = Physics.CheckSphere(groundPoint.position, 0.4f, walkableLayer);
+        isGrounded = Physics.CheckSphere(groundPoint.position, isGroundedRaycastRange, walkableLayer);
     }
 
-    private void UpdateIsOnSlopeState() {
-        if (Physics.Raycast(groundPoint.position, Vector3.down, out slopeHit, 0.4f, walkableLayer)) {
-            if (slopeHit.normal != Vector3.up) {
-                isOnSlope = true;
+    private void UpdateIsOnWalkableAngleState() {
+        if (Physics.Raycast(groundPoint.position, Vector3.down, out slopeHit, walkableAngleRaycastRange, walkableLayer)) {
+            float angleOfGround = Vector3.Angle(Vector3.up, slopeHit.normal);
+            if (angleOfGround <= maxWalkableAngle) {
+                isOnWalkableAngle = true;
                 return;
             }
             else {
-                isOnSlope = false;
+                isOnWalkableAngle = false;
                 return;
             }
         }
-        isOnSlope = false;
+        isOnWalkableAngle = false;
     }
 
     private void UpdateIsJumpingState() {
@@ -159,7 +164,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void Jump() {
-        if (isGrounded) {
+        if (isOnWalkableAngle && isGrounded) {
             isJumping = true;
             isGrounded = false;
             rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0, rigidBody.velocity.z);
@@ -168,15 +173,12 @@ public class PlayerMovement : NetworkBehaviour {
         }
     }
 
-    private void ToggleGravityIfOnSlope() {
-        rigidBody.useGravity = !isOnSlope;
+    private void ToggleGravityIfOnWalkableAngle() {
+        rigidBody.useGravity = !isOnWalkableAngle;
     }
 
     private void MovePlayer() {
-        if (isGrounded && !isOnSlope) {
-            rigidBody.AddForce(moveDirection.normalized * moveForceMultiplier, ForceMode.Acceleration);
-        }
-        else if (isGrounded && isOnSlope) {
+        if (isOnWalkableAngle && isGrounded) {
             rigidBody.AddForce(slopeMoveDirection.normalized * moveForceMultiplier, ForceMode.Acceleration);
         }
         else if (!isGrounded) {
