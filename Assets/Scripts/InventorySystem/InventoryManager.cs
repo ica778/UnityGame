@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class InventoryManager : MonoBehaviour {
 
@@ -11,6 +13,11 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField] private int inventoryToolbarSize = 6;
 
     private int selectedSlotIndex;
+
+    public event EventHandler<OnSelectedItemChangedEventArgs> OnSelectedItemChanged;
+    public class OnSelectedItemChangedEventArgs : EventArgs { 
+        public MeshFilter meshFilter;
+    }
 
     private void Awake() {
         Instance = this;
@@ -49,6 +56,16 @@ public class InventoryManager : MonoBehaviour {
 
         inventorySlots[slotIndex].Select();
         selectedSlotIndex = slotIndex;
+        if (inventorySlots[selectedSlotIndex].GetComponentInChildren<InventoryItem>()) {
+            OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
+                meshFilter = GetSelectedItem(false).GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+            });
+        }
+        else {
+            OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
+                meshFilter = null
+            });
+        }
     }
 
     private void IncrementSelectedSlotIndex() {
@@ -90,6 +107,11 @@ public class InventoryManager : MonoBehaviour {
             InventoryItem currentInventoryItem = currentInventorySlot.GetComponentInChildren<InventoryItem>();
             if (!currentInventoryItem) {
                 SpawnNewItem(item, currentInventorySlot);
+                if (i == selectedSlotIndex) {
+                    OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
+                        meshFilter = item.GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+                    });
+                }
                 return true;
             }
         }
@@ -111,6 +133,9 @@ public class InventoryManager : MonoBehaviour {
                 inventoryItemInSlot.SetCount(inventoryItemInSlot.GetCount() - 1);
                 if (inventoryItemInSlot.GetCount() <= 0) {
                     Destroy(inventoryItemInSlot.gameObject);
+                    OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
+                        meshFilter = null
+                    });
                 }
                 else {
                     inventoryItemInSlot.UpdateCount();

@@ -18,4 +18,8 @@ public class GroundLoot : MonoBehaviour {
     public int GetCount() {
         return count;
     }
+
+    public MeshFilter GetMeshFilter() {
+        return transform.GetComponentInChildren<MeshFilter>();
+    }
 }
