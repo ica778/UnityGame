@@ -87,10 +87,16 @@ public class Player : NetworkBehaviour {
         Spawn(item);
     }
 
+    // TODO: fix potential duplication bug if more than one player pick up same object at same time. potential fix is make pickup item server authoritative.
+    // This solution will introduce client side lag, but can also do client and server authoritative, and when the server authoritative part runs it can override
+    // the client side. Basically this will mean if you try to dupe item by having more than one player pick up item at same time, it will temporarily show the items
+    // to other players, but will then remove item when server authoritative side runs. Might also want to make changes to drop item so players cant pickup and then
+    // immediately drop before server authoritative part runs to get past our anti item dupe solution.
     private void PickupGroundLoot(GroundLoot groundLoot) {
         bool addedItemSuccessfully = InventoryManager.Instance.AddItem(groundLoot.GetItem());
 
         if (addedItemSuccessfully) {
+            groundLoot.gameObject.SetActive(false);
             DespawnItemObjectServerRpc(currentInteractableObject.transform.gameObject);
         }
     }
@@ -110,9 +116,6 @@ public class Player : NetworkBehaviour {
         return playerMovement;
     }
 
-
-    // TODO: make an item database so you can send the item index over the rpc and then update meshes by getting item at that index, then fix the duplication bug that
-    // happens when you pick up a groundloot by spamming e very fast
     private void ShowEquippedItem(InventoryManager.OnSelectedItemChangedEventArgs e) {
         if (e.idOfItemMesh == -1) {
             equippedItemHolder.GetComponent<MeshFilter>().mesh = null;
@@ -124,10 +127,11 @@ public class Player : NetworkBehaviour {
         // THIS IS UNITY'S OFFICIAL WAY OF CHANGING MESH
         Mesh mesh = ItemDatabase.Instance.GetMesh(e.idOfItemMesh);
         equippedItemHolder.GetComponent<MeshFilter>().mesh = mesh;
-        ShowEquippedItemServerRpc(base.ObjectId, e.idOfItemMesh);
 
         Material material = ItemDatabase.Instance.GetMaterial(e.idOfItemMesh);
         equippedItemHolder.GetComponent<MeshRenderer>().material = material;
+
+        ShowEquippedItemServerRpc(base.ObjectId, e.idOfItemMesh);
     }
 
     public void SetEquippedItemMesh(int idOfItemToShow) {
