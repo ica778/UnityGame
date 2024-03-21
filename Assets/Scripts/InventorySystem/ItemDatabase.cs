@@ -31,4 +31,8 @@ public class ItemDatabase : MonoBehaviour {
     public Mesh GetMesh(int ID) {
         return groundLootList[ID].GetComponentInChildren<MeshFilter>().sharedMesh;
     }
+
+    public Material GetMaterial(int ID) {
+        return groundLootList[ID].GetComponentInChildren<MeshRenderer>().sharedMaterial;
+    }
 }

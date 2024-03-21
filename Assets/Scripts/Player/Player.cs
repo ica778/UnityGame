@@ -116,6 +116,7 @@ public class Player : NetworkBehaviour {
     private void ShowEquippedItem(InventoryManager.OnSelectedItemChangedEventArgs e) {
         if (e.idOfItemMesh == -1) {
             equippedItemHolder.GetComponent<MeshFilter>().mesh = null;
+            equippedItemHolder.GetComponent<MeshRenderer>().material = null;
             ShowEquippedItemServerRpc(base.ObjectId, -1);
             return;
         }
@@ -124,26 +125,31 @@ public class Player : NetworkBehaviour {
         Mesh mesh = ItemDatabase.Instance.GetMesh(e.idOfItemMesh);
         equippedItemHolder.GetComponent<MeshFilter>().mesh = mesh;
         ShowEquippedItemServerRpc(base.ObjectId, e.idOfItemMesh);
+
+        Material material = ItemDatabase.Instance.GetMaterial(e.idOfItemMesh);
+        equippedItemHolder.GetComponent<MeshRenderer>().material = material;
     }
 
-    public void SetEquippedItemMesh(int idOfItemToShowMeshOf) {
-        if (idOfItemToShowMeshOf == -1) {
+    public void SetEquippedItemMesh(int idOfItemToShow) {
+        if (idOfItemToShow == -1) {
             equippedItemHolder.GetComponent<MeshFilter>().mesh = null;
+            equippedItemHolder.GetComponent<MeshRenderer>().material = null;
         }
         else {
-            equippedItemHolder.GetComponent<MeshFilter>().mesh = ItemDatabase.Instance.GetMesh(idOfItemToShowMeshOf);
+            equippedItemHolder.GetComponent<MeshFilter>().mesh = ItemDatabase.Instance.GetMesh(idOfItemToShow);
+            equippedItemHolder.GetComponent<MeshRenderer>().material = ItemDatabase.Instance.GetMaterial(idOfItemToShow);
         }
     }
 
     
     [ServerRpc]
-    private void ShowEquippedItemServerRpc(int playerId, int idOfItemToShowMeshOf) {
-        ShowEquippedItemObserversRpc(playerId, idOfItemToShowMeshOf);
+    private void ShowEquippedItemServerRpc(int playerId, int idOfItemToShow) {
+        ShowEquippedItemObserversRpc(playerId, idOfItemToShow);
     }
 
     [ObserversRpc(ExcludeOwner = true)]
-    private void ShowEquippedItemObserversRpc(int playerId, int idOfItemToShowMeshOf) {
+    private void ShowEquippedItemObserversRpc(int playerId, int idOfItemToShow) {
         Player player = PlayerManager.Instance.GetPlayer(playerId);
-        player.SetEquippedItemMesh(idOfItemToShowMeshOf);
+        player.SetEquippedItemMesh(idOfItemToShow);
     }
 }
