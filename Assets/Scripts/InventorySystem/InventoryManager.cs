@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour {
 
     public event EventHandler<OnSelectedItemChangedEventArgs> OnSelectedItemChanged;
     public class OnSelectedItemChangedEventArgs : EventArgs { 
-        public MeshFilter meshFilter;
+        public int idOfItemMesh;
     }
 
     private void Awake() {
@@ -58,12 +58,14 @@ public class InventoryManager : MonoBehaviour {
         selectedSlotIndex = slotIndex;
         if (inventorySlots[selectedSlotIndex].GetComponentInChildren<InventoryItem>()) {
             OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
-                meshFilter = GetSelectedItem(false).GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+                //meshFilter = GetSelectedItem(false).GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+                idOfItemMesh = GetSelectedItem(false).GetID()
             });
         }
         else {
             OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
-                meshFilter = null
+                //meshFilter = null
+                idOfItemMesh = -1
             });
         }
     }
@@ -109,7 +111,8 @@ public class InventoryManager : MonoBehaviour {
                 SpawnNewItem(item, currentInventorySlot);
                 if (i == selectedSlotIndex) {
                     OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
-                        meshFilter = item.GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+                        //meshFilter = item.GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
+                        idOfItemMesh = item.GetID()
                     });
                 }
                 return true;
@@ -134,7 +137,8 @@ public class InventoryManager : MonoBehaviour {
                 if (inventoryItemInSlot.GetCount() <= 0) {
                     Destroy(inventoryItemInSlot.gameObject);
                     OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
-                        meshFilter = null
+                        //meshFilter = null
+                        idOfItemMesh = -1
                     });
                 }
                 else {

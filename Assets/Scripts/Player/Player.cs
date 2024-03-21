@@ -1,3 +1,4 @@
+using FishNet.Demo.AdditiveScenes;
 using FishNet.Object;
 using System;
 using System.Collections;
@@ -109,15 +110,40 @@ public class Player : NetworkBehaviour {
         return playerMovement;
     }
 
+
+    // TODO: make an item database so you can send the item index over the rpc and then update meshes by getting item at that index, then fix the duplication bug that
+    // happens when you pick up a groundloot by spamming e very fast
     private void ShowEquippedItem(InventoryManager.OnSelectedItemChangedEventArgs e) {
-        if (!e.meshFilter) {
-            equippedItemHolder.GetComponent<MeshFilter>().sharedMesh = null;
+        if (e.idOfItemMesh == -1) {
+            equippedItemHolder.GetComponent<MeshFilter>().mesh = null;
+            ShowEquippedItemServerRpc(base.ObjectId, -1);
             return;
         }
 
         // THIS IS UNITY'S OFFICIAL WAY OF CHANGING MESH
-        Mesh mesh = e.meshFilter.sharedMesh;
-        Mesh mesh2 = Instantiate(mesh);
-        equippedItemHolder.GetComponent<MeshFilter>().sharedMesh = mesh2;
+        Mesh mesh = ItemDatabase.Instance.GetMesh(e.idOfItemMesh);
+        equippedItemHolder.GetComponent<MeshFilter>().mesh = mesh;
+        ShowEquippedItemServerRpc(base.ObjectId, e.idOfItemMesh);
+    }
+
+    public void SetEquippedItemMesh(int idOfItemToShowMeshOf) {
+        if (idOfItemToShowMeshOf == -1) {
+            equippedItemHolder.GetComponent<MeshFilter>().mesh = null;
+        }
+        else {
+            equippedItemHolder.GetComponent<MeshFilter>().mesh = ItemDatabase.Instance.GetMesh(idOfItemToShowMeshOf);
+        }
+    }
+
+    
+    [ServerRpc]
+    private void ShowEquippedItemServerRpc(int playerId, int idOfItemToShowMeshOf) {
+        ShowEquippedItemObserversRpc(playerId, idOfItemToShowMeshOf);
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    private void ShowEquippedItemObserversRpc(int playerId, int idOfItemToShowMeshOf) {
+        Player player = PlayerManager.Instance.GetPlayer(playerId);
+        player.SetEquippedItemMesh(idOfItemToShowMeshOf);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundLoot : MonoBehaviour {
+    [SerializeField] private int ID;
     [SerializeField] private ItemSO item;
 
     private int count;
@@ -19,7 +20,7 @@ public class GroundLoot : MonoBehaviour {
         return count;
     }
 
-    public MeshFilter GetMeshFilter() {
-        return transform.GetComponentInChildren<MeshFilter>();
+    public int GetID() {
+        return ID;
     }
 }
