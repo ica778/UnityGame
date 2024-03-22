@@ -84,7 +84,7 @@ public class Player : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void DropItemServerRpc(GameObject groundLootItemToDrop, Vector3 dropItemPosition, Quaternion quaternion) {
         GameObject item = Instantiate(groundLootItemToDrop, dropItemPosition, quaternion);
-        Spawn(item);
+        ServerManager.Spawn(item);
     }
 
     // TODO: fix potential duplication bug if more than one player pick up same object at same time. potential fix is make pickup item server authoritative.
