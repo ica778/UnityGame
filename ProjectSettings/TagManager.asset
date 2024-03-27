@@ -14,7 +14,7 @@ TagManager:
   - walkableLayer
   - interactableLayer
   - playerLayer
-  - 
+  - dungeonValidatorColliderLayer
   - 
   - 
   - 
