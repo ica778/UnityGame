@@ -4,45 +4,35 @@ using UnityEngine;
 
 public class DungeonValidator : MonoBehaviour {
     [SerializeField] private LayerMask dungeonValidatorColliderLayer;
-    private BoxCollider[] boxColliders;
+    [SerializeField] private BoxCollider[] boxColliders;
 
-    private void Awake() {
-        boxColliders = GetComponentsInChildren<BoxCollider>();
-    }
-
-    public bool CheckIfCollidersOverlapWithOtherColliders() {
+    public bool CheckIfValid() {
         DisableColliders();
         foreach (BoxCollider collider in boxColliders) {
-            // NOTE: the 5.5f is the distance from the middle of the new room object which is 5f and 0.5f which is distance from middle of current doorway to outside
-            if (Physics.CheckBox(collider.bounds.center + (collider.transform.forward * 5.51f), collider.size, collider.transform.rotation, dungeonValidatorColliderLayer)) {
+            collider.gameObject.SetActive(true);
+            Vector3 center = collider.bounds.center;
+            Vector3 extents = collider.bounds.extents;
+            Quaternion direction = collider.transform.rotation;
+            collider.gameObject.SetActive(false);
+
+            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonValidatorColliderLayer);
+            if (overlappingColliders.Length != 0) {
                 EnableColliders();
-                return true;
+                return false;
             }
         }
         EnableColliders();
-        return false;
-        /*
-        DisableColliders();
-        foreach (BoxCollider collider in boxColliders) {
-            // NOTE: the 5.5f is the distance from the middle of the new room object which is 5f and 0.5f which is distance from middle of current doorway to outside
-            if (Physics.CheckBox(collider.bounds.center + (collider.transform.forward * 5.51f), collider.size, collider.transform.rotation, dungeonValidatorColliderLayer)) {
-                EnableColliders();
-                return true;
-            }
-        }
-        EnableColliders();
-        return false;
-        */
+        return true;
     }
 
     public void DisableColliders() {
-        foreach (Collider collider in boxColliders) {
+        foreach (BoxCollider collider in boxColliders) {
             collider.gameObject.SetActive(false);
         }
     }
 
     public void EnableColliders() {
-        foreach (Collider collider in boxColliders) {
+        foreach (BoxCollider collider in boxColliders) {
             collider.gameObject.SetActive(true);
         }
     }

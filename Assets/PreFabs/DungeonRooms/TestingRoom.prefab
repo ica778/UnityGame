@@ -1779,7 +1779,7 @@ Transform:
   m_GameObject: {fileID: 5656859293701748111}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1805,7 +1805,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 21, y: 8, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 3.5, z: 0}
 --- !u!1 &5974170688032812073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1854,6 +1854,8 @@ MonoBehaviour:
   dungeonValidatorColliderLayer:
     serializedVersion: 2
     m_Bits: 512
+  boxColliders:
+  - {fileID: 5012157210891116190}
 --- !u!1 &6091818276398816202
 GameObject:
   m_ObjectHideFlags: 0

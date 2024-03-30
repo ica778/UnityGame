@@ -2173,6 +2173,8 @@ MonoBehaviour:
   dungeonValidatorColliderLayer:
     serializedVersion: 2
     m_Bits: 512
+  boxColliders:
+  - {fileID: 437355775107521894}
 --- !u!1 &8027611922863618927
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class DungeonGenerator : MonoBehaviour {
 
     private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
 
-    private int maxRooms = 3;
+    private int maxRooms = 30;
     private int currentRoomCount = 0;
 
 
@@ -24,25 +24,22 @@ public class DungeonGenerator : MonoBehaviour {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
 
             GameObject newRoomObject = Instantiate(
-                //rooms[Random.Range(0, rooms.Length)], 
-                rooms[2],
+                rooms[Random.Range(0, rooms.Length)], 
+                //rooms[1],
                 currentRoomEntrance.transform.position,
                 currentRoomEntrance.transform.rotation
                 );
             Room newRoom = newRoomObject.GetComponent<Room>();
-
-            //newRoom.MoveRoomInFrontOfOpening(currentRoomEntrance.transform);
             newRoom.CoupleRoomToCouplingPoint(currentRoomEntrance.GetDoorwayCollider().transform);
 
             currentRoomEntrance.GetParentRoom().GetDungeonValidator().DisableColliders();
-            /*
-            if (!newRoom.CheckIfRoomPlacementValid()) {
-                Debug.Log("TESTING NOT VALID PLACEMENT " + currentRoomEntrance.transform.position);
+            if (!newRoom.GetDungeonValidator().CheckIfValid()) {
+                // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
+                newRoomObject.SetActive(false);
                 Destroy(newRoomObject);
                 currentRoomEntrance.GetParentRoom().GetDungeonValidator().EnableColliders();
                 continue;
             }
-            */
             currentRoomEntrance.GetParentRoom().GetDungeonValidator().EnableColliders();
 
             currentRoomCount++;
