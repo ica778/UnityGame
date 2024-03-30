@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Room : MonoBehaviour {
-    [SerializeField] private RoomEntrance[] roomEntrances;
+    [SerializeField] private RoomConnectorHandler[] roomEntrances;
+    [SerializeField] private RoomConnectorHandler roomSpawnEntrance;
     [SerializeField] private DungeonValidator dungeonValidator;
 
     private void Start() {
     }
 
-    public RoomEntrance[] GetRoomEntrances() {
+    public RoomConnectorHandler[] GetRoomConnectors() {
         return roomEntrances;
     }
 
-    public RoomEntrance GetRoomEntrance(int index) {
+    public RoomConnectorHandler GetRoomConnector(int index) {
         return roomEntrances[index];
     }
 
@@ -23,5 +24,11 @@ public class Room : MonoBehaviour {
 
     public DungeonValidator GetDungeonValidator() {
         return dungeonValidator;
+    }
+
+    public void MoveRoomInFrontOfOpening(Transform openingTransform) {
+        Vector3 parentPosition = transform.position;
+        Vector3 childPosition = roomSpawnEntrance.transform.position;
+        transform.position += parentPosition - childPosition;
     }
 }

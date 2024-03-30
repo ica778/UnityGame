@@ -1262,7 +1262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6122705830018459302}
-  - component: {fileID: 3602076913795071056}
+  - component: {fileID: 2585002763284337333}
   m_Layer: 0
   m_Name: RoomEntrance (Right)
   m_TagString: Untagged
@@ -1287,7 +1287,7 @@ Transform:
   - {fileID: 4623454689214371953}
   m_Father: {fileID: 7128480713991219027}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &3602076913795071056
+--- !u!114 &2585002763284337333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1296,11 +1296,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5370188823099317253}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
+  m_Script: {fileID: 11500000, guid: d3cef536b9f08574784c17aaffb1667a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entranceway: {fileID: 4740859389923174262}
   wall: {fileID: 6222105545699827563}
+  roomConnectorType: 0
 --- !u!1 &5564360432900947117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,7 +1345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7744436191795901145}
-  - component: {fileID: 1560558943493601915}
+  - component: {fileID: 8677880124381483948}
   m_Layer: 0
   m_Name: RoomEntrance (Up)
   m_TagString: Untagged
@@ -1369,7 +1370,7 @@ Transform:
   - {fileID: 1175594907712383297}
   m_Father: {fileID: 7128480713991219027}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1560558943493601915
+--- !u!114 &8677880124381483948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1378,11 +1379,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5702681848450150095}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
+  m_Script: {fileID: 11500000, guid: d3cef536b9f08574784c17aaffb1667a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entranceway: {fileID: 6971411489498587556}
   wall: {fileID: 1631188925068980865}
+  roomConnectorType: 0
 --- !u!1 &6222105545699827563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,7 +1494,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6099438790503013952}
-  - component: {fileID: 2379081127205385834}
+  - component: {fileID: 7492317517970831160}
   m_Layer: 0
   m_Name: RoomEntrance (Left)
   m_TagString: Untagged
@@ -1517,7 +1519,7 @@ Transform:
   - {fileID: 3180793502210490014}
   m_Father: {fileID: 7128480713991219027}
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
---- !u!114 &2379081127205385834
+--- !u!114 &7492317517970831160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1526,11 +1528,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7127171257084543373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
+  m_Script: {fileID: 11500000, guid: d3cef536b9f08574784c17aaffb1667a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entranceway: {fileID: 6831672988007310948}
   wall: {fileID: 1873081759793571476}
+  roomConnectorType: 0
 --- !u!1 &7290093036521048728
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,9 +1901,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomEntrances:
-  - {fileID: 1560558943493601915}
-  - {fileID: 2379081127205385834}
-  - {fileID: 3602076913795071056}
+  - {fileID: 8677880124381483948}
+  - {fileID: 7492317517970831160}
+  - {fileID: 2585002763284337333}
+  roomSpawnEntrance: {fileID: 0}
   dungeonValidator: {fileID: 4351321663871031584}
 --- !u!1 &7847304465660323392
 GameObject:
@@ -1928,7 +1932,7 @@ Transform:
   m_GameObject: {fileID: 7847304465660323392}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.5000005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1981,7 +1985,7 @@ Transform:
   m_GameObject: {fileID: 7886770605578885202}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.5000005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

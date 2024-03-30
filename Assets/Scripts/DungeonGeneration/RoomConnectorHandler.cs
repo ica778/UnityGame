@@ -2,10 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomEntrance : MonoBehaviour {
+public class RoomConnectorHandler : MonoBehaviour {
+    public enum RoomConnectorType {
+        Doorway,
+        SpawnEntranceDoorway,
+    }
+
     [SerializeField] private GameObject entranceway;
     [SerializeField] private GameObject wall;
+    [SerializeField] private RoomConnectorType roomConnectorType = RoomConnectorType.Doorway;
     private Room parentRoom;
+
 
     private void Awake() {
         parentRoom = GetComponentInParent<Room>();
@@ -31,5 +38,9 @@ public class RoomEntrance : MonoBehaviour {
 
     public Room GetParentRoom() {
         return parentRoom;
+    }
+
+    public RoomConnectorType GetRoomConnectorType() {
+        return roomConnectorType;
     }
 }

@@ -603,12 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c312f017e78625489ff27d460a08ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomEntrances:
-  - {fileID: 560186174205610493}
-  - {fileID: 4495179673410711818}
-  - {fileID: 6345970722477950816}
-  - {fileID: 2308221607019829530}
-  validator: {fileID: 6436788162467032595}
+  roomEntrances: []
   dungeonValidator: {fileID: 6810429153983026446}
 --- !u!1 &1552778967315056469
 GameObject:
@@ -1073,7 +1068,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6512595377692557170}
-  - component: {fileID: 560186174205610493}
   m_Layer: 0
   m_Name: RoomEntrance (Up)
   m_TagString: Untagged
@@ -1098,20 +1092,6 @@ Transform:
   - {fileID: 4186017964552143413}
   m_Father: {fileID: 8250153345302352872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &560186174205610493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3205714819963324469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entranceway: {fileID: 4584987651034741735}
-  wall: {fileID: 1375360807508392181}
 --- !u!1 &3401408780199640921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,7 +1772,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 729409379342032737}
-  - component: {fileID: 2308221607019829530}
   m_Layer: 0
   m_Name: RoomEntrance (Down)
   m_TagString: Untagged
@@ -1817,20 +1796,6 @@ Transform:
   - {fileID: 2342648285799857046}
   m_Father: {fileID: 8250153345302352872}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &2308221607019829530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6999391249629742298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entranceway: {fileID: 1055969039314626405}
-  wall: {fileID: 291980594595428636}
 --- !u!1 &7248784460008306226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,7 +1805,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2562158634731398150}
-  - component: {fileID: 4495179673410711818}
   m_Layer: 0
   m_Name: RoomEntrance (Left)
   m_TagString: Untagged
@@ -1865,20 +1829,6 @@ Transform:
   - {fileID: 7070365773433302490}
   m_Father: {fileID: 8250153345302352872}
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
---- !u!114 &4495179673410711818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7248784460008306226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entranceway: {fileID: 874350899733549997}
-  wall: {fileID: 4279916769746125815}
 --- !u!1 &7790526214221982700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,7 +2065,7 @@ Transform:
   m_GameObject: {fileID: 8083450498647788515}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.5000005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2141,7 +2091,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 10, y: 8, z: 10}
-  m_Center: {x: 0, y: 3.5, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8381810169776160994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2361,7 +2311,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1615145485030276317}
-  - component: {fileID: 6345970722477950816}
   m_Layer: 0
   m_Name: RoomEntrance (Right)
   m_TagString: Untagged
@@ -2386,20 +2335,6 @@ Transform:
   - {fileID: 3209511219320391183}
   m_Father: {fileID: 8250153345302352872}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &6345970722477950816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8507519260205898017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b407bf4afe8210b4a9bb0003afa9bc94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entranceway: {fileID: 2209660169097454136}
-  wall: {fileID: 3401408780199640921}
 --- !u!1 &9131445682009664074
 GameObject:
   m_ObjectHideFlags: 0
