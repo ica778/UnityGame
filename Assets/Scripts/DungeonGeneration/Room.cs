@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Room : MonoBehaviour {
     [SerializeField] private RoomConnectorHandler[] roomEntrances;
-    [SerializeField] private RoomConnectorHandler roomSpawnEntrance;
+    [SerializeField] private RoomConnectorHandler roomSpawnConnector;
     [SerializeField] private DungeonValidator dungeonValidator;
 
     private void Start() {
@@ -28,7 +28,13 @@ public class Room : MonoBehaviour {
 
     public void MoveRoomInFrontOfOpening(Transform openingTransform) {
         Vector3 parentPosition = transform.position;
-        Vector3 childPosition = roomSpawnEntrance.transform.position;
+        Vector3 childPosition = openingTransform.transform.position;
         transform.position += parentPosition - childPosition;
+    }
+
+    public void CoupleRoomToCouplingPoint(Transform otherRoomCouplingPoint) {
+        Debug.Log("TESTING SPAWNED ROOM " + roomSpawnConnector.GetDoorwayCollider().transform.position);
+        Debug.Log("TESTING OLD ROOM " + otherRoomCouplingPoint.transform.position);
+        transform.position += otherRoomCouplingPoint.transform.position - roomSpawnConnector.GetDoorwayCollider().transform.position;
     }
 }

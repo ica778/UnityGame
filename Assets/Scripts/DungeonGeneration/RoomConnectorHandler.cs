@@ -10,12 +10,18 @@ public class RoomConnectorHandler : MonoBehaviour {
 
     [SerializeField] private GameObject entranceway;
     [SerializeField] private GameObject wall;
+    [SerializeField] private BoxCollider doorwayCollider;
     [SerializeField] private RoomConnectorType roomConnectorType = RoomConnectorType.Doorway;
     private Room parentRoom;
 
 
+
     private void Awake() {
         parentRoom = GetComponentInParent<Room>();
+    }
+
+    private void Start() {
+        
     }
 
     public void OpenEntrance() {
@@ -42,5 +48,9 @@ public class RoomConnectorHandler : MonoBehaviour {
 
     public RoomConnectorType GetRoomConnectorType() {
         return roomConnectorType;
+    }
+
+    public BoxCollider GetDoorwayCollider() {
+        return doorwayCollider;
     }
 }

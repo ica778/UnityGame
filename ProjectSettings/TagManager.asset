@@ -15,7 +15,7 @@ TagManager:
   - interactableLayer
   - playerLayer
   - dungeonValidatorColliderLayer
-  - 
+  - dungeonRoomOpeningColliderLayer
   - 
   - 
   - 

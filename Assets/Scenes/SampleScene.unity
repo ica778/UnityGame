@@ -6958,6 +6958,7 @@ MonoBehaviour:
   rooms:
   - {fileID: 7503301651407316013, guid: b7920f38cbcc15646b2009d5c9f05df0, type: 3}
   - {fileID: 4262248090721987254, guid: a57d2f0de1d238e409369c54a21e500a, type: 3}
+  - {fileID: 4477952955062550165, guid: e4f321e7b2c73964ead3ed01d9c01051, type: 3}
   entranceRoom: {fileID: 7503301651407316013, guid: 7a5afff7852d5ce409cc2da0ccf066a9,
     type: 3}
 --- !u!4 &1691064656

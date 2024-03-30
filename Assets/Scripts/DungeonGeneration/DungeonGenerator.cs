@@ -31,7 +31,8 @@ public class DungeonGenerator : MonoBehaviour {
                 );
             Room newRoom = newRoomObject.GetComponent<Room>();
 
-            newRoom.MoveRoomInFrontOfOpening(currentRoomEntrance.transform);
+            //newRoom.MoveRoomInFrontOfOpening(currentRoomEntrance.transform);
+            newRoom.CoupleRoomToCouplingPoint(currentRoomEntrance.GetDoorwayCollider().transform);
 
             currentRoomEntrance.GetParentRoom().GetDungeonValidator().DisableColliders();
             /*
