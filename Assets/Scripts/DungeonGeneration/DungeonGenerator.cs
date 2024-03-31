@@ -9,7 +9,7 @@ public class DungeonGenerator : MonoBehaviour {
 
     private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
 
-    private int maxRooms = 30;
+    private int maxRooms = 300;
     private int currentRoomCount = 0;
 
 
@@ -25,7 +25,7 @@ public class DungeonGenerator : MonoBehaviour {
 
             GameObject newRoomObject = Instantiate(
                 rooms[Random.Range(0, rooms.Length)], 
-                //rooms[1],
+                //rooms[0],
                 currentRoomEntrance.transform.position,
                 currentRoomEntrance.transform.rotation
                 );

@@ -14,8 +14,6 @@ public class RoomConnectorHandler : MonoBehaviour {
     [SerializeField] private RoomConnectorType roomConnectorType = RoomConnectorType.Doorway;
     private Room parentRoom;
 
-
-
     private void Awake() {
         parentRoom = GetComponentInParent<Room>();
     }

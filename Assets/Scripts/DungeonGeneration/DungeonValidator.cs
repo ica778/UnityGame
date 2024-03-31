@@ -12,11 +12,11 @@ public class DungeonValidator : MonoBehaviour {
             collider.gameObject.SetActive(true);
             Vector3 center = collider.bounds.center;
             Vector3 extents = collider.bounds.extents;
-            Quaternion direction = collider.transform.rotation;
             collider.gameObject.SetActive(false);
 
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonValidatorColliderLayer);
             if (overlappingColliders.Length != 0) {
+                Debug.Log("TESTING OVERLAPPING!!!");
                 EnableColliders();
                 return false;
             }
