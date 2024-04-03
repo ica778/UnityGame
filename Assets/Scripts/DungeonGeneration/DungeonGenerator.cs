@@ -19,7 +19,7 @@ public class DungeonGenerator : MonoBehaviour {
 
     private void Awake () {
         DungeonGeneration();
-        AddDoors();
+        ConnectRooms();
     }
 
     // TODO: make it cycle through all available rooms if one doesn't fit
@@ -27,46 +27,57 @@ public class DungeonGenerator : MonoBehaviour {
         GameObject entrance = Instantiate(entranceRoom, transform.position, Quaternion.identity);
         Room entranceRoomScript = entrance.GetComponent<Room>();
 
-
         foreach (RoomConnectorHandler i in entranceRoomScript.GetRoomConnectors()) {
             queue.Enqueue(i);
             connectors.Add(i);
         }
-        Debug.Log("TESTING " + queue.Count);
+        
         while (currentRoomCount < maxRooms && queue.Count > 0) {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
-            int roomID = Random.Range(0, rooms.Length);
-            //int roomID = 0;
-            Room roomPrefab = rooms[roomID].GetComponent<Room>();
-            Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(currentRoomEntrance);
-            
-            GameObject newRoomObject = Instantiate(
-                rooms[roomID],
-                //currentRoomEntrance.transform.position,
-                spawnRoomPosition,
-                currentRoomEntrance.transform.rotation
-                );
-            Room newRoom = newRoomObject.GetComponent<Room>();
-            if (!newRoom.GetDungeonValidator().CheckIfValid()) {
+
+            Room room = SpawnRoomObject(currentRoomEntrance);
+
+            if (!ValidateRoomGeneration(room)) {
                 // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
-                newRoomObject.SetActive(false);
-                Destroy(newRoomObject);
+                room.gameObject.SetActive(false);
+                Destroy(room.gameObject);
                 connectors.Add(currentRoomEntrance);
                 continue;
             }
             currentRoomCount++;
-            //currentRoomEntrance.OpenEntrance();
-            foreach (RoomConnectorHandler i in newRoom.GetRoomConnectors()) {
+
+            foreach (RoomConnectorHandler i in room.GetRoomConnectors()) {
                 if (Random.Range(0, 10) < 10) {
                     queue.Enqueue(i);
                 }
                 connectors.Add(i);
             }
         }
-        
     }
 
-    private void AddDoors() {
+    private Room SpawnRoomObject(RoomConnectorHandler root) {
+        int roomID = Random.Range(0, rooms.Length);
+        //int roomID = 0;
+        Room roomPrefab = rooms[roomID].GetComponent<Room>();
+        Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(root);
+
+        GameObject newRoomObject = Instantiate(
+            rooms[roomID],
+            spawnRoomPosition,
+            root.transform.rotation
+            );
+        Room room = newRoomObject.GetComponent<Room>();
+        return room;
+    }
+
+    private bool ValidateRoomGeneration(Room room) {
+        if (!room.GetDungeonValidator().CheckIfValid()) {
+            return false;
+        }
+        return true;
+    }
+
+    private void ConnectRooms() {
         foreach (RoomConnectorHandler connector in connectors) {
             BoxCollider collider = connector.GetDoorwayCollider();
             Vector3 center = collider.bounds.center;
