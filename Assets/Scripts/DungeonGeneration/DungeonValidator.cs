@@ -15,8 +15,7 @@ public class DungeonValidator : MonoBehaviour {
             collider.gameObject.SetActive(false);
 
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonValidatorColliderLayer);
-            if (overlappingColliders.Length != 0) {
-                Debug.Log("TESTING OVERLAPPING!!!");
+            if (overlappingColliders.Length > 0) {
                 EnableColliders();
                 return false;
             }

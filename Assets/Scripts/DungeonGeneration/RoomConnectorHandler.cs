@@ -5,7 +5,6 @@ using UnityEngine;
 public class RoomConnectorHandler : MonoBehaviour {
     public enum RoomConnectorType {
         Doorway,
-        SpawnEntranceDoorway,
     }
 
     [SerializeField] private GameObject entranceway;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class Room : MonoBehaviour {
@@ -22,7 +23,7 @@ public class Room : MonoBehaviour {
         return dungeonValidator;
     }
 
-    public void CoupleRoomToCouplingPoint(Transform otherRoomCouplingPoint) {
-        transform.position += otherRoomCouplingPoint.transform.position - roomSpawnConnector.GetDoorwayCollider().transform.position;
+    public Vector3 GetRoomSpawnVector(RoomConnectorHandler root) {
+        return root.GetDoorwayCollider().transform.position - (root.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position);
     }
 }
