@@ -17,12 +17,11 @@ public class DungeonGenerator : MonoBehaviour {
     private int currentRoomCount = 0;
 
 
-    private void Awake () {
+    private void Start () {
         DungeonGeneration();
         ConnectRooms();
     }
 
-    // TODO: make it cycle through all available rooms if one doesn't fit
     private void DungeonGeneration() {
         GameObject entrance = Instantiate(entranceRoom, transform.position, Quaternion.identity);
         Room entranceRoomScript = entrance.GetComponent<Room>();
@@ -34,9 +33,30 @@ public class DungeonGenerator : MonoBehaviour {
         
         while (currentRoomCount < maxRooms && queue.Count > 0) {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
-
-            Room room = SpawnRoomObject(currentRoomEntrance);
-
+            /*
+            int roomID = Random.Range(0, rooms.Length);
+            //int roomID = 0;
+            Room room = SpawnRoomObject(currentRoomEntrance, roomID);
+            */
+            ShuffleRooms();
+            Room room = null;
+            foreach (GameObject currentPrefab in rooms) {
+                room = SpawnRoomObject(currentRoomEntrance, currentPrefab);
+                if (!ValidateRoomGeneration(room)) {
+                    // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
+                    room.gameObject.SetActive(false);
+                    Destroy(room.gameObject);
+                    connectors.Add(currentRoomEntrance);
+                    room = null;
+                }
+                else {
+                    break;
+                }
+            }
+            if (!room) {
+                continue;
+            }
+            /*
             if (!ValidateRoomGeneration(room)) {
                 // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
                 room.gameObject.SetActive(false);
@@ -44,6 +64,7 @@ public class DungeonGenerator : MonoBehaviour {
                 connectors.Add(currentRoomEntrance);
                 continue;
             }
+            */
             currentRoomCount++;
 
             foreach (RoomConnectorHandler i in room.GetRoomConnectors()) {
@@ -55,9 +76,29 @@ public class DungeonGenerator : MonoBehaviour {
         }
     }
 
-    private Room SpawnRoomObject(RoomConnectorHandler root) {
-        int roomID = Random.Range(0, rooms.Length);
-        //int roomID = 0;
+    private void ShuffleRooms() {
+        for (int i = rooms.Length - 1; i > 0; i--) {
+            int j = Random.Range(0, i + 1);
+            GameObject temp = rooms[i];
+            rooms[i] = rooms[j];
+            rooms[j] = temp;
+        }
+    }
+
+    private Room SpawnRoomObject(RoomConnectorHandler root, GameObject prefab) {
+        Room roomPrefab = prefab.GetComponent<Room>();
+        Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(root);
+
+        GameObject newRoomObject = Instantiate(
+            prefab,
+            spawnRoomPosition,
+            root.transform.rotation
+            );
+        Room room = newRoomObject.GetComponent<Room>();
+        return room;
+    }
+
+    private Room SpawnRoomObject(RoomConnectorHandler root, int roomID) {
         Room roomPrefab = rooms[roomID].GetComponent<Room>();
         Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(root);
 
@@ -77,6 +118,7 @@ public class DungeonGenerator : MonoBehaviour {
         return true;
     }
 
+    // TODO: could probably optimize this by reducing potential duplicates
     private void ConnectRooms() {
         foreach (RoomConnectorHandler connector in connectors) {
             BoxCollider collider = connector.GetDoorwayCollider();
