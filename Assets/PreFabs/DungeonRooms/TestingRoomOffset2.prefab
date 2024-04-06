@@ -1317,6 +1317,7 @@ MonoBehaviour:
     m_Bits: 512
   boxColliders:
   - {fileID: 9110880839195322608}
+  room: {fileID: 6051386071034703158}
 --- !u!1 &4206747865685162536
 GameObject:
   m_ObjectHideFlags: 0
@@ -3537,7 +3538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6082642731373322426}
-  - component: {fileID: 3351937387451559089}
+  - component: {fileID: 6051386071034703158}
   m_Layer: 6
   m_Name: TestingRoomOffset2
   m_TagString: Untagged
@@ -3570,7 +3571,7 @@ Transform:
   - {fileID: 6669032017291426683}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3351937387451559089
+--- !u!114 &6051386071034703158
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3579,12 +3580,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7728395715373864142}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c312f017e78625489ff27d460a08ad7, type: 3}
+  m_Script: {fileID: 11500000, guid: 08d93e0982734dd4983209e5c4d3b78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   roomEntrances:
-  - {fileID: 708759436293593882}
   - {fileID: 178526503922236358}
+  - {fileID: 708759436293593882}
   - {fileID: 6081911160105878611}
   - {fileID: 7394026790353343132}
   - {fileID: 1729191580590401746}

@@ -11,10 +11,10 @@ public class RoomConnectorHandler : MonoBehaviour {
     [SerializeField] private GameObject wall;
     [SerializeField] private BoxCollider doorwayCollider;
     [SerializeField] private RoomConnectorType roomConnectorType = RoomConnectorType.Doorway;
-    private Room parentRoom;
+    private RoomHandler parentRoom;
 
     private void Awake() {
-        parentRoom = GetComponentInParent<Room>();
+        parentRoom = GetComponentInParent<RoomHandler>();
     }
 
     private void Start() {
@@ -39,7 +39,7 @@ public class RoomConnectorHandler : MonoBehaviour {
         return wall; 
     }
 
-    public Room GetParentRoom() {
+    public RoomHandler GetParentRoom() {
         return parentRoom;
     }
 

@@ -760,7 +760,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 530114748393052519}
-  - component: {fileID: 7780376046989150243}
+  - component: {fileID: 9053568805621662556}
   m_Layer: 6
   m_Name: TestingMultiLevelRoom
   m_TagString: Untagged
@@ -807,7 +807,7 @@ Transform:
   - {fileID: 8207072941332465377}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7780376046989150243
+--- !u!114 &9053568805621662556
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -816,7 +816,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 873265320763572527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c312f017e78625489ff27d460a08ad7, type: 3}
+  m_Script: {fileID: 11500000, guid: 08d93e0982734dd4983209e5c4d3b78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   roomEntrances:
@@ -879,6 +879,7 @@ MonoBehaviour:
     m_Bits: 512
   boxColliders:
   - {fileID: 6967856607217110421}
+  room: {fileID: 9053568805621662556}
 --- !u!1 &1208635510669926465
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
 
-public class Room : MonoBehaviour {
+public class RoomHandler : MonoBehaviour {
     [SerializeField] private RoomConnectorHandler[] roomEntrances;
     [SerializeField] private RoomConnectorHandler roomSpawnConnector;
     [SerializeField] private DungeonValidator dungeonValidator;
@@ -23,7 +23,11 @@ public class Room : MonoBehaviour {
         return dungeonValidator;
     }
 
-    public Vector3 GetRoomSpawnVector(RoomConnectorHandler root) {
-        return root.GetDoorwayCollider().transform.position - (root.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position);
+    public RoomConnectorHandler GetRoomSpawnConnector() {
+        return roomSpawnConnector;
+    }
+
+    public Vector3 GetRoomSpawnVector(RoomConnectorHandler origin) {
+        return origin.GetDoorwayCollider().transform.position - (origin.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position);
     }
 }

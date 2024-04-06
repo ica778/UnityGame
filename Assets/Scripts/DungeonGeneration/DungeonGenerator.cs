@@ -24,7 +24,7 @@ public class DungeonGenerator : MonoBehaviour {
 
     private void DungeonGeneration() {
         GameObject entrance = Instantiate(entranceRoom, transform.position, Quaternion.identity);
-        Room entranceRoomScript = entrance.GetComponent<Room>();
+        RoomHandler entranceRoomScript = entrance.GetComponent<RoomHandler>();
 
         foreach (RoomConnectorHandler i in entranceRoomScript.GetRoomConnectors()) {
             queue.Enqueue(i);
@@ -33,41 +33,22 @@ public class DungeonGenerator : MonoBehaviour {
         
         while (currentRoomCount < maxRooms && queue.Count > 0) {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
-            /*
-            int roomID = Random.Range(0, rooms.Length);
-            //int roomID = 0;
-            Room room = SpawnRoomObject(currentRoomEntrance, roomID);
-            */
             ShuffleRooms();
-            Room room = null;
+            RoomHandler roomHandler = null;
             foreach (GameObject currentPrefab in rooms) {
-                room = SpawnRoomObject(currentRoomEntrance, currentPrefab);
-                if (!ValidateRoomGeneration(room)) {
-                    // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
-                    room.gameObject.SetActive(false);
-                    Destroy(room.gameObject);
-                    connectors.Add(currentRoomEntrance);
-                    room = null;
-                }
-                else {
+                RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
+                if (ValidateRoomGeneration(currentPrefab, prefabRoomHandler, currentRoomEntrance)) {
+                    roomHandler = SpawnRoomObject(currentRoomEntrance, prefabRoomHandler, currentPrefab);
                     break;
                 }
             }
-            if (!room) {
+            if (!roomHandler) {
                 continue;
             }
-            /*
-            if (!ValidateRoomGeneration(room)) {
-                // NOTE: HAVE TO DISABLE OBJECT BECAUSE DESTROY APPEARS TO RUN AFTER START INSTEAD OF DURING
-                room.gameObject.SetActive(false);
-                Destroy(room.gameObject);
-                connectors.Add(currentRoomEntrance);
-                continue;
-            }
-            */
+
             currentRoomCount++;
 
-            foreach (RoomConnectorHandler i in room.GetRoomConnectors()) {
+            foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
                 if (Random.Range(0, 10) < 10) {
                     queue.Enqueue(i);
                 }
@@ -85,37 +66,23 @@ public class DungeonGenerator : MonoBehaviour {
         }
     }
 
-    private Room SpawnRoomObject(RoomConnectorHandler root, GameObject prefab) {
-        Room roomPrefab = prefab.GetComponent<Room>();
-        Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(root);
+    private RoomHandler SpawnRoomObject(RoomConnectorHandler origin, RoomHandler prefabRoomHandler, GameObject prefab) {
+        Vector3 spawnRoomPosition = prefabRoomHandler.GetRoomSpawnVector(origin);
 
         GameObject newRoomObject = Instantiate(
             prefab,
             spawnRoomPosition,
-            root.transform.rotation
+            origin.transform.rotation
             );
-        Room room = newRoomObject.GetComponent<Room>();
-        return room;
+        RoomHandler newRoomHandler = newRoomObject.GetComponent<RoomHandler>();
+        return newRoomHandler;
     }
 
-    private Room SpawnRoomObject(RoomConnectorHandler root, int roomID) {
-        Room roomPrefab = rooms[roomID].GetComponent<Room>();
-        Vector3 spawnRoomPosition = roomPrefab.GetRoomSpawnVector(root);
-
-        GameObject newRoomObject = Instantiate(
-            rooms[roomID],
-            spawnRoomPosition,
-            root.transform.rotation
-            );
-        Room room = newRoomObject.GetComponent<Room>();
-        return room;
-    }
-
-    private bool ValidateRoomGeneration(Room room) {
-        if (!room.GetDungeonValidator().CheckIfValid()) {
-            return false;
+    private bool ValidateRoomGeneration(GameObject roomPrefab, RoomHandler prefabRoomHandler, RoomConnectorHandler roomSpawnEntrance) {
+        if (prefabRoomHandler.GetDungeonValidator().CheckIfSpaceIsClear(roomPrefab, roomSpawnEntrance)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     // TODO: could probably optimize this by reducing potential duplicates

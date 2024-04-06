@@ -5,22 +5,17 @@ using UnityEngine;
 public class DungeonValidator : MonoBehaviour {
     [SerializeField] private LayerMask dungeonValidatorColliderLayer;
     [SerializeField] private BoxCollider[] boxColliders;
+    [SerializeField] private RoomHandler room;
 
-    public bool CheckIfValid() {
-        DisableColliders();
+    public bool CheckIfSpaceIsClear(GameObject roomPrefab, RoomConnectorHandler roomSpawnEntrance) {
         foreach (BoxCollider collider in boxColliders) {
-            collider.gameObject.SetActive(true);
-            Vector3 center = collider.bounds.center;
-            Vector3 extents = collider.bounds.extents;
-            collider.gameObject.SetActive(false);
-
-            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonValidatorColliderLayer);
+            Vector3 center = room.GetRoomSpawnVector(roomSpawnEntrance) + collider.center;
+            Vector3 extents = collider.size / 2f;
+            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, roomSpawnEntrance.transform.rotation, dungeonValidatorColliderLayer);
             if (overlappingColliders.Length > 0) {
-                EnableColliders();
                 return false;
             }
         }
-        EnableColliders();
         return true;
     }
 
