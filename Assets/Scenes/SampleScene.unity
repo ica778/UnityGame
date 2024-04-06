@@ -6936,6 +6936,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1691064656}
   - component: {fileID: 1691064655}
+  - component: {fileID: 1691064657}
   m_Layer: 0
   m_Name: DungeonGenerator
   m_TagString: Untagged
@@ -6955,6 +6956,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76e21b3eda60e1438a3739e97a3650b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 1691064657}
+  _networkObjectCache: {fileID: 1691064657}
   rooms:
   - {fileID: 7503301651407316013, guid: b7920f38cbcc15646b2009d5c9f05df0, type: 3}
   - {fileID: 4262248090721987254, guid: a57d2f0de1d238e409369c54a21e500a, type: 3}
@@ -6981,6 +6985,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1691064657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691064654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  _networkBehaviours:
+  - {fileID: 1691064655}
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  SerializedTransformProperties:
+    Position: {x: 0, y: -0.5, z: 25}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _isNetworked: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: 0
+  <SpawnableCollectionId>k__BackingField: 0
+  _scenePathHash: 584410112
+  <SceneId>k__BackingField: 2510022320136427368
+  <AssetPathHash>k__BackingField: 0
 --- !u!1 &1704848528
 GameObject:
   m_ObjectHideFlags: 0

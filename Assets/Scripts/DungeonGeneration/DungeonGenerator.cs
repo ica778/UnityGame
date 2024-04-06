@@ -1,9 +1,11 @@
+using FishNet.Object;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DungeonGenerator : MonoBehaviour {
+public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
     [SerializeField] private GameObject entranceRoom;
 
@@ -18,8 +20,28 @@ public class DungeonGenerator : MonoBehaviour {
 
 
     private void Start () {
+
+    }
+
+    public override void OnStartClient() {
+        base.OnStartClient();
+
+        if (IsServer) {
+            int seed = CreateSeed();
+            GenerateDungeon(seed);
+        }
+    }
+
+    [ObserversRpc(BufferLast = true)]
+    private void GenerateDungeon(int seed) {
+        Random.InitState(seed);
+
         DungeonGeneration();
         ConnectRooms();
+    }
+
+    private int CreateSeed() {
+        return Random.Range(int.MinValue, int.MaxValue);
     }
 
     private void DungeonGeneration() {
