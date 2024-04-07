@@ -15,7 +15,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 300;
+    private int maxRooms = 3;
     private int currentRoomCount = 0;
 
 
@@ -55,7 +55,7 @@ public class DungeonGenerator : NetworkBehaviour {
         
         while (currentRoomCount < maxRooms && queue.Count > 0) {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
-            ShuffleRooms();
+            //ShuffleRooms();
             RoomHandler roomHandler = null;
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
@@ -111,7 +111,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private void ConnectRooms() {
         foreach (RoomConnectorHandler connector in connectors) {
             BoxCollider collider = connector.GetDoorwayCollider();
-            Vector3 center = collider.bounds.center;
+            Vector3 center = collider.transform.position;
             Vector3 extents = collider.bounds.extents;
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
             if (overlappingColliders.Length == 2) {

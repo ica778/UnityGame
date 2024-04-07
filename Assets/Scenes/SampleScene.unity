@@ -6960,11 +6960,8 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1691064657}
   _networkObjectCache: {fileID: 1691064657}
   rooms:
-  - {fileID: 7503301651407316013, guid: b7920f38cbcc15646b2009d5c9f05df0, type: 3}
-  - {fileID: 4262248090721987254, guid: a57d2f0de1d238e409369c54a21e500a, type: 3}
-  - {fileID: 4477952955062550165, guid: e4f321e7b2c73964ead3ed01d9c01051, type: 3}
-  - {fileID: 7728395715373864142, guid: 4324c9f73ec559a4ca5b442624309b45, type: 3}
-  entranceRoom: {fileID: 7503301651407316013, guid: 7a5afff7852d5ce409cc2da0ccf066a9,
+  - {fileID: 8923100836935535901, guid: aaca36cd7c1cbdd46b57a3c619f508af, type: 3}
+  entranceRoom: {fileID: 8923100836935535901, guid: f46fe96fdaa732d43bf342c5e010c395,
     type: 3}
   dungeonRoomOpeningColliderLayer:
     serializedVersion: 2
@@ -6979,7 +6976,7 @@ Transform:
   m_GameObject: {fileID: 1691064654}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 25}
+  m_LocalPosition: {x: 0, y: 0, z: 25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7005,7 +7002,7 @@ MonoBehaviour:
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
-    Position: {x: 0, y: -0.5, z: 25}
+    Position: {x: 0, y: 0, z: 25}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1

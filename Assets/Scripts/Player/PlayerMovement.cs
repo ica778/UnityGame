@@ -174,7 +174,9 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     private void ToggleGravityIfOnWalkableAngle() {
-        rigidBody.useGravity = !isOnWalkableAngle;
+        //rigidBody.useGravity = !isOnWalkableAngle;
+        // TODO: TESTING
+        rigidBody.useGravity = true;
     }
 
     private void MovePlayer() {

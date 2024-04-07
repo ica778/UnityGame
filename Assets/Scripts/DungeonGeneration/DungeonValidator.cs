@@ -9,9 +9,10 @@ public class DungeonValidator : MonoBehaviour {
 
     public bool CheckIfSpaceIsClear(GameObject roomPrefab, RoomConnectorHandler roomSpawnEntrance) {
         foreach (BoxCollider collider in boxColliders) {
-            Vector3 center = room.GetRoomSpawnVector(roomSpawnEntrance) + collider.center;
+            Vector3 center = room.GetRoomSpawnVector(roomSpawnEntrance) + collider.transform.position;
             Vector3 extents = collider.size / 2f;
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, roomSpawnEntrance.transform.rotation, dungeonValidatorColliderLayer);
+            Debug.Log("TESTING " + extents);
             if (overlappingColliders.Length > 0) {
                 return false;
             }
