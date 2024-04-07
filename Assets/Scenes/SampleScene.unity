@@ -6960,6 +6960,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1691064657}
   _networkObjectCache: {fileID: 1691064657}
   rooms:
+  - {fileID: 8923100836935535901, guid: fc8694baa673b934abd0c45cb61c2203, type: 3}
   - {fileID: 8923100836935535901, guid: aaca36cd7c1cbdd46b57a3c619f508af, type: 3}
   entranceRoom: {fileID: 8923100836935535901, guid: f46fe96fdaa732d43bf342c5e010c395,
     type: 3}

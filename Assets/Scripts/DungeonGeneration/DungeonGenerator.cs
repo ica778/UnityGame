@@ -55,7 +55,7 @@ public class DungeonGenerator : NetworkBehaviour {
         
         while (currentRoomCount < maxRooms && queue.Count > 0) {
             RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
-            //ShuffleRooms();
+            ShuffleRooms();
             RoomHandler roomHandler = null;
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
