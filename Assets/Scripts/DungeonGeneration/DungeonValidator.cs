@@ -7,11 +7,11 @@ public class DungeonValidator : MonoBehaviour {
     [SerializeField] private BoxCollider[] boxColliders;
     [SerializeField] private RoomHandler room;
 
-    public bool CheckIfSpaceIsClear(GameObject roomPrefab, RoomConnectorHandler roomSpawnEntrance) {
+    public bool CheckIfSpaceIsClear(RoomConnectorHandler parentRoomConnectorToSpawnFrom) {
         foreach (BoxCollider collider in boxColliders) {
-            Vector3 center = room.GetRoomSpawnVector(roomSpawnEntrance) + collider.transform.position;
+            Vector3 center = room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom) + collider.transform.position;
             Vector3 extents = collider.size / 2f;
-            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, roomSpawnEntrance.transform.rotation, dungeonValidatorColliderLayer);
+            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, parentRoomConnectorToSpawnFrom.transform.rotation, dungeonValidatorColliderLayer);
             if (overlappingColliders.Length > 0) {
                 return false;
             }

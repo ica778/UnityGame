@@ -27,7 +27,10 @@ public class RoomHandler : MonoBehaviour {
         return roomSpawnConnector;
     }
 
-    public Vector3 GetRoomSpawnVector(RoomConnectorHandler origin) {
-        return origin.GetDoorwayCollider().transform.position - (origin.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position);
+    public Vector3 GetRoomSpawnVector(RoomConnectorHandler parentRoomConnectorHandler) {
+        if (roomSpawnConnector.transform.rotation.eulerAngles.y == 0 || roomSpawnConnector.transform.rotation.eulerAngles.y == 180) {
+            return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - (((Quaternion.Euler(0, 180, 0)) * (roomSpawnConnector.transform.rotation)) * (parentRoomConnectorHandler.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position));
+        }
+        return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - ((roomSpawnConnector.transform.rotation) * (parentRoomConnectorHandler.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position));
     }
 }

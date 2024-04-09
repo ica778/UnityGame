@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
@@ -54,13 +55,17 @@ public class DungeonGenerator : NetworkBehaviour {
         }
         
         while (currentRoomCount < maxRooms && queue.Count > 0) {
-            RoomConnectorHandler currentRoomEntrance = queue.Dequeue();
+            RoomConnectorHandler currentRoomConnectorHandler = queue.Dequeue();
             ShuffleRooms();
             RoomHandler roomHandler = null;
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
-                if (ValidateRoomGeneration(currentPrefab, prefabRoomHandler, currentRoomEntrance)) {
-                    roomHandler = SpawnRoomObject(currentRoomEntrance, prefabRoomHandler, currentPrefab);
+
+                Quaternion rotationOfNewRoomObject = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, prefabRoomHandler);
+                Vector3 spawnRoomPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, prefabRoomHandler);
+                
+                if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler)) {
+                    roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, currentPrefab);
                     break;
                 }
             }
@@ -88,20 +93,31 @@ public class DungeonGenerator : NetworkBehaviour {
         }
     }
 
-    private RoomHandler SpawnRoomObject(RoomConnectorHandler origin, RoomHandler prefabRoomHandler, GameObject prefab) {
-        Vector3 spawnRoomPosition = prefabRoomHandler.GetRoomSpawnVector(origin);
+    private Quaternion GetSpawnNewRoomObjectQuaternion(RoomConnectorHandler parentRoomConnectorHandler, RoomHandler prefabRoomHandler) {
+        Quaternion rotationOfNewRoomObject = Quaternion.Inverse(parentRoomConnectorHandler.transform.rotation) * prefabRoomHandler.GetRoomSpawnConnector().transform.rotation;
 
+        if (rotationOfNewRoomObject.eulerAngles.y == 0 || rotationOfNewRoomObject.eulerAngles.y == 180) {
+            rotationOfNewRoomObject *= Quaternion.Euler(0, 180, 0);
+        }
+        return rotationOfNewRoomObject;
+    }
+
+    private Vector3 GetNewRoomObjectVector(RoomConnectorHandler parentRoomConnectorHandler, RoomHandler prefabRoomHandler) {
+        return prefabRoomHandler.GetRoomSpawnVector(parentRoomConnectorHandler);
+    }
+
+    private RoomHandler SpawnRoomObject(Vector3 spawnRoomPosition, Quaternion rotationOfNewRoomObject, GameObject prefab) {
         GameObject newRoomObject = Instantiate(
             prefab,
             spawnRoomPosition,
-            origin.transform.rotation
+            rotationOfNewRoomObject
             );
         RoomHandler newRoomHandler = newRoomObject.GetComponent<RoomHandler>();
         return newRoomHandler;
     }
 
-    private bool ValidateRoomGeneration(GameObject roomPrefab, RoomHandler prefabRoomHandler, RoomConnectorHandler roomSpawnEntrance) {
-        if (prefabRoomHandler.GetDungeonValidator().CheckIfSpaceIsClear(roomPrefab, roomSpawnEntrance)) {
+    private bool ValidateRoomGeneration(RoomHandler prefabRoomHandler, RoomConnectorHandler roomSpawnEntrance) {
+        if (prefabRoomHandler.GetDungeonValidator().CheckIfSpaceIsClear(roomSpawnEntrance)) {
             return true;
         }
         return false;
