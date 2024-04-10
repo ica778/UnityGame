@@ -16,7 +16,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 3;
+    private int maxRooms = 30;
     private int currentRoomCount = 0;
 
 
