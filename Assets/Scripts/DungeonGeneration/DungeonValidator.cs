@@ -9,7 +9,7 @@ public class DungeonValidator : MonoBehaviour {
 
     public bool CheckIfSpaceIsClear(RoomConnectorHandler parentRoomConnectorToSpawnFrom, RoomConnectorHandler newRoomConnectorHandler) {
         foreach (BoxCollider collider in boxColliders) {
-            Quaternion rotation = Quaternion.Inverse(parentRoomConnectorToSpawnFrom.transform.rotation);
+            Quaternion rotation = Quaternion.Inverse(parentRoomConnectorToSpawnFrom.transform.rotation) * newRoomConnectorHandler.transform.rotation;
 
             if (rotation.eulerAngles.y == 0 || rotation.eulerAngles.y == 180) {
                 rotation *= Quaternion.Euler(0, 180, 0);
@@ -23,7 +23,6 @@ public class DungeonValidator : MonoBehaviour {
             if (overlappingColliders.Length > 0) {
                 return false;
             }
-            Debug.Log("TESTING SPAWNING VALIDATION " + room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom, newRoomConnectorHandler) + " | " + colliderPosition);
         }
         return true;
     }
