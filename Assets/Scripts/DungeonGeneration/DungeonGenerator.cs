@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using static UnityEditor.FilePathAttribute;
 
@@ -16,7 +17,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 30;
+    private int maxRooms = 1;
     private int currentRoomCount = 0;
 
 
@@ -58,6 +59,7 @@ public class DungeonGenerator : NetworkBehaviour {
             RoomConnectorHandler currentRoomConnectorHandler = queue.Dequeue();
             ShuffleRooms();
             RoomHandler roomHandler = null;
+            int maxNumberOfConnections = 0;
             Quaternion rotationOfNewRoomObject = Quaternion.identity;
             Vector3 spawnRoomPosition = Vector3.zero;
             GameObject newRoomPrefabToSpawn = null;
@@ -68,11 +70,34 @@ public class DungeonGenerator : NetworkBehaviour {
 
                 foreach (RoomConnectorHandler newRoomConnectorHandler in openingsInThisRoomPrefab) {
                     if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler, newRoomConnectorHandler)) {
-                        rotationOfNewRoomObject = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
-                        spawnRoomPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
-                        newRoomPrefabToSpawn = currentPrefab;
-                        break;
+                        int numberOfConnections = 0;
+
+                        Quaternion tempRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
+                        Vector3 tempPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
+
+                        // this loop checks each doorway collider in the room in its current state
+                        foreach (RoomConnectorHandler x in openingsInThisRoomPrefab) {
+                            BoxCollider collider = x.GetDoorwayCollider();
+
+                            Vector3 center = tempPosition + collider.transform.position;
+                            Vector3 extents = collider.bounds.extents;
+                            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
+                            if (overlappingColliders.Length > 0) {
+                                numberOfConnections++;
+                            }
+                            Debug.Log("TESTING COLLIDER " + center);
+                        }
+
+                        if (numberOfConnections > maxNumberOfConnections) {
+                            maxNumberOfConnections = numberOfConnections;
+                            rotationOfNewRoomObject = tempRotation;
+                            spawnRoomPosition = tempPosition;
+                            newRoomPrefabToSpawn = currentPrefab;
+                        }
                     }
+                    Debug.Log("TESTING COLLIDER " + maxNumberOfConnections);
+                    // NOTE: break here is for testing so that only one doorway is tested
+                    break;
                 }
             }
 
