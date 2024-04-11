@@ -58,29 +58,31 @@ public class DungeonGenerator : NetworkBehaviour {
             RoomConnectorHandler currentRoomConnectorHandler = queue.Dequeue();
             ShuffleRooms();
             RoomHandler roomHandler = null;
+            Quaternion rotationOfNewRoomObject = Quaternion.identity;
+            Vector3 spawnRoomPosition = Vector3.zero;
+            GameObject newRoomPrefabToSpawn = null;
+
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
 
-                Quaternion rotationOfNewRoomObject = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, prefabRoomHandler);
-                Vector3 spawnRoomPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, prefabRoomHandler);
-                
                 if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler)) {
-                    roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, currentPrefab);
+                    rotationOfNewRoomObject = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, prefabRoomHandler);
+                    spawnRoomPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, prefabRoomHandler);
+                    newRoomPrefabToSpawn = currentPrefab;
                     break;
                 }
             }
-            if (!roomHandler) {
-                continue;
-            }
-
-            currentRoomCount++;
-
-            foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
-                if (Random.Range(0, 10) < 10) {
-                    queue.Enqueue(i);
+            if (newRoomPrefabToSpawn) {
+                roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
+                currentRoomCount++;
+                foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
+                    if (Random.Range(0, 10) < 10) {
+                        queue.Enqueue(i);
+                    }
+                    connectors.Add(i);
                 }
-                connectors.Add(i);
             }
+            
         }
     }
 
