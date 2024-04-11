@@ -7,7 +7,7 @@ public class DungeonValidator : MonoBehaviour {
     [SerializeField] private BoxCollider[] boxColliders;
     [SerializeField] private RoomHandler room;
 
-    public bool CheckIfSpaceIsClear(RoomConnectorHandler parentRoomConnectorToSpawnFrom) {
+    public bool CheckIfSpaceIsClear(RoomConnectorHandler parentRoomConnectorToSpawnFrom, RoomConnectorHandler newRoomConnectorHandler) {
         foreach (BoxCollider collider in boxColliders) {
             Quaternion rotation = Quaternion.Inverse(parentRoomConnectorToSpawnFrom.transform.rotation);
 
@@ -16,14 +16,14 @@ public class DungeonValidator : MonoBehaviour {
             }
 
             Vector3 colliderPosition = rotation * collider.transform.position;
-
-            Vector3 center = room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom) + colliderPosition;
+            Vector3 center = room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom, newRoomConnectorHandler) + colliderPosition;
             Vector3 extents = collider.size / 2f;
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, rotation, dungeonValidatorColliderLayer);
-
+            
             if (overlappingColliders.Length > 0) {
                 return false;
             }
+            Debug.Log("TESTING SPAWNING VALIDATION " + room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom, newRoomConnectorHandler) + " | " + colliderPosition);
         }
         return true;
     }

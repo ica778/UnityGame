@@ -4126,8 +4126,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomEntrances:
+  - {fileID: 8903234027212352571}
   - {fileID: 2060613146672836078}
-  - {fileID: 5769070280807555021}
   - {fileID: 5849895970738390747}
-  roomSpawnConnector: {fileID: 8903234027212352571}
+  - {fileID: 5769070280807555021}
+  roomSpawnConnectors:
+  - {fileID: 8903234027212352571}
+  - {fileID: 2060613146672836078}
+  - {fileID: 5849895970738390747}
+  - {fileID: 5769070280807555021}
   dungeonValidator: {fileID: 8510877648122515219}

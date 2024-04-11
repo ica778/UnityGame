@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RoomHandler : MonoBehaviour {
     [SerializeField] private RoomConnectorHandler[] roomEntrances;
-    [SerializeField] private RoomConnectorHandler roomSpawnConnector;
+    [SerializeField] private RoomConnectorHandler[] roomSpawnConnectors;
     [SerializeField] private DungeonValidator dungeonValidator;
 
     private void Start() {
@@ -23,14 +23,26 @@ public class RoomHandler : MonoBehaviour {
         return dungeonValidator;
     }
 
-    public RoomConnectorHandler GetRoomSpawnConnector() {
-        return roomSpawnConnector;
+    public RoomConnectorHandler[] GetRoomSpawnConnectors() {
+        return roomSpawnConnectors;
     }
 
-    public Vector3 GetRoomSpawnVector(RoomConnectorHandler parentRoomConnectorHandler) {
-        if (roomSpawnConnector.transform.rotation.eulerAngles.y == 0 || roomSpawnConnector.transform.rotation.eulerAngles.y == 180) {
-            return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - (((Quaternion.Euler(0, 180, 0)) * (roomSpawnConnector.transform.rotation)) * (parentRoomConnectorHandler.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position));
+    public Vector3 GetRoomSpawnVector(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectHandler) {
+        bool containsRoomConnectorHandler = false;
+        foreach (RoomConnectorHandler x in roomSpawnConnectors) {
+            if (newRoomConnectHandler.Equals(x)) {
+                containsRoomConnectorHandler = true;
+                break;
+            }
         }
-        return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - ((roomSpawnConnector.transform.rotation) * (parentRoomConnectorHandler.transform.rotation * roomSpawnConnector.GetDoorwayCollider().transform.position));
+
+        if (!containsRoomConnectorHandler) {
+            Debug.LogException(new System.Exception("ROOM DOES NOT CONTAIN THIS OPENING"), this);
+        }
+
+        if (newRoomConnectHandler.transform.rotation.eulerAngles.y == 0 || newRoomConnectHandler.transform.rotation.eulerAngles.y == 180) {
+            return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - (((Quaternion.Euler(0, 180, 0)) * (newRoomConnectHandler.transform.rotation)) * (parentRoomConnectorHandler.transform.rotation * newRoomConnectHandler.GetDoorwayCollider().transform.position));
+        }
+        return parentRoomConnectorHandler.GetDoorwayCollider().transform.position - ((newRoomConnectHandler.transform.rotation) * (parentRoomConnectorHandler.transform.rotation * newRoomConnectHandler.GetDoorwayCollider().transform.position));
     }
 }
