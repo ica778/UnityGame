@@ -72,32 +72,32 @@ public class DungeonGenerator : NetworkBehaviour {
                     if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler, newRoomConnectorHandler)) {
                         int numberOfConnections = 0;
 
-                        Quaternion tempRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
-                        Vector3 tempPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
+                        Quaternion currentNewRoomObjectRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
+                        Vector3 currentNewRoomObjectPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
 
                         // this loop checks each doorway collider in the room in its current state
                         foreach (RoomConnectorHandler x in openingsInThisRoomPrefab) {
                             BoxCollider collider = x.GetDoorwayCollider();
-
-                            Vector3 center = tempPosition + collider.transform.position;
+                            
+                            Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 extents = collider.bounds.extents;
                             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
                             if (overlappingColliders.Length > 0) {
+                                Debug.Log("TESTING FOUND OVERLAP " + center);
                                 numberOfConnections++;
                             }
-                            Debug.Log("TESTING COLLIDER " + center);
                         }
 
                         if (numberOfConnections > maxNumberOfConnections) {
                             maxNumberOfConnections = numberOfConnections;
-                            rotationOfNewRoomObject = tempRotation;
-                            spawnRoomPosition = tempPosition;
+                            rotationOfNewRoomObject = currentNewRoomObjectRotation;
+                            spawnRoomPosition = currentNewRoomObjectPosition;
                             newRoomPrefabToSpawn = currentPrefab;
                         }
                     }
                     Debug.Log("TESTING COLLIDER " + maxNumberOfConnections);
                     // NOTE: break here is for testing so that only one doorway is tested
-                    break;
+                    //break;
                 }
             }
 
