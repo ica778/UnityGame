@@ -27,6 +27,18 @@ public class RoomHandler : MonoBehaviour {
         return roomSpawnConnectors;
     }
 
+    public void DisableConnectorColliders() {
+        foreach (RoomConnectorHandler roomEntranceConnectorHandler in roomEntrances) {
+            roomEntranceConnectorHandler.GetDoorwayCollider().gameObject.SetActive(false);
+        }
+    }
+
+    public void EnableConnectorColliders() {
+        foreach (RoomConnectorHandler roomEntranceConnectorHandler in roomEntrances) {
+            roomEntranceConnectorHandler.GetDoorwayCollider().gameObject.SetActive(true);
+        }
+    }
+
     public Vector3 GetRoomSpawnVector(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectHandler) {
         bool containsRoomConnectorHandler = false;
         foreach (RoomConnectorHandler x in roomSpawnConnectors) {

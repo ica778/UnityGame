@@ -14,10 +14,10 @@ public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private LayerMask dungeonRoomOpeningColliderLayer;
     [SerializeField] private GameObject doorway;
 
-    private Queue<RoomConnectorHandler> queue = new Queue<RoomConnectorHandler>();
+    private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 1;
+    private int maxRooms = 50;
     private int currentRoomCount = 0;
 
 
@@ -51,39 +51,42 @@ public class DungeonGenerator : NetworkBehaviour {
         RoomHandler entranceRoomScript = entrance.GetComponent<RoomHandler>();
 
         foreach (RoomConnectorHandler i in entranceRoomScript.GetRoomConnectors()) {
-            queue.Enqueue(i);
+            stack.Push(i);
             connectors.Add(i);
         }
         
-        while (currentRoomCount < maxRooms && queue.Count > 0) {
-            RoomConnectorHandler currentRoomConnectorHandler = queue.Dequeue();
-            ShuffleRooms();
-            RoomHandler roomHandler = null;
+        while (currentRoomCount < maxRooms && stack.Count > 0) {
+            RoomConnectorHandler currentRoomConnectorHandler = stack.Pop();
+            ShuffleRooms(rooms);
             int maxNumberOfConnections = 0;
+            // NOTE: the values I assigned for the next 3 variables are only because compiler complains if I dont give them values
             Quaternion rotationOfNewRoomObject = Quaternion.identity;
             Vector3 spawnRoomPosition = Vector3.zero;
             GameObject newRoomPrefabToSpawn = null;
 
+            RoomHandler currentParentRoomHandler = currentRoomConnectorHandler.GetComponentInParent<RoomHandler>();
+            currentParentRoomHandler.DisableConnectorColliders();
+
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
-                RoomConnectorHandler[] openingsInThisRoomPrefab = prefabRoomHandler.GetRoomConnectors();
+                RoomConnectorHandler[] connectorsInThisRoomPrefab = prefabRoomHandler.GetRoomConnectors();
+                ShuffleRooms(connectorsInThisRoomPrefab);
 
-                foreach (RoomConnectorHandler newRoomConnectorHandler in openingsInThisRoomPrefab) {
+                foreach (RoomConnectorHandler newRoomConnectorHandler in connectorsInThisRoomPrefab) {
                     if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler, newRoomConnectorHandler)) {
-                        int numberOfConnections = 0;
+                        int numberOfConnections = 1;
 
                         Quaternion currentNewRoomObjectRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
                         Vector3 currentNewRoomObjectPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
 
                         // this loop checks each doorway collider in the room in its current state
-                        foreach (RoomConnectorHandler x in openingsInThisRoomPrefab) {
+                        foreach (RoomConnectorHandler x in connectorsInThisRoomPrefab) {
                             BoxCollider collider = x.GetDoorwayCollider();
                             
                             Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 extents = collider.bounds.extents;
                             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
                             if (overlappingColliders.Length > 0) {
-                                Debug.Log("TESTING FOUND OVERLAP " + center);
                                 numberOfConnections++;
                             }
                         }
@@ -95,19 +98,30 @@ public class DungeonGenerator : NetworkBehaviour {
                             newRoomPrefabToSpawn = currentPrefab;
                         }
                     }
-                    Debug.Log("TESTING COLLIDER " + maxNumberOfConnections);
                     // NOTE: break here is for testing so that only one doorway is tested
                     //break;
                 }
             }
 
+            currentParentRoomHandler.EnableConnectorColliders();
+
             if (newRoomPrefabToSpawn) {
-                roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
+                RoomHandler roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
                 currentRoomCount++;
+                bool alreadyAddedConnector = false;
                 foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
-                    if (Random.Range(0, 10) < 10) {
-                        queue.Enqueue(i);
+                    if (alreadyAddedConnector) {
+                        if (Random.Range(0, 10) < 3) {
+                            stack.Push(i);
+                        }
                     }
+                    else {
+                        if (Random.Range(0, 10) < 7) {
+                            stack.Push(i);
+                            alreadyAddedConnector = true;
+                        }
+                    }
+                    
                     connectors.Add(i);
                 }
             }
@@ -115,12 +129,12 @@ public class DungeonGenerator : NetworkBehaviour {
         }
     }
 
-    private void ShuffleRooms() {
-        for (int i = rooms.Length - 1; i > 0; i--) {
+    private void ShuffleRooms<T>(T[] array) {
+        for (int i = array.Length - 1; i > 0; i--) {
             int j = Random.Range(0, i + 1);
-            GameObject temp = rooms[i];
-            rooms[i] = rooms[j];
-            rooms[j] = temp;
+            T temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
     }
 
