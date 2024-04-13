@@ -16,6 +16,7 @@ public class DungeonValidator : MonoBehaviour {
             Vector3 colliderPosition = rotation * collider.transform.position;
             Vector3 center = room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom, newRoomConnectorHandler) + colliderPosition;
             Vector3 extents = collider.size / 2f;
+            extents -= new Vector3(0.01f, 0.01f, 0.01f);
             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, rotation, dungeonValidatorColliderLayer);
             
             if (overlappingColliders.Length > 0) {

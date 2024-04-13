@@ -80,6 +80,9 @@ public class DungeonGenerator : NetworkBehaviour {
 
                         // this loop checks each doorway collider in the room in its current state
                         foreach (RoomConnectorHandler x in spawnConnectorsInThisRoomPrefab) {
+                            if (x == newRoomConnectorHandler) {
+                                continue;
+                            }
                             BoxCollider collider = x.GetDoorwayCollider();
                             
                             Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
@@ -88,6 +91,9 @@ public class DungeonGenerator : NetworkBehaviour {
                             if (overlappingColliders.Length > 0) {
                                 numberOfConnections++;
                             }
+
+                            // NOTE: break here is so only one random doorway is tested
+                            //break;
                         }
 
                         if (numberOfConnections > maxNumberOfConnections) {
@@ -100,6 +106,8 @@ public class DungeonGenerator : NetworkBehaviour {
                     // NOTE: break here is for testing so that only one doorway is tested
                     //break;
                 }
+                // NOTE: break here is so only one room is tested
+                break;
             }
 
             //currentParentRoomHandler.EnableConnectorColliders();
