@@ -60,14 +60,18 @@ public class DungeonGenerator : NetworkBehaviour {
             GameObject newRoomPrefabToSpawn = null;
 
             RoomHandler currentParentRoomHandler = currentRoomConnectorHandler.GetComponentInParent<RoomHandler>();
-            currentParentRoomHandler.DisableConnectorColliders();
+
+            // NOTE: bottom line is disabled because sometimes it might spawn room that isnt connected to the room that spawned it. might be able to fix by getting doorway
+            // collider checker check for doorway colliders owned by the room that spawned it. the reason why i am not implementing that fix right now is because I imagine 
+            // it can get pretty expensive.
+            //currentParentRoomHandler.DisableConnectorColliders();
 
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
-                RoomConnectorHandler[] connectorsInThisRoomPrefab = prefabRoomHandler.GetRoomConnectors();
-                ShuffleRooms(connectorsInThisRoomPrefab);
+                RoomConnectorHandler[] spawnConnectorsInThisRoomPrefab = prefabRoomHandler.GetRoomSpawnConnectors();
+                ShuffleRooms(spawnConnectorsInThisRoomPrefab);
 
-                foreach (RoomConnectorHandler newRoomConnectorHandler in connectorsInThisRoomPrefab) {
+                foreach (RoomConnectorHandler newRoomConnectorHandler in spawnConnectorsInThisRoomPrefab) {
                     if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler, newRoomConnectorHandler)) {
                         int numberOfConnections = 1;
 
@@ -75,7 +79,7 @@ public class DungeonGenerator : NetworkBehaviour {
                         Vector3 currentNewRoomObjectPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
 
                         // this loop checks each doorway collider in the room in its current state
-                        foreach (RoomConnectorHandler x in connectorsInThisRoomPrefab) {
+                        foreach (RoomConnectorHandler x in spawnConnectorsInThisRoomPrefab) {
                             BoxCollider collider = x.GetDoorwayCollider();
                             
                             Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
@@ -98,7 +102,7 @@ public class DungeonGenerator : NetworkBehaviour {
                 }
             }
 
-            currentParentRoomHandler.EnableConnectorColliders();
+            //currentParentRoomHandler.EnableConnectorColliders();
 
             if (newRoomPrefabToSpawn) {
                 RoomHandler roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
