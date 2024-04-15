@@ -11,6 +11,7 @@ public class MainMenuUI : MonoBehaviour {
 
     private NetworkManager networkManager;
 
+    // NOTE: THIS IS VERY GHETTO AND YOU SHOULD CHANGE IT SO THAT IT IS BETTER
     private void Start() {
         networkManager = FindObjectOfType<NetworkManager>();
         if (networkManager == null) {
