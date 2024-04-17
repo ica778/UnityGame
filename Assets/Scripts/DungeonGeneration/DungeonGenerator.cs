@@ -1,6 +1,7 @@
 using FishNet.Object;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
@@ -12,7 +13,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 50;
+    private int maxRooms = 100;
     private int currentRoomCount = 0;
 
 
@@ -52,7 +53,7 @@ public class DungeonGenerator : NetworkBehaviour {
         
         while (currentRoomCount < maxRooms && stack.Count > 0) {
             RoomConnectorHandler currentRoomConnectorHandler = stack.Pop();
-            ShuffleRooms(rooms);
+            ShuffleArray(rooms);
             int maxNumberOfConnections = 0;
             // NOTE: the values I assigned for the next 3 variables are only because compiler complains if I dont give them values
             Quaternion rotationOfNewRoomObject = Quaternion.identity;
@@ -61,21 +62,18 @@ public class DungeonGenerator : NetworkBehaviour {
 
             RoomHandler currentParentRoomHandler = currentRoomConnectorHandler.GetComponentInParent<RoomHandler>();
 
-            // NOTE: bottom line is disabled because sometimes it might spawn room that isnt connected to the room that spawned it. might be able to fix by getting doorway
-            // collider checker check for doorway colliders owned by the room that spawned it. the reason why i am not implementing that fix right now is because I imagine 
-            // it can get pretty expensive.
-            //currentParentRoomHandler.DisableConnectorColliders();
+            currentParentRoomHandler.DisableConnectorColliders();
 
             foreach (GameObject currentPrefab in rooms) {
                 RoomHandler prefabRoomHandler = currentPrefab.GetComponent<RoomHandler>();
                 RoomConnectorHandler[] spawnConnectorsInThisRoomPrefab = prefabRoomHandler.GetRoomSpawnConnectors();
-                ShuffleRooms(spawnConnectorsInThisRoomPrefab);
+                ShuffleArray(spawnConnectorsInThisRoomPrefab);
 
                 foreach (RoomConnectorHandler newRoomConnectorHandler in spawnConnectorsInThisRoomPrefab) {
                     if (ValidateRoomGeneration(prefabRoomHandler, currentRoomConnectorHandler, newRoomConnectorHandler)) {
                         int numberOfConnections = 1;
 
-                        Quaternion currentNewRoomObjectRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
+                        Quaternion currentNewRoomObjectRotation = GetSpawnNewRoomObjectQuaternion(currentRoomConnectorHandler, newRoomConnectorHandler);
                         Vector3 currentNewRoomObjectPosition = GetNewRoomObjectVector(currentRoomConnectorHandler, newRoomConnectorHandler, prefabRoomHandler);
 
                         // this loop checks each doorway collider in the room in its current state
@@ -84,16 +82,14 @@ public class DungeonGenerator : NetworkBehaviour {
                                 continue;
                             }
                             BoxCollider collider = x.GetDoorwayCollider();
-                            
+
+                            //Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 extents = collider.bounds.extents;
                             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
                             if (overlappingColliders.Length > 0) {
                                 numberOfConnections++;
                             }
-
-                            // NOTE: break here is so only one random doorway is tested
-                            //break;
                         }
 
                         if (numberOfConnections > maxNumberOfConnections) {
@@ -107,12 +103,13 @@ public class DungeonGenerator : NetworkBehaviour {
                     //break;
                 }
                 // NOTE: break here is so only one room is tested
-                break;
+                //break;
             }
 
-            //currentParentRoomHandler.EnableConnectorColliders();
+            currentParentRoomHandler.EnableConnectorColliders();
 
             if (newRoomPrefabToSpawn) {
+                Debug.Log("TESTING SPAWN ROOM " + currentRoomConnectorHandler.transform.position + " | " + spawnRoomPosition + " | " + rotationOfNewRoomObject.eulerAngles);
                 RoomHandler roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
                 currentRoomCount++;
                 bool alreadyAddedConnector = false;
@@ -136,7 +133,7 @@ public class DungeonGenerator : NetworkBehaviour {
         }
     }
 
-    private void ShuffleRooms<T>(T[] array) {
+    private void ShuffleArray<T>(T[] array) {
         for (int i = array.Length - 1; i > 0; i--) {
             int j = Random.Range(0, i + 1);
             T temp = array[i];
@@ -145,13 +142,20 @@ public class DungeonGenerator : NetworkBehaviour {
         }
     }
 
-    private Quaternion GetSpawnNewRoomObjectQuaternion(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectorHandler, RoomHandler prefabRoomHandler) {
+    // TODO: fix this duplicate code for getting quaternion rotation
+    private Quaternion GetSpawnNewRoomObjectQuaternion(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectorHandler) {
+        /*
         Quaternion rotationOfNewRoomObject = Quaternion.Inverse(parentRoomConnectorHandler.transform.rotation) * newRoomConnectorHandler.transform.rotation;
 
         if (rotationOfNewRoomObject.eulerAngles.y == 0 || rotationOfNewRoomObject.eulerAngles.y == 180) {
             rotationOfNewRoomObject *= Quaternion.Euler(0, 180, 0);
         }
         return rotationOfNewRoomObject;
+        */
+
+        Quaternion rotation = newRoomConnectorHandler.transform.rotation * Quaternion.Euler(0, 180, 0);
+
+        return rotation * parentRoomConnectorHandler.transform.rotation;
     }
 
     private Vector3 GetNewRoomObjectVector(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectorHandler, RoomHandler prefabRoomHandler) {

@@ -7,11 +7,10 @@ public class DungeonValidator : MonoBehaviour {
 
     public bool CheckIfSpaceIsClear(RoomConnectorHandler parentRoomConnectorToSpawnFrom, RoomConnectorHandler newRoomConnectorHandler) {
         foreach (BoxCollider collider in boxColliders) {
-            Quaternion rotation = Quaternion.Inverse(parentRoomConnectorToSpawnFrom.transform.rotation) * newRoomConnectorHandler.transform.rotation;
+            // TODO: fix this duplicate code for getting quaternion rotation
+            Quaternion rotation = newRoomConnectorHandler.transform.rotation * Quaternion.Euler(0, 180, 0);
 
-            if (rotation.eulerAngles.y == 0 || rotation.eulerAngles.y == 180) {
-                rotation *= Quaternion.Euler(0, 180, 0);
-            }
+            rotation = rotation * parentRoomConnectorToSpawnFrom.transform.rotation;
 
             Vector3 colliderPosition = rotation * collider.transform.position;
             Vector3 center = room.GetRoomSpawnVector(parentRoomConnectorToSpawnFrom, newRoomConnectorHandler) + colliderPosition;
