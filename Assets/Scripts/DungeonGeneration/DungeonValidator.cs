@@ -9,7 +9,6 @@ public class DungeonValidator : MonoBehaviour {
         foreach (BoxCollider collider in boxColliders) {
             // TODO: fix this duplicate code for getting quaternion rotation
             Quaternion rotation = newRoomConnectorHandler.transform.rotation * Quaternion.Euler(0, 180, 0);
-
             rotation = rotation * parentRoomConnectorToSpawnFrom.transform.rotation;
 
             Vector3 colliderPosition = rotation * collider.transform.position;

@@ -13,7 +13,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 100;
+    private int maxRooms = 50;
     private int currentRoomCount = 0;
 
 
@@ -109,13 +109,12 @@ public class DungeonGenerator : NetworkBehaviour {
             currentParentRoomHandler.EnableConnectorColliders();
 
             if (newRoomPrefabToSpawn) {
-                Debug.Log("TESTING SPAWN ROOM " + currentRoomConnectorHandler.transform.position + " | " + spawnRoomPosition + " | " + rotationOfNewRoomObject.eulerAngles);
                 RoomHandler roomHandler = SpawnRoomObject(spawnRoomPosition, rotationOfNewRoomObject, newRoomPrefabToSpawn);
                 currentRoomCount++;
                 bool alreadyAddedConnector = false;
                 foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
                     if (alreadyAddedConnector) {
-                        if (Random.Range(0, 10) < 3) {
+                        if (Random.Range(0, 10) < 2) {
                             stack.Push(i);
                         }
                     }
@@ -131,6 +130,7 @@ public class DungeonGenerator : NetworkBehaviour {
             }
             
         }
+        Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
     }
 
     private void ShuffleArray<T>(T[] array) {
@@ -144,17 +144,7 @@ public class DungeonGenerator : NetworkBehaviour {
 
     // TODO: fix this duplicate code for getting quaternion rotation
     private Quaternion GetSpawnNewRoomObjectQuaternion(RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectorHandler) {
-        /*
-        Quaternion rotationOfNewRoomObject = Quaternion.Inverse(parentRoomConnectorHandler.transform.rotation) * newRoomConnectorHandler.transform.rotation;
-
-        if (rotationOfNewRoomObject.eulerAngles.y == 0 || rotationOfNewRoomObject.eulerAngles.y == 180) {
-            rotationOfNewRoomObject *= Quaternion.Euler(0, 180, 0);
-        }
-        return rotationOfNewRoomObject;
-        */
-
         Quaternion rotation = newRoomConnectorHandler.transform.rotation * Quaternion.Euler(0, 180, 0);
-
         return rotation * parentRoomConnectorHandler.transform.rotation;
     }
 
