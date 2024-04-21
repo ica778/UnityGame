@@ -29,4 +29,8 @@ public class PlayerManager : NetworkBehaviour {
         players.Remove(playerId);
     }
 
+    public Dictionary<int, Player> GetPlayersList() {
+        return players;
+    }
+
 }

@@ -1,7 +1,7 @@
 using FishNet.Object;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
@@ -9,6 +9,8 @@ public class DungeonGenerator : NetworkBehaviour {
 
     [SerializeField] private LayerMask dungeonRoomOpeningColliderLayer;
     [SerializeField] private GameObject doorway;
+
+    [SerializeField] private NavMeshSurface navMeshSurface;
 
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
@@ -36,6 +38,8 @@ public class DungeonGenerator : NetworkBehaviour {
 
         DungeonGeneration();
         ConnectRooms();
+
+        navMeshSurface.BuildNavMesh();
     }
 
     private int CreateSeed() {

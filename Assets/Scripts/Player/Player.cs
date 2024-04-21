@@ -12,11 +12,12 @@ public class Player : NetworkBehaviour {
     private PlayerMovement playerMovement;
     private float interactDistance = 5f;
     private RaycastHit currentInteractableObject;
+    private int playerID;
 
     private void Start() {
+        playerID = base.ObjectId;
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
         playerMovement = GetComponentInChildren<PlayerMovement>();
-
         Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
     }
     
@@ -149,5 +150,13 @@ public class Player : NetworkBehaviour {
     private void ShowEquippedItemObserversRpc(int playerId, int idOfItemToShow) {
         Player player = PlayerManager.Instance.GetPlayer(playerId);
         player.SetEquippedItemMesh(idOfItemToShow);
+    }
+
+    public GameObject GetPlayerCharacter() {
+        return playerCharacter;
+    }
+
+    public int GetPlayerID() {
+        return playerID;
     }
 }
