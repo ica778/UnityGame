@@ -8899,6 +8899,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2002464451}
   _networkObjectCache: {fileID: 2002464451}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!195 &2002464446
 NavMeshAgent:
   m_ObjectHideFlags: 0

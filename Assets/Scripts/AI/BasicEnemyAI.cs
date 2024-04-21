@@ -10,13 +10,18 @@ public class BasicEnemyAI : NetworkBehaviour {
         Chasing,
     }
 
+    [SerializeField] private LayerMask targetLayer;
+
     private float changePositionDelay = 0.2f;
     private float changePositionTimer = 0f;
     private NavMeshAgent navMeshAgent;
     private State currentState = State.Idle;
+    private Transform enemyTransform;
+    private float targetDistance = 10f;
 
-    private void Start() {
+    private void Awake() {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        enemyTransform = transform;
     }
 
     private void Update() {
@@ -31,26 +36,30 @@ public class BasicEnemyAI : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     private void EnemyBehaviour() {
-        Transform target = PlayerManager.Instance.GetPlayer(3).GetPlayerCharacter().transform;
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+        Transform targetTransform = null;
+
+        Collider[] collidersInRange = Physics.OverlapSphere(enemyTransform.position, targetDistance, targetLayer);
+        if (collidersInRange.Length > 0) {
+            targetTransform = collidersInRange[0].transform;
+        }
 
         switch (currentState) {
-            default:
-                Debug.LogError("ENEMY INITIAL STATE NOT SET");
-                break;
             case State.Idle:
-                if (distanceToTarget <= 10f) {
+                if (targetTransform) {
                     currentState = State.Chasing;
-                    Debug.Log("TESTING CHASING STATE ACTIVATED");
+                    Debug.Log("TESTING STATE CHANGED TO CHASING");
                 }
 
                 break;
             case State.Chasing:
-                navMeshAgent.SetDestination(target.position);
-                if (distanceToTarget > 10f) {
+                if (!targetTransform) {
                     currentState = State.Idle;
-                    Debug.Log("TESTING IDLE STATE ACTIVATED");
+                    Debug.Log("TESTING STATE CHANGED TO IDLE");
                 }
+                else {
+                    navMeshAgent.SetDestination(targetTransform.position);
+                }
+
                 break;
         }
     }
