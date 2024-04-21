@@ -5,9 +5,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class BasicEnemyAI : NetworkBehaviour {
+    private enum State {
+        Idle,
+        Chasing,
+    }
+
     private float changePositionDelay = 0.2f;
     private float changePositionTimer = 0f;
     private NavMeshAgent navMeshAgent;
+    private State currentState = State.Idle;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -16,7 +22,7 @@ public class BasicEnemyAI : NetworkBehaviour {
     private void Update() {
         if (changePositionTimer >= changePositionDelay) {
             changePositionTimer = 0f;
-            ChangePositionServerRpc();
+            EnemyBehaviour();
         }
         else {
             changePositionTimer += Time.deltaTime;
@@ -24,14 +30,28 @@ public class BasicEnemyAI : NetworkBehaviour {
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void ChangePositionServerRpc() {
-        if (PlayerManager.Instance) {
-            foreach (KeyValuePair<int, Player> x in PlayerManager.Instance.GetPlayersList()) {
-                Transform target = x.Value.GetPlayerCharacter().transform;
+    private void EnemyBehaviour() {
+        Transform target = PlayerManager.Instance.GetPlayer(3).GetPlayerCharacter().transform;
+        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+        switch (currentState) {
+            default:
+                Debug.LogError("ENEMY INITIAL STATE NOT SET");
+                break;
+            case State.Idle:
+                if (distanceToTarget <= 10f) {
+                    currentState = State.Chasing;
+                    Debug.Log("TESTING CHASING STATE ACTIVATED");
+                }
+
+                break;
+            case State.Chasing:
                 navMeshAgent.SetDestination(target.position);
-                return;
-            }
-            
+                if (distanceToTarget > 10f) {
+                    currentState = State.Idle;
+                    Debug.Log("TESTING IDLE STATE ACTIVATED");
+                }
+                break;
         }
     }
 
