@@ -11,13 +11,16 @@ public class BasicEnemyAI : NetworkBehaviour {
     }
 
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private LayerMask obstacleLayer;
+
+    private float detectionRadius = 20f;
+    private float viewAngle = 120f;
 
     private float changePositionDelay = 0.2f;
     private float changePositionTimer = 0f;
     private NavMeshAgent navMeshAgent;
     private State currentState = State.Idle;
     private Transform enemyTransform;
-    private float targetDistance = 10f;
 
     private void Awake() {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -36,32 +39,56 @@ public class BasicEnemyAI : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     private void EnemyBehaviour() {
-        Transform targetTransform = null;
+        Transform targetInRangeTransform = null;
+        bool targetDetected = false;
 
-        Collider[] collidersInRange = Physics.OverlapSphere(enemyTransform.position, targetDistance, targetLayer);
-        if (collidersInRange.Length > 0) {
-            targetTransform = collidersInRange[0].transform;
+        Collider[] collidersInRange = Physics.OverlapSphere(enemyTransform.position, detectionRadius, targetLayer);
+        foreach (Collider collider in collidersInRange) {
+            // TODO: optimize by caching the transforms for each player collider
+            targetInRangeTransform = collider.transform;
+
+            targetDetected = CheckIfTargetDetectableByVision(targetInRangeTransform);
+
+            if (targetDetected) {
+                break;
+            }
         }
 
         switch (currentState) {
             case State.Idle:
-                if (targetTransform) {
+                if (targetDetected) {
                     currentState = State.Chasing;
                     Debug.Log("TESTING STATE CHANGED TO CHASING");
                 }
 
                 break;
             case State.Chasing:
-                if (!targetTransform) {
+                if (!targetDetected) {
                     currentState = State.Idle;
                     Debug.Log("TESTING STATE CHANGED TO IDLE");
                 }
                 else {
-                    navMeshAgent.SetDestination(targetTransform.position);
+                    navMeshAgent.SetDestination(targetInRangeTransform.position);
                 }
 
                 break;
         }
+    }
+
+    private bool CheckIfTargetDetectableByVision(Transform targetInRangeTransform) {
+        Vector3 directionToTarget = (targetInRangeTransform.position - enemyTransform.position).normalized;
+        float targetAngle = Vector3.Angle(enemyTransform.forward, directionToTarget);
+
+        if (targetAngle < (viewAngle / 2)) {
+            float distanceToTarget = Vector3.Distance(enemyTransform.position, targetInRangeTransform.position);
+            
+            if (distanceToTarget <= detectionRadius) {
+                if (!Physics.Raycast(enemyTransform.position, directionToTarget, distanceToTarget, obstacleLayer)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
