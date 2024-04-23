@@ -39,17 +39,19 @@ public class BasicEnemyAI : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     private void EnemyBehaviour() {
-        Transform targetInRangeTransform = null;
+        Transform targetInOverlapSphereTransform = null;
         bool targetDetected = false;
 
         Collider[] collidersInRange = Physics.OverlapSphere(enemyTransform.position, detectionRadius, targetLayer);
+        // TODO: no consistent way of selecting a certain player if more than one in range
         foreach (Collider collider in collidersInRange) {
             // TODO: optimize by caching the transforms for each player collider
-            targetInRangeTransform = collider.transform;
+            targetInOverlapSphereTransform = collider.transform;
 
-            targetDetected = CheckIfTargetDetectableByVision(targetInRangeTransform);
+            targetDetected = CheckIfTargetDetectableByVision(targetInOverlapSphereTransform);
 
             if (targetDetected) {
+                Debug.Log("TESTING TARGET DETECTED: " + targetInOverlapSphereTransform.position);
                 break;
             }
         }
@@ -68,20 +70,23 @@ public class BasicEnemyAI : NetworkBehaviour {
                     Debug.Log("TESTING STATE CHANGED TO IDLE");
                 }
                 else {
-                    navMeshAgent.SetDestination(targetInRangeTransform.position);
+                    //navMeshAgent.SetDestination(targetInRangeTransform.position);
                 }
 
                 break;
         }
     }
 
-    private bool CheckIfTargetDetectableByVision(Transform targetInRangeTransform) {
-        Vector3 directionToTarget = (targetInRangeTransform.position - enemyTransform.position).normalized;
+    // TODO: make it check other parts of player by modifying the directionToTarget and targetAngle so that it raycasts other parts of the player. probably
+    // have to wait till player dimensions are finalized first though unless you want to make it really expensive and check a bunch of points. Have to make it
+    // check other points so if player's feet is sticking out or something the enemy can still see it.
+    private bool CheckIfTargetDetectableByVision(Transform targetInOverlapSphereTransform) {
+        Vector3 directionToTarget = (targetInOverlapSphereTransform.position - enemyTransform.position).normalized;
         float targetAngle = Vector3.Angle(enemyTransform.forward, directionToTarget);
 
         if (targetAngle < (viewAngle / 2)) {
-            float distanceToTarget = Vector3.Distance(enemyTransform.position, targetInRangeTransform.position);
-            
+            float distanceToTarget = Vector3.Distance(enemyTransform.position, targetInOverlapSphereTransform.position);
+
             if (distanceToTarget <= detectionRadius) {
                 if (!Physics.Raycast(enemyTransform.position, directionToTarget, distanceToTarget, obstacleLayer)) {
                     return true;
