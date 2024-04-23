@@ -54,18 +54,15 @@ public class BasicEnemyAI : NetworkBehaviour {
             case State.Idle:
                 if (detectedTargetTransform) {
                     currentState = State.Chasing;
-                    Debug.Log("TESTING STATE CHANGED TO CHASING");
                 }
 
                 break;
             case State.Chasing:
                 if (!detectedTargetTransform) {
                     currentState = State.Idle;
-                    Debug.Log("TESTING STATE CHANGED TO IDLE");
                 }
                 else {
-                    Debug.Log("TESTING HIT");
-                    //navMeshAgent.SetDestination(detectedTargetTransform.position);
+                    navMeshAgent.SetDestination(detectedTargetTransform.position);
                 }
 
                 break;
@@ -99,7 +96,7 @@ public class BasicEnemyAI : NetworkBehaviour {
 
         float distanceToTarget = GetDistanceToTarget(targetPosition);
         RaycastHit hitInfo;
-        bool hit = Physics.Raycast(currentTransform.position, directionToTarget, out hitInfo, distanceToTarget);
+        bool hit = Physics.Raycast(currentTransform.position, directionToTarget, out hitInfo, distanceToTarget, targetLayer | obstacleLayer);
         Debug.DrawRay(currentTransform.position, directionToTarget, Color.green, 1f);
 
         if (hit && hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("playerLayer")) {
@@ -114,6 +111,7 @@ public class BasicEnemyAI : NetworkBehaviour {
         foreach (Collider collider in collidersInRange) {
             Transform currentTargetTransform = collider.transform;
 
+            // this checks if target detectable by vision
             foreach (Vector3 pos in visionRaycastPositions) {
                 if (CheckIfTargetIsVisible(currentTargetTransform.position + pos)) {
                     return currentTargetTransform;
