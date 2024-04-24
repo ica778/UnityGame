@@ -1,9 +1,11 @@
 using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Profiling;
 
 public class BasicEnemyAI : NetworkBehaviour {
     private enum State {
@@ -108,7 +110,9 @@ public class BasicEnemyAI : NetworkBehaviour {
 
     private Transform DetectTarget() {
         Collider[] collidersInRange = Physics.OverlapSphere(currentTransform.position, detectionRadius, targetLayer);
-        foreach (Collider collider in collidersInRange) {
+        List<Collider> sortedColliders = collidersInRange.OrderBy(collider => Vector3.Distance(collider.transform.position, currentTransform.position)).ToList();
+
+        foreach (Collider collider in sortedColliders) {
             Transform currentTargetTransform = collider.transform;
 
             // this checks if target detectable by vision
@@ -117,7 +121,6 @@ public class BasicEnemyAI : NetworkBehaviour {
                     return currentTargetTransform;
                 }
             }
-            
         }
         return null;
     }
