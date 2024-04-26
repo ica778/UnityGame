@@ -9,25 +9,14 @@ public class MainMenuUI : MonoBehaviour {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button joinButton;
 
-    private NetworkManager networkManager;
-
     // NOTE: THIS IS VERY GHETTO AND YOU SHOULD CHANGE IT SO THAT IT IS BETTER
     private void Start() {
-        networkManager = FindObjectOfType<NetworkManager>();
-        if (networkManager == null) {
-            Debug.LogError("NetworkManager not found");
-            return;
-        }
-
         hostButton.onClick.AddListener(() => {
-            networkManager.ServerManager.StartConnection();
-            networkManager.ClientManager.StartConnection();
-            SceneLoader.Load(SceneLoader.Scene.GameScene);
+            MainMenuManager.Instance.OnHostButtonClick();
         });
 
         joinButton.onClick.AddListener(() => {
-            networkManager.ClientManager.StartConnection();
-            SceneLoader.Load(SceneLoader.Scene.GameScene);
+            MainMenuManager.Instance.OnJoinButtonClick();
         });
     }
 }
