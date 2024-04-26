@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
+    public static ConnectionManager Instance { get; private set; }
+
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
-    [SerializeField] private string connectionAddress;
 
     private string hostHex;
+
+    private void Start () {
+        Instance = this;
+    }
 
     public void StartHost() {
         var user = UserData.Get();
@@ -19,8 +24,8 @@ public class ConnectionManager : MonoBehaviour {
         Debug.Log("TESTING 123123123 HOST ID: " + hostHex);
     }
 
-    public void StartConnection() {
-        hostHex = connectionAddress.ToString();
+    public void StartConnection(UserData userData) {
+        hostHex = userData.ToString();
         var hostUser = UserData.Get(hostHex);
 
         if (!hostUser.IsValid) {
