@@ -56,6 +56,7 @@ public class LobbyHandler : MonoBehaviour {
     public void DestroySelf() {
         if (lobbyManager.IsPlayerOwner) {
             foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
+                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
                 KickPlayer(lobbyMemberData.user);
             }
         }
