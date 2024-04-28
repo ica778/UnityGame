@@ -8,18 +8,25 @@ using UnityEngine.UI;
 
 public class PauseMenuUI : MonoBehaviour {
     [SerializeField] private Button startButton;
+    [SerializeField] private Button quitButton;
     [SerializeField] private FriendInviteDropDown friendInviteDropDown;
+    [SerializeField] private PauseMenuManager pauseMenuManager;
 
     private void Start() {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+
         startButton.onClick.AddListener(() => {
             LobbyHandler.Instance.CreateLobby();
         });
 
+        quitButton.onClick.AddListener(() => { 
+            pauseMenuManager.QuitGame();
+        });
+
         friendInviteDropDown.Invited.AddListener((UserData userData) => {
             LobbyHandler.Instance.InvitePlayer(userData);
-            Debug.Log("TESTING INVITED: " + userData.ToString());
         });
+
         Hide();
     }
 
