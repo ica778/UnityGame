@@ -19,7 +19,6 @@ public class LobbyHandler : MonoBehaviour {
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
         ConnectionManager.Instance.ConnectToServer(lobbyData, userData);
         SceneLoader.Load(SceneLoader.Scene.GameScene);
-        
     }
 
     public void JoinLobby(LobbyData lobbyData) {
@@ -36,6 +35,10 @@ public class LobbyHandler : MonoBehaviour {
 
     public bool IsHost() {
         return lobbyManager.IsPlayerOwner;
+    }
+
+    public LobbyManager GetLobbyManager() {
+        return lobbyManager;
     }
 
     public void DestroySelf() {

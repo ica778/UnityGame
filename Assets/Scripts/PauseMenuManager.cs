@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class PauseMenuManager : MonoBehaviour {
     public void QuitGame() {
-        GameManager.Instance.DisconnectFromLobby();
+        GameManager.Instance.QuitGame();
     }
 }
