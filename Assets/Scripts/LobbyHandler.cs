@@ -1,4 +1,5 @@
 using HeathenEngineering.SteamworksIntegration;
+using HeathenEngineering.SteamworksIntegration.API;
 using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,18 +14,6 @@ public class LobbyHandler : MonoBehaviour {
         Instance = this;
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
         DontDestroyOnLoad(gameObject);
-    }
-
-    public void OnLobbyCreated(LobbyData lobbyData) {
-        lobbyData.Name = UserData.Me.Name + "'s lobby";
-    }
-
-    public void OnLobbyJoined(LobbyData lobbyData) {
-        Debug.Log("TESTING LOBBY JOINED ON LOBBY JOINED =====================================");
-    }
-
-    public void OnLobbyJoinedFailure(EChatRoomEnterResponse eChatRoomEnterResponse) {
-        Debug.LogError("LOBBY JOIN FAILURE " + eChatRoomEnterResponse.ToString());
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
@@ -45,10 +34,6 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.Invite(userData);
     }
 
-    public void KickPlayer(UserData userData) {
-        lobbyManager.KickMember(userData);
-    }
-
     public bool IsHost() {
         return lobbyManager.IsPlayerOwner;
     }
@@ -56,8 +41,10 @@ public class LobbyHandler : MonoBehaviour {
     public void DestroySelf() {
         if (lobbyManager.IsPlayerOwner) {
             foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
-                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
-                KickPlayer(lobbyMemberData.user);
+                if (!lobbyMemberData.IsOwner) {
+                    Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
+                    lobbyMemberData.Kick();
+                }
             }
         }
         lobbyManager.Leave();

@@ -10459,7 +10459,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8baed8fa2d9904743b31efa75bd35949, type: 2}
   - {fileID: 11400000, guid: 32e20f5e2bc27714c907285f42c76f3d, type: 2}
   groundLootList:
-  - {fileID: 0}
+  - {fileID: 3009866161618170642, guid: f94c1915ff3b3be41b023c541cde0ec0, type: 3}
   - {fileID: 500886075383076551, guid: 0538536192e08184084937bba7560c0c, type: 3}
 --- !u!4 &2133596426
 Transform:
