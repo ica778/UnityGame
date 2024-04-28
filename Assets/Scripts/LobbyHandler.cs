@@ -41,9 +41,23 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.Invite(userData);
     }
 
+    public void KickPlayer(UserData userData) {
+        lobbyManager.KickMember(userData);
+    }
+
+    public bool IsPlayerHost() {
+        return lobbyManager.IsPlayerOwner;
+    }
+
     public void DestroySelf() {
+        if (lobbyManager.IsPlayerOwner) {
+            foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
+                KickPlayer(lobbyMemberData.user);
+            }
+        }
         lobbyManager.Leave();
         Destroy(gameObject);
         Instance = null;
     }
+
 }

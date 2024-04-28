@@ -47,4 +47,6 @@ public class ConnectionManager : MonoBehaviour {
         isHost = false;
         hostHex = null;
     }
+
+
 }
