@@ -20,7 +20,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     public void OnLobbyJoined(LobbyData lobbyData) {
-        Debug.Log("TESTING LOBBY JOINED ON LOBBY JOINED");
+        Debug.Log("TESTING LOBBY JOINED ON LOBBY JOINED =====================================");
     }
 
     public void OnLobbyJoinedFailure(EChatRoomEnterResponse eChatRoomEnterResponse) {
@@ -28,8 +28,12 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
-        ConnectionManager.Instance.StartConnection(userData);
+        ConnectionManager.Instance.ConnectToServer(lobbyData, userData);
         SceneLoader.Load(SceneLoader.Scene.GameScene);
+        
+    }
+
+    public void JoinLobby(LobbyData lobbyData) {
         lobbyManager.Join(lobbyData);
     }
 
@@ -45,7 +49,7 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.KickMember(userData);
     }
 
-    public bool IsPlayerHost() {
+    public bool IsHost() {
         return lobbyManager.IsPlayerOwner;
     }
 

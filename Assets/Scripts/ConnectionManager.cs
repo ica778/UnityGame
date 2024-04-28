@@ -9,23 +9,21 @@ public class ConnectionManager : MonoBehaviour {
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
     private string hostHex;
-    private bool isHost = false;
 
     private void Start () {
         Instance = this;
     }
 
-    public void StartHost() {
+    private void StartHost() {
         var user = UserData.Get();
         hostHex = user.ToString();
 
         fishySteamworks.StartConnection(true);
         fishySteamworks.StartConnection(false);
 
-        isHost = true;
     }
 
-    public void StartConnection(UserData userData) {
+    private void StartConnection(UserData userData) {
         hostHex = userData.ToString();
         var hostUser = UserData.Get(hostHex);
 
@@ -37,16 +35,29 @@ public class ConnectionManager : MonoBehaviour {
         fishySteamworks.StartConnection(false);
     }
 
-    public void StopConnection() {
-        if (isHost) {
+    private void StopConnection() {
+        if (LobbyHandler.Instance.IsHost()) {
             fishySteamworks.Shutdown();
         }
         else {
             fishySteamworks.StopConnection(false);
         }
-        isHost = false;
         hostHex = null;
     }
 
+    public void ConnectAsHost() {
+        StartHost();
+        LobbyHandler.Instance.CreateLobby();
+    }
+
+    public void ConnectToServer(LobbyData lobbyData, UserData userData) {
+        StartConnection(userData);
+        LobbyHandler.Instance.JoinLobby(lobbyData);
+    }
+
+    public void DisconnectFromServer() {
+        StopConnection();
+        LobbyHandler.Instance.DestroySelf();
+    }
 
 }

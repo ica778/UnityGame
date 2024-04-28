@@ -9,7 +9,6 @@ public class MainMenuUI : MonoBehaviour {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button joinButton;
 
-    // NOTE: THIS IS VERY GHETTO AND YOU SHOULD CHANGE IT SO THAT IT IS BETTER
     private void Start() {
         hostButton.onClick.AddListener(() => {
             MainMenuManager.Instance.OnHostButtonClick();

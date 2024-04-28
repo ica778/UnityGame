@@ -13,9 +13,9 @@ public static class SceneLoader {
     private static Scene currentScene;
 
     public static void Load(Scene sceneToLoad) {
-        SceneLoader.currentScene = sceneToLoad;
+        currentScene = sceneToLoad;
 
-        SceneManager.LoadScene(SceneLoader.currentScene.ToString());
+        SceneManager.LoadScene(currentScene.ToString());
     }
 
     public static Scene GetCurrentScene() {

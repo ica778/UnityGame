@@ -9,7 +9,6 @@ public class MainMenuManager : MonoBehaviour {
     public static MainMenuManager Instance { get; private set; }
 
     [SerializeField] private GameObject mainMenuUI;
-    [SerializeField] private ConnectionManager connectionManager;
     [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
 
     private NetworkManager networkManager;
@@ -31,8 +30,7 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     public void OnHostButtonClick() {
-        connectionManager.StartHost();
-        LobbyHandler.Instance.CreateLobby();
+        ConnectionManager.Instance.ConnectAsHost();
         SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 

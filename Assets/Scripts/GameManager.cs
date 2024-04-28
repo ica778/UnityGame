@@ -10,8 +10,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void DisconnectFromLobby() {
-        LobbyHandler.Instance.DestroySelf();
-        ConnectionManager.Instance.StopConnection();
+        ConnectionManager.Instance.DisconnectFromServer();
         SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
     }
 }
