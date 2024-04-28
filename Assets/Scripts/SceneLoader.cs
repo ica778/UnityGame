@@ -10,14 +10,15 @@ public static class SceneLoader {
         GameScene,
     }
 
-
     private static Scene currentScene;
-
-
 
     public static void Load(Scene sceneToLoad) {
         SceneLoader.currentScene = sceneToLoad;
 
         SceneManager.LoadScene(SceneLoader.currentScene.ToString());
+    }
+
+    public static Scene GetCurrentScene() {
+        return currentScene;
     }
 }

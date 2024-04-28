@@ -40,4 +40,10 @@ public class LobbyHandler : MonoBehaviour {
     public void InvitePlayer(UserData userData) {
         lobbyManager.Invite(userData);
     }
+
+    public void DestroySelf() {
+        lobbyManager.Leave();
+        Destroy(gameObject);
+        Instance = null;
+    }
 }

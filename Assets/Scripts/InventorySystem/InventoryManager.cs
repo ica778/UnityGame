@@ -149,4 +149,10 @@ public class InventoryManager : MonoBehaviour {
         }
         return null;
     }
+
+    private void OnDestroy() {
+        GameInput.Instance.OnScrollUpAction -= GameInput_OnScrollUpAction;
+        GameInput.Instance.OnScrollDownAction -= GameInput_OnScrollDownAction;
+        GameInput.Instance.OnLeftClickPressedAction -= GameInput_OnLeftClickPressedAction;
+    }
 }

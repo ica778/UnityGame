@@ -159,4 +159,11 @@ public class Player : NetworkBehaviour {
     public int GetPlayerID() {
         return playerID;
     }
+
+    private void OnDestroy() {
+        GameInput.Instance.OnInteractAction -= GameInput_OnInteractAction;
+        GameInput.Instance.OnDropAction -= GameInput_OnDropAction;
+        GameInput.Instance.OnLeftClickPressedAction -= GameInput_OnLeftClickPressedAction;
+        InventoryManager.Instance.OnSelectedItemChanged -= InventoryManager_OnSelectedItemChanged;
+    }
 }

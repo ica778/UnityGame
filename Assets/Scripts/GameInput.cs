@@ -118,4 +118,21 @@ public class GameInput : MonoBehaviour {
     public Vector2 GetMoveVector() {
         return playerInputActions.Player.Move.ReadValue<Vector2>();
     }
+
+    private void OnDestroy() {
+        playerInputActions.Player.Jump.performed -= Jump_performed;
+        playerInputActions.Player.Crouch.performed -= Crouch_performed;
+        playerInputActions.Player.Sprint.started -= Sprint_started;
+        playerInputActions.Player.Sprint.canceled -= Sprint_canceled;
+        playerInputActions.Player.Pause.performed -= Pause_performed;
+
+        playerInputActions.Player.Interact.performed -= Interact_performed;
+        playerInputActions.Player.Inventory.performed -= Inventory_performed;
+        playerInputActions.Player.Drop.performed -= Drop_performed;
+
+        playerInputActions.Player.Scrolling.performed -= Scrolling_performed;
+        playerInputActions.Player.LeftClick.performed -= LeftClick_performed;
+
+        playerInputActions.Dispose();
+    }
 }

@@ -9,6 +9,7 @@ public class ConnectionManager : MonoBehaviour {
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
     private string hostHex;
+    private bool isHost = false;
 
     private void Start () {
         Instance = this;
@@ -21,7 +22,7 @@ public class ConnectionManager : MonoBehaviour {
         fishySteamworks.StartConnection(true);
         fishySteamworks.StartConnection(false);
 
-        Debug.Log("TESTING 123123123 HOST ID: " + hostHex);
+        isHost = true;
     }
 
     public void StartConnection(UserData userData) {
@@ -34,5 +35,16 @@ public class ConnectionManager : MonoBehaviour {
 
         fishySteamworks.SetClientAddress(hostUser.id.ToString());
         fishySteamworks.StartConnection(false);
+    }
+
+    public void StopConnection() {
+        if (isHost) {
+            fishySteamworks.Shutdown();
+        }
+        else {
+            fishySteamworks.StopConnection(false);
+        }
+        isHost = false;
+        hostHex = null;
     }
 }

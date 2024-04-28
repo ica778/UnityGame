@@ -290,4 +290,11 @@ public class PlayerMovement : NetworkBehaviour {
         }
         return false;
     }
+
+    private void OnDestroy() {
+        GameInput.Instance.OnJumpAction -= GameInput_OnJumpAction;
+        GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
+        GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
+    }
 }

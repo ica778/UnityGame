@@ -28,4 +28,8 @@ public class PlayerInventoryUI : MonoBehaviour {
     private void Show() {
         backpackInventory.SetActive(true);
     }
+
+    private void OnDestroy() {
+        GameInput.Instance.OnInventoryAction -= GameInput_OnInventoryAction;
+    }
 }

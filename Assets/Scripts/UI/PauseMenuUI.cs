@@ -48,4 +48,8 @@ public class PauseMenuUI : MonoBehaviour {
     private void Show() {
         gameObject.SetActive(true);
     }
+
+    private void OnDestroy() {
+        GameInput.Instance.OnPauseAction -= GameInput_OnPauseAction;
+    }
 }
