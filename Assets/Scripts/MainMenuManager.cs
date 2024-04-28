@@ -32,6 +32,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void OnHostButtonClick() {
         connectionManager.StartHost();
+        LobbyHandler.Instance.CreateLobby();
         SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 
