@@ -13,7 +13,12 @@ public class LobbyHandler : MonoBehaviour {
     private void Start () {
         Instance = this;
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
+        HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.EventLobbyAskedToLeave.AddListener(OnAskedToLeave);
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnAskedToLeave(LobbyData lobbyData) {
+        GameManager.Instance.QuitGame();
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
