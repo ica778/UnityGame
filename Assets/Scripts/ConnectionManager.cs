@@ -19,7 +19,6 @@ public class ConnectionManager : MonoBehaviour {
     private void StartHost() {
         var user = UserData.Get();
         hostHex = user.ToString();
-        isHost = true;
 
         fishySteamworks.StartConnection(true);
         fishySteamworks.StartConnection(false);
@@ -51,6 +50,7 @@ public class ConnectionManager : MonoBehaviour {
 
     public void ConnectAsHost() {
         StartHost();
+        isHost = true;
         LobbyHandler.Instance.CreateLobby();
     }
 
@@ -60,7 +60,7 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     public void DisconnectFromServer() {
-        LobbyHandler.Instance?.DestroySelf();
+        LobbyHandler.Instance.DestroySelf();
         StopConnection();
         
     }
