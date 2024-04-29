@@ -18,6 +18,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnAskedToLeave(LobbyData lobbyData) {
+        Debug.Log("TESTING OnAskedToLeave=============================");
         GameManager.Instance.QuitGame();
     }
 

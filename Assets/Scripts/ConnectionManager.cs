@@ -1,6 +1,7 @@
 using HeathenEngineering.SteamworksIntegration;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
@@ -9,6 +10,7 @@ public class ConnectionManager : MonoBehaviour {
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
     private string hostHex;
+    private bool isHost = false;
 
     private void Start () {
         Instance = this;
@@ -17,6 +19,7 @@ public class ConnectionManager : MonoBehaviour {
     private void StartHost() {
         var user = UserData.Get();
         hostHex = user.ToString();
+        isHost = true;
 
         fishySteamworks.StartConnection(true);
         fishySteamworks.StartConnection(false);
@@ -36,12 +39,13 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     private void StopConnection() {
-        if (LobbyHandler.Instance.IsHost()) {
+        if (isHost) {
             fishySteamworks.Shutdown();
         }
         else {
             fishySteamworks.StopConnection(false);
         }
+        isHost = false;
         hostHex = null;
     }
 
