@@ -11,7 +11,12 @@ public class GameManager : MonoBehaviour {
     }
 
     public void QuitGame() {
+        /*
         ConnectionManager.Instance.DisconnectFromServer();
+        GameInput.Instance.UnlockCursor();
         SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
+        */
+
+        LobbyHandler.Instance.TestingKickUsers();
     }
 }

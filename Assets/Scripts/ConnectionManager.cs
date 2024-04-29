@@ -60,8 +60,9 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     public void DisconnectFromServer() {
+        LobbyHandler.Instance?.DestroySelf();
         StopConnection();
-        LobbyHandler.Instance.DestroySelf();
+        
     }
 
 }

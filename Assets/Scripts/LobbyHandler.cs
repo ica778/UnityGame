@@ -18,8 +18,8 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnAskedToLeave(LobbyData lobbyData) {
-        Debug.Log("TESTING OnAskedToLeave=============================");
-        GameManager.Instance.QuitGame();
+        Debug.Log("TESTING OnAskedToLeave NEW 123=============================");
+        //GameManager.Instance.QuitGame();
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
@@ -45,6 +45,15 @@ public class LobbyHandler : MonoBehaviour {
 
     public LobbyManager GetLobbyManager() {
         return lobbyManager;
+    }
+
+    public void TestingKickUsers() {
+        foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
+            if (!lobbyMemberData.IsOwner) {
+                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
+                lobbyMemberData.Kick();
+            }
+        }
     }
 
     public void DestroySelf() {
