@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void OnAskedToLeave() {
-        QuitGame();
+        ConnectionManager.Instance.DisconnectFromServer();
     }
 
     public void QuitGame() {
