@@ -8,10 +8,15 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         Instance = this;
+        LobbyHandler.Instance.GetLobbyManager().evtAskedToLeave.AddListener(OnAskedToLeave);
+    }
+
+    private void OnAskedToLeave() {
+        QuitGame();
     }
 
     public void QuitGame() {
-        LobbyHandler.Instance.KickSelf();
-        //SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
+        ConnectionManager.Instance.DisconnectFromServer();
+        SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
     }
 }
