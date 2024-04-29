@@ -293,15 +293,15 @@ namespace HeathenEngineering.SteamworksIntegration.API
 
                             if (m_SteamAPIWarningMessageHook == null)
                             {
-                                // Set up our callback to recieve warning messages from Steamworks.
-                                // You must launch with "-debug_steamapi" in the launch args to recieve warnings.
+                                // Set up our callback to receive warning messages from Steamworks.
+                                // You must launch with "-debug_steamapi" in the launch args to receive warnings.
                                 m_SteamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
                                 SteamClient.SetWarningMessageHook(m_SteamAPIWarningMessageHook);
                             }
 
                             if (!SteamUser.BLoggedOn())
                             {
-                                Debug.LogWarning("Steam API was able to initalize however the user does not have an acitve logon; no real-time services provided by the Steamworks API will be enabled. The Steam client will automatically be trying to recreate the connection as often as possible. When the connection is restored a API.App.Client.EvenServersConnected event will be posted.");
+                                Debug.LogWarning("Steam API was able to initialize however the user does not have an active logon; no real-time services provided by the Steamworks API will be enabled. The Steam client will automatically be trying to recreate the connection as often as possible. When the connection is restored a API.App.Client.EvenServersConnected event will be posted.");
                             }
 
                             API.StatsAndAchievements.Client.RequestCurrentStats();
@@ -314,7 +314,7 @@ namespace HeathenEngineering.SteamworksIntegration.API
                             if (appId != SteamUtils.GetAppID())
                             {
 #if UNITY_EDITOR
-                                Debug.LogWarning($"The reported applicaiton ID of {SteamUtils.GetAppID()} does not match the anticipated ID of {appId}. This is most frequently caused when you edit your AppID but fail to restart Unity, Visual Studio and or any other processes that may have mounted the Steam API under the previous App ID. To correct this please insure your AppID is entered correctly in the SteamSettings object and that you fully restart the Unity Editor, Visual Studio and any other processes that may have connectd to them.");
+                                Debug.LogWarning($"The reported application ID of {SteamUtils.GetAppID()} does not match the anticipated ID of {appId}. This is most frequently caused when you edit your AppID but fail to restart Unity, Visual Studio and or any other processes that may have mounted the Steam API under the previous App ID. To correct this please insure your AppID is entered correctly in the SteamSettings object and that you fully restart the Unity Editor, Visual Studio and any other processes that may have connected to them.");
 #else
                             Debug.LogError($"The reported AppId is not as expected:\ntAppId Reported = {SteamUtils.GetAppID()}\n\tAppId Expected = {appId}");
                             Application.Quit();

@@ -136,7 +136,7 @@ namespace HeathenEngineering.SteamworksIntegration
             
             if(boards.Any(b => b == null || string.IsNullOrEmpty(b.apiName)))
             {
-                Debug.LogError("Errors have been found with the Leaderboard Objects proivded. Please review your Leaderboard Objects and try again.");
+                Debug.LogError("Errors have been found with the Leaderboard Objects provided. Please review your Leaderboard Objects and try again.");
                 callback?.Invoke(EResult.k_EResultUnexpectedError);
                 return;
             }

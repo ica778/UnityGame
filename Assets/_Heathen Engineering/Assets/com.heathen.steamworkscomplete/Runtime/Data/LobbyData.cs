@@ -556,7 +556,7 @@ namespace HeathenEngineering.SteamworksIntegration
         /// This creates an entry in the metadata named z_heathenKick which contains a string array of Ids of users that should leave the lobby.
         /// When users detect their ID in the string they will automatically leave the lobby on leaving the lobby the users ID will be removed from the array.
         /// </remarks>
-        public readonly bool KickMember(CSteamID memberId)
+        public readonly bool KickMember(UserData memberId)
         {
             if (!IsOwner)
                 return false;
@@ -576,7 +576,7 @@ namespace HeathenEngineering.SteamworksIntegration
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public readonly bool KickListContains(CSteamID memberId)
+        public readonly bool KickListContains(UserData memberId)
         {
             var kickList = API.Matchmaking.Client.GetLobbyData(id, DataKick);
             return kickList.Contains("[" + memberId.ToString() + "]");
@@ -586,7 +586,7 @@ namespace HeathenEngineering.SteamworksIntegration
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public readonly bool RemoveFromKickList(CSteamID memberId)
+        public readonly bool RemoveFromKickList(UserData memberId)
         {
             if (!IsOwner)
                 return false;
@@ -612,23 +612,24 @@ namespace HeathenEngineering.SteamworksIntegration
         /// Use this sparingly it requires string parsing and is not performant
         /// </summary>
         /// <returns></returns>
-        public readonly CSteamID[] GetKickList()
+        public readonly UserData[] GetKickList()
         {
             var list = API.Matchmaking.Client.GetLobbyData(id, DataKick);
             if (!string.IsNullOrEmpty(list))
             {
                 var sArray = list.Split(new string[] { "][" }, StringSplitOptions.RemoveEmptyEntries);
-                var resultList = new List<CSteamID>();
+                var resultList = new List<UserData>();
                 for (int i = 0; i < sArray.Length; i++)
                 {
-                    if (ulong.TryParse(sArray[i].Replace("[", string.Empty).Replace("]", string.Empty), out ulong id))
-                        resultList.Add(new CSteamID(id));
+                    var user = UserData.Get(sArray[i].Replace("[", string.Empty).Replace("]", string.Empty));
+                    if (user.IsValid)
+                        resultList.Add(user);
                 }
 
                 return resultList.ToArray();
             }
             else
-                return new CSteamID[0];
+                return new UserData[0];
         }
         /// <summary>
         /// Sets metadata for the player on the first lobby
@@ -653,7 +654,7 @@ namespace HeathenEngineering.SteamworksIntegration
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public readonly string GetMemberMetadata(CSteamID memberId, string key)
+        public readonly string GetMemberMetadata(UserData memberId, string key)
         {
             return API.Matchmaking.Client.GetLobbyMemberData(id, memberId, key);
         }
