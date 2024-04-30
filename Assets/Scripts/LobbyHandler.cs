@@ -13,11 +13,20 @@ public class LobbyHandler : MonoBehaviour {
     private void Start () {
         Instance = this;
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
-        HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.EventLobbyAskedToLeave.AddListener(OnAskedToLeave);
+        lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         DontDestroyOnLoad(gameObject);
     }
 
-    private void OnAskedToLeave(LobbyData lobbyData) {
+    public void Testing() {
+        foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
+            if (!lobbyMemberData.IsOwner) {
+                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
+                lobbyMemberData.Kick();
+            }
+        }
+    }
+
+    private void OnAskedToLeave() {
         GameManager.Instance.QuitGame();
     }
 
@@ -25,15 +34,6 @@ public class LobbyHandler : MonoBehaviour {
         ConnectionManager.Instance.StartConnection(userData);
         JoinLobby(lobbyData);
         SceneLoader.Load(SceneLoader.Scene.GameScene);
-    }
-
-    public void TestingFunction() {
-        foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
-            if (!lobbyMemberData.IsOwner) {
-                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
-                lobbyMemberData.Kick();
-            }
-        }
     }
 
     public void JoinLobby(LobbyData lobbyData) {
@@ -45,6 +45,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     public void InvitePlayer(UserData userData) {
+        lobbyManager.Lobby.ClearKickList();
         lobbyManager.Invite(userData);
     }
 

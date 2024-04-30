@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
     public void QuitGame() {
         ConnectionManager.Instance.Disconnect();
         GameInput.Instance.UnlockCursor();
+        LobbyHandler.Instance.DestroySelf();
         SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
     }
 }

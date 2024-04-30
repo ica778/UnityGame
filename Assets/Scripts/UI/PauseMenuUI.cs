@@ -20,7 +20,7 @@ public class PauseMenuUI : MonoBehaviour {
         });
 
         testButton.onClick.AddListener(() => {
-            pauseMenuManager.QuitGame();
+            LobbyHandler.Instance.Testing();
         });
 
         friendInviteDropDown.Invited.AddListener((UserData userData) => {
