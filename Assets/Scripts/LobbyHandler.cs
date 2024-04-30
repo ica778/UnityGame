@@ -4,11 +4,13 @@ using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static HeathenEngineering.SteamworksIntegration.GameServerBrowserManager;
 
 public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
 
     [SerializeField] private LobbyManager lobbyManager;
+    [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
 
     private void Start () {
         Instance = this;
@@ -31,13 +33,14 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
-        ConnectionManager.Instance.StartConnection(userData);
-        JoinLobby(lobbyData);
-        SceneLoader.Load(SceneLoader.Scene.GameScene);
+        JoinLobbyAsGuest(lobbyData, userData);
     }
 
-    public void JoinLobby(LobbyData lobbyData) {
+    // TODO: make it verify if join was successful before proceeding
+    public void JoinLobbyAsGuest(LobbyData lobbyData, UserData userData) {
         lobbyManager.Join(lobbyData);
+        ConnectionManager.Instance.StartConnection(userData);
+        SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 
     public void CreateLobby() {
@@ -47,10 +50,6 @@ public class LobbyHandler : MonoBehaviour {
     public void InvitePlayer(UserData userData) {
         lobbyManager.Lobby.ClearKickList();
         lobbyManager.Invite(userData);
-    }
-
-    public bool IsHost() {
-        return lobbyManager.IsPlayerOwner;
     }
 
     public LobbyManager GetLobbyManager() {

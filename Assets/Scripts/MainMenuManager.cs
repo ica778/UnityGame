@@ -9,7 +9,7 @@ public class MainMenuManager : MonoBehaviour {
     public static MainMenuManager Instance { get; private set; }
 
     [SerializeField] private GameObject mainMenuUI;
-    [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
+    [SerializeField] private LobbySearcher lobbySearcher;
 
     private void Awake() {
         Instance = this;
@@ -17,39 +17,14 @@ public class MainMenuManager : MonoBehaviour {
         ShowMainMenuUI();
     }
 
-    private void Start() {
-        gameServerBrowserManager.evtSearchCompleted.AddListener(OnServerSearchCompleted);
-    }
-
     public void OnHostButtonClick() {
-        ConnectionManager.Instance.StartHost();
         LobbyHandler.Instance.CreateLobby();
+        ConnectionManager.Instance.StartHost();
         SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 
-    /*
     public void OnJoinButtonClick() {
-        gameServerBrowserManager.GetAllInternet();
-    }
-    */
-
-    public void OnJoinButtonClick() {
-        //connectionManager.StartConnection();
-        Debug.LogError("FEATURE NOT IMPLEMENTED YET");
-        SceneLoader.Load(SceneLoader.Scene.GameScene);
-    }
-
-    private void OnServerSearchCompleted(ResultData resultData) {
-        if (resultData.entries != null) {
-            resultData.entries.ForEach(entry => {
-                Debug.Log("TESTING " + entry.SteamId);
-            });
-            Debug.Log("TESTING 123: " + resultData.entries.Count);
-        }
-        
-        
-        
-        
+        lobbySearcher.FindLobbies();
     }
 
     private void ShowMainMenuUI() {
