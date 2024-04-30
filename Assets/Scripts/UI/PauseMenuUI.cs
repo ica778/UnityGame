@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class PauseMenuUI : MonoBehaviour {
     [SerializeField] private Button quitButton;
+    [SerializeField] private Button testButton;
     [SerializeField] private FriendInviteDropDown friendInviteDropDown;
     [SerializeField] private PauseMenuManager pauseMenuManager;
 
@@ -15,6 +16,10 @@ public class PauseMenuUI : MonoBehaviour {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
 
         quitButton.onClick.AddListener(() => { 
+            pauseMenuManager.QuitGame();
+        });
+
+        testButton.onClick.AddListener(() => {
             pauseMenuManager.QuitGame();
         });
 

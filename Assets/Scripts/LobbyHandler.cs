@@ -22,8 +22,18 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
-        ConnectionManager.Instance.ConnectToServer(lobbyData, userData);
+        ConnectionManager.Instance.StartConnection(userData);
+        JoinLobby(lobbyData);
         SceneLoader.Load(SceneLoader.Scene.GameScene);
+    }
+
+    public void TestingFunction() {
+        foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
+            if (!lobbyMemberData.IsOwner) {
+                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
+                lobbyMemberData.Kick();
+            }
+        }
     }
 
     public void JoinLobby(LobbyData lobbyData) {
@@ -44,15 +54,6 @@ public class LobbyHandler : MonoBehaviour {
 
     public LobbyManager GetLobbyManager() {
         return lobbyManager;
-    }
-
-    public void TestingKickUsers() {
-        foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
-            if (!lobbyMemberData.IsOwner) {
-                Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
-                lobbyMemberData.Kick();
-            }
-        }
     }
 
     public void DestroySelf() {

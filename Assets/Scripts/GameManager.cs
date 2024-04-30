@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void QuitGame() {
-        ConnectionManager.Instance.DisconnectFromServer();
+        ConnectionManager.Instance.Disconnect();
         GameInput.Instance.UnlockCursor();
         SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
     }

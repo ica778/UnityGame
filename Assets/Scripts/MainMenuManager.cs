@@ -11,16 +11,8 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
 
-    private NetworkManager networkManager;
-
     private void Awake() {
         Instance = this;
-
-        networkManager = FindObjectOfType<NetworkManager>();
-        if (networkManager == null) {
-            Debug.LogError("NetworkManager not found");
-            return;
-        }
 
         ShowMainMenuUI();
     }
@@ -30,7 +22,8 @@ public class MainMenuManager : MonoBehaviour {
     }
 
     public void OnHostButtonClick() {
-        ConnectionManager.Instance.ConnectAsHost();
+        ConnectionManager.Instance.StartHost();
+        LobbyHandler.Instance.CreateLobby();
         SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 
