@@ -12,10 +12,13 @@ public class LobbyHandler : MonoBehaviour {
     [SerializeField] private LobbyManager lobbyManager;
     [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
 
+    private UserData userData;
+
     private void Start () {
         Instance = this;
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
+        lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -25,6 +28,12 @@ public class LobbyHandler : MonoBehaviour {
                 Debug.Log("TESTING KICK USER: " + lobbyMemberData.user.Name);
                 lobbyMemberData.Kick();
             }
+        }
+    }
+
+    private void OnJoinLobbySuccess(LobbyData lobbyData) {
+        if (ConnectionManager.Instance.StartConnection(userData)) {
+            SceneLoader.Load(SceneLoader.Scene.GameScene);
         }
     }
 
@@ -38,9 +47,8 @@ public class LobbyHandler : MonoBehaviour {
 
     // TODO: make it verify if join was successful before proceeding
     public void JoinLobbyAsGuest(LobbyData lobbyData, UserData userData) {
+        this.userData = userData;
         lobbyManager.Join(lobbyData);
-        ConnectionManager.Instance.StartConnection(userData);
-        SceneLoader.Load(SceneLoader.Scene.GameScene);
     }
 
     public void CreateLobby() {

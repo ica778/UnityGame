@@ -17,18 +17,22 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     // start server and join as host
-    public void StartHost() {
+    public bool StartHost() {
         var user = UserData.Get();
         hostHex = user.ToString();
 
-        fishySteamworks.StartConnection(true);
-        fishySteamworks.StartConnection(false);
+        if (fishySteamworks.StartConnection(true)) {
+            if (fishySteamworks.StartConnection(false)) {
+                isHost = true;
+                return true;
+            }
+        }
 
-        isHost = true;
+        return false;
     }
 
     // join server as guest
-    public void StartConnection(UserData userData) {
+    public bool StartConnection(UserData userData) {
         hostHex = userData.ToString();
         var hostUser = UserData.Get(hostHex);
 
@@ -37,7 +41,7 @@ public class ConnectionManager : MonoBehaviour {
         }
 
         fishySteamworks.SetClientAddress(hostUser.id.ToString());
-        fishySteamworks.StartConnection(false);
+        return fishySteamworks.StartConnection(false);
     }
 
     public void Disconnect() {
