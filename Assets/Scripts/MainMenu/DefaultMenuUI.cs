@@ -5,17 +5,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuUI : MonoBehaviour {
+public class DefaultMenuUI : MonoBehaviour {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button joinButton;
 
+    private DefaultMenuManager defaultMenuManager;
+
+    private void Awake() {
+        defaultMenuManager = GetComponent<DefaultMenuManager>();
+    }
+
     private void Start() {
         hostButton.onClick.AddListener(() => {
-            MainMenuManager.Instance.OnHostButtonClick();
+            defaultMenuManager.OnClickHostButton();
         });
 
         joinButton.onClick.AddListener(() => {
-            MainMenuManager.Instance.OnJoinButtonClick();
+            defaultMenuManager.OnClickJoinButton();
         });
     }
 }

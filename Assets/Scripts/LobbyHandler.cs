@@ -10,7 +10,6 @@ public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
 
     [SerializeField] private LobbyManager lobbyManager;
-    [SerializeField] private GameServerBrowserManager gameServerBrowserManager;
 
     private UserData userData;
 
