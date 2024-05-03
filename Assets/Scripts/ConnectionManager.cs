@@ -32,7 +32,7 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     // join server as guest
-    public bool StartConnection(UserData userData) {
+    public bool StartConnectionAsGuest(UserData userData) {
         hostHex = userData.ToString();
         var hostUser = UserData.Get(hostHex);
 

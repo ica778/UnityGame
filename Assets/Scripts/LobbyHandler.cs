@@ -31,7 +31,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
-        if (ConnectionManager.Instance.StartConnection(userData)) {
+        if (ConnectionManager.Instance.StartConnectionAsGuest(userData)) {
             SceneLoader.Load(SceneLoader.Scene.GameScene);
         }
     }
@@ -43,8 +43,8 @@ public class LobbyHandler : MonoBehaviour {
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
         JoinLobbyAsGuest(lobbyData, userData);
     }
-
-    // TODO: make it verify if join was successful before proceeding
+    
+    // This is what you use to join game, dont need to go into ConnectionManager
     public void JoinLobbyAsGuest(LobbyData lobbyData, UserData userData) {
         this.userData = userData;
         lobbyManager.Join(lobbyData);
