@@ -1,4 +1,5 @@
 using HeathenEngineering.SteamworksIntegration;
+using Steamworks;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
@@ -6,7 +7,6 @@ public class ConnectionManager : MonoBehaviour {
 
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
-    private string hostHex;
     private bool isHost = false;
 
     private void Start () {
@@ -15,13 +15,12 @@ public class ConnectionManager : MonoBehaviour {
 
     // start server and join as host
     public bool StartHost() {
-        var user = UserData.Get();
-        hostHex = user.ToString();
+        UserData user = UserData.Get();
 
         if (fishySteamworks.StartConnection(true)) {
             if (fishySteamworks.StartConnection(false)) {
                 isHost = true;
-                LobbyHandler.Instance.SetLobbyGameServer(user);
+                LobbyHandler.Instance.SetLobbyGameServer(user.id);
                 return true;
             }
         }
@@ -29,16 +28,14 @@ public class ConnectionManager : MonoBehaviour {
         return false;
     }
 
-    // join server as guest
-    public bool StartConnectionAsGuest(UserData hostUserData) {
-        hostHex = hostUserData.ToString();
-        var hostUser = UserData.Get(hostHex);
+    // join server as guest using host CSteamID
+    public bool StartConnectionAsGuest(CSteamID hostCSteamID) {
+        UserData hostUser = UserData.Get(hostCSteamID);
 
         if (!hostUser.IsValid) {
             Debug.LogError("TESTING HOST USER IS NOT VALID");
         }
-
-        fishySteamworks.SetClientAddress(hostUser.id.ToString());
+        fishySteamworks.SetClientAddress(hostCSteamID.ToString());
         return fishySteamworks.StartConnection(false);
     }
 
@@ -50,6 +47,5 @@ public class ConnectionManager : MonoBehaviour {
             fishySteamworks.StopConnection(false);
         }
         isHost = false;
-        hostHex = null;
     }
 }

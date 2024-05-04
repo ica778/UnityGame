@@ -1,6 +1,8 @@
 using HeathenEngineering.SteamworksIntegration;
+using HeathenEngineering.SteamworksIntegration.API;
 using Steamworks;
 using UnityEngine;
+using static HeathenEngineering.SteamworksIntegration.SteamSettings;
 
 public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
@@ -25,7 +27,10 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
-        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyManager.Lobby.Owner.user)) {
+        //lobbyManager.Lobby.Owner.user.id
+        Debug.Log("TESTING JOIN SERVER GAME SERVER: " + lobbyData.GameServer.id + " | " + lobbyData.GameServer.ipAddress + " | " + lobbyData.GameServer.IpAddress);
+
+        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyManager.Lobby.Owner.user.id)) {
             SceneLoader.Load(SceneLoader.Scene.GameScene);
         }
     }
@@ -57,6 +62,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     public void SetLobbyGameServer(CSteamID gameServerID) {
+        Debug.Log("TESTING SET GAMESERVER: " + gameServerID.ToString());
         lobbyManager.Lobby.SetGameServer(gameServerID);
     }
 
