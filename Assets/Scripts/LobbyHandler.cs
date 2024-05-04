@@ -11,8 +11,6 @@ public class LobbyHandler : MonoBehaviour {
 
     [SerializeField] private LobbyManager lobbyManager;
 
-    private UserData userData;
-
     private void Start () {
         Instance = this;
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
@@ -31,7 +29,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
-        if (ConnectionManager.Instance.StartConnectionAsGuest(userData)) {
+        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyManager.Lobby.Owner.user)) {
             SceneLoader.Load(SceneLoader.Scene.GameScene);
         }
     }
@@ -41,12 +39,11 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
-        JoinLobbyAsGuest(lobbyData, userData);
+        JoinLobbyAsGuest(lobbyData);
     }
     
     // This is what you use to join game, dont need to go into ConnectionManager
-    public void JoinLobbyAsGuest(LobbyData lobbyData, UserData userData) {
-        this.userData = userData;
+    public void JoinLobbyAsGuest(LobbyData lobbyData) {
         lobbyManager.Join(lobbyData);
     }
 

@@ -18,14 +18,11 @@ public class LobbyListingManager : MonoBehaviour {
     }
 
     private void JoinLobby() {
-        LobbyHandler.Instance.JoinLobbyAsGuest(lobbyData, UserData.Get());
+        LobbyHandler.Instance.JoinLobbyAsGuest(lobbyData);
     }
 
-    public void SetText(string text) {
-        lobbyText.text = text;
-    }
-
-    public void SetLobbyData(LobbyData lobbyData) {
+    public void SetLobbyListingData(LobbyData lobbyData) {
         this.lobbyData = lobbyData;
+        lobbyText.text = lobbyData.Name;
     }
 }

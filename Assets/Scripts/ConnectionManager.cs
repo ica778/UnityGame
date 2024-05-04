@@ -32,12 +32,12 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     // join server as guest
-    public bool StartConnectionAsGuest(UserData userData) {
-        hostHex = userData.ToString();
+    public bool StartConnectionAsGuest(UserData hostUserData) {
+        hostHex = hostUserData.ToString();
         var hostUser = UserData.Get(hostHex);
 
         if (!hostUser.IsValid) {
-            Debug.Log("TESTING HOST USER IS NOT VALID");
+            Debug.LogError("TESTING HOST USER IS NOT VALID");
         }
 
         fishySteamworks.SetClientAddress(hostUser.id.ToString());

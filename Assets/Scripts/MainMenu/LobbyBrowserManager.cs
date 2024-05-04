@@ -39,8 +39,7 @@ public class LobbyBrowserManager : MonoBehaviour {
             lobbyListingSpawnHeight -= lobbyListingHeight;
 
             LobbyListingManager lobbyListingManager = newLobbyListing.GetComponent<LobbyListingManager>();
-            lobbyListingManager.SetText(lobbyData.Name);
-            lobbyListingManager.SetLobbyData(lobbyData);
+            lobbyListingManager.SetLobbyListingData(lobbyData);
         }
 
     }
