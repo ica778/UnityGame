@@ -1,13 +1,14 @@
 using HeathenEngineering.SteamworksIntegration;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LobbyListingManager : MonoBehaviour {
-    [SerializeField] private TextMeshProUGUI lobbyText;
+    [SerializeField] private TextMeshProUGUI lobbyName;
+    [SerializeField] private TextMeshProUGUI lobbyCapacity;
+    [SerializeField] private TextMeshProUGUI ping;
     [SerializeField] private Button joinButton;
+
 
     private LobbyData lobbyData;
 
@@ -23,6 +24,9 @@ public class LobbyListingManager : MonoBehaviour {
 
     public void SetLobbyListingData(LobbyData lobbyData) {
         this.lobbyData = lobbyData;
-        lobbyText.text = lobbyData.Name;
+        lobbyName.SetText(lobbyData.Name);
+        lobbyCapacity.SetText(lobbyData.MemberCount + "/" + lobbyData.MaxMembers);
+        //LobbyGameServer lobbyGameServer = lobbyData;
+        ping.SetText("69");
     }
 }

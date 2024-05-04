@@ -1,7 +1,4 @@
 using HeathenEngineering.SteamworksIntegration;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
@@ -24,6 +21,7 @@ public class ConnectionManager : MonoBehaviour {
         if (fishySteamworks.StartConnection(true)) {
             if (fishySteamworks.StartConnection(false)) {
                 isHost = true;
+                LobbyHandler.Instance.SetLobbyGameServer(user);
                 return true;
             }
         }

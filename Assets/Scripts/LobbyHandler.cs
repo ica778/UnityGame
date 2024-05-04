@@ -1,10 +1,6 @@
 using HeathenEngineering.SteamworksIntegration;
-using HeathenEngineering.SteamworksIntegration.API;
 using Steamworks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static HeathenEngineering.SteamworksIntegration.GameServerBrowserManager;
 
 public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
@@ -58,6 +54,10 @@ public class LobbyHandler : MonoBehaviour {
 
     public LobbyManager GetLobbyManager() {
         return lobbyManager;
+    }
+
+    public void SetLobbyGameServer(CSteamID gameServerID) {
+        lobbyManager.Lobby.SetGameServer(gameServerID);
     }
 
     public void DestroySelf() {

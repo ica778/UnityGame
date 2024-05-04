@@ -1,7 +1,3 @@
-using FishNet.Managing;
-using FishNet.Transporting;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 

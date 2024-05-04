@@ -1,7 +1,5 @@
 using HeathenEngineering.SteamworksIntegration;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LobbyBrowserManager : MonoBehaviour {
@@ -45,6 +43,7 @@ public class LobbyBrowserManager : MonoBehaviour {
     }
 
     public void FindLobbies() {
+        //HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.AddRequestLobbyListFilterSlotsAvailable
         HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.RequestLobbyList(RequestLobbyListCallback);
     }
 

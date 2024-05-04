@@ -1,9 +1,4 @@
-using FishNet.Managing;
-using HeathenEngineering.SteamworksIntegration;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static HeathenEngineering.SteamworksIntegration.GameServerBrowserManager;
 
 public class MainMenuManager : MonoBehaviour {
     public static MainMenuManager Instance { get; private set; }
