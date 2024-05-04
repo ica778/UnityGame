@@ -15,8 +15,6 @@ public class ConnectionManager : MonoBehaviour {
 
     // start server and join as host
     public bool StartHost() {
-        UserData user = UserData.Get();
-
         if (fishySteamworks.StartConnection(true)) {
             if (fishySteamworks.StartConnection(false)) {
                 isHost = true;

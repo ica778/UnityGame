@@ -2039,12 +2039,15 @@ MonoBehaviour:
     slots: -1
     distance: 1
     nearValues: []
-    numericFilters: []
+    numericFilters:
+    - key: GameKey
+      value: 37572537
+      comparison: 0
     stringFilters: []
   createArguments:
     usageHint: 2
-    name: SPONGEBOOB'S LOBBY
-    slots: 4
+    name: 
+    slots: 6
     type: 2
     metadata: []
     richPresenceFields: []

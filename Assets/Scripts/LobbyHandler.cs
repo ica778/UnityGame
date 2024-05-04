@@ -14,6 +14,7 @@ public class LobbyHandler : MonoBehaviour {
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
+        lobbyManager.evtCreated.AddListener(OnLobbyCreateSuccess);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -39,7 +40,11 @@ public class LobbyHandler : MonoBehaviour {
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
         JoinLobbyAsGuest(lobbyData);
     }
-    
+
+    private void OnLobbyCreateSuccess(LobbyData lobbyData) {
+        lobbyData.Name = lobbyData.Owner.user.Name + "'s Lobby";
+    }
+
     // This is what you use to join game, dont need to go into ConnectionManager
     public void JoinLobbyAsGuest(LobbyData lobbyData) {
         lobbyManager.Join(lobbyData);

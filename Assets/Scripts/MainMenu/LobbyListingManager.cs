@@ -26,7 +26,6 @@ public class LobbyListingManager : MonoBehaviour {
         this.lobbyData = lobbyData;
         lobbyName.SetText(lobbyData.Name);
         lobbyCapacity.SetText(lobbyData.MemberCount + "/" + lobbyData.MaxMembers);
-        //LobbyGameServer lobbyGameServer = lobbyData;
         ping.SetText("69");
     }
 }
