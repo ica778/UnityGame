@@ -20,7 +20,6 @@ public class ConnectionManager : MonoBehaviour {
         if (fishySteamworks.StartConnection(true)) {
             if (fishySteamworks.StartConnection(false)) {
                 isHost = true;
-                LobbyHandler.Instance.SetLobbyGameServer(user.id);
                 return true;
             }
         }

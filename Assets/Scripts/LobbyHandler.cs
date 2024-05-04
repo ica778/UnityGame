@@ -27,10 +27,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
-        //lobbyManager.Lobby.Owner.user.id
-        Debug.Log("TESTING JOIN SERVER GAME SERVER: " + lobbyData.GameServer.id + " | " + lobbyData.GameServer.ipAddress + " | " + lobbyData.GameServer.IpAddress);
-
-        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyManager.Lobby.Owner.user.id)) {
+        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyData.Owner.user.id)) {
             SceneLoader.Load(SceneLoader.Scene.GameScene);
         }
     }
@@ -59,11 +56,6 @@ public class LobbyHandler : MonoBehaviour {
 
     public LobbyManager GetLobbyManager() {
         return lobbyManager;
-    }
-
-    public void SetLobbyGameServer(CSteamID gameServerID) {
-        Debug.Log("TESTING SET GAMESERVER: " + gameServerID.ToString());
-        lobbyManager.Lobby.SetGameServer(gameServerID);
     }
 
     public void DestroySelf() {
