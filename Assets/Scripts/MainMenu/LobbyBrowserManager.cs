@@ -51,8 +51,6 @@ public class LobbyBrowserManager : MonoBehaviour {
     }
 
     public void FindLobbies() {
-        // NOTE: HERE IS THE THING THAT MAKES LOBBY ONLY SHOW LOBBIES FOR THIS GAME
-        HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.AddRequestLobbyListNumericalFilter("GameKey", 37572537, Steamworks.ELobbyComparison.k_ELobbyComparisonEqual);
         HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.RequestLobbyList(RequestLobbyListCallback);
     }
 
