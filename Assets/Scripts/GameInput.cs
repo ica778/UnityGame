@@ -97,10 +97,9 @@ public class GameInput : MonoBehaviour {
         Cursor.visible = true;
     }
 
-    // TODO: CONFIRM IF Time.deltaTime IS NEEDED
     public float GetLookX() {
         if (Cursor.lockState == CursorLockMode.Locked) {
-            return playerInputActions.Player.Look.ReadValue<Vector2>().x * Time.deltaTime;
+            return playerInputActions.Player.Look.ReadValue<Vector2>().x;
         }
         else {
             return 0f;
@@ -109,7 +108,7 @@ public class GameInput : MonoBehaviour {
 
     public float GetLookY() {
         if (Cursor.lockState == CursorLockMode.Locked) {
-            return playerInputActions.Player.Look.ReadValue<Vector2>().y * Time.deltaTime;
+            return playerInputActions.Player.Look.ReadValue<Vector2>().y;
         }
         else {
             return 0f;

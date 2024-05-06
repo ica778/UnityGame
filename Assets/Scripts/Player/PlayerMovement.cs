@@ -15,8 +15,6 @@ public class PlayerMovement : NetworkBehaviour {
     [SerializeField] private GameObject standingCapsule;
     [SerializeField] private GameObject crouchingCapsule;
     private Rigidbody rigidBody;
-    private CapsuleCollider standingCapsuleCollider;
-    private CapsuleCollider crouchingCapsuleCollider;
 
     private float maxWalkSpeed = 5f;
     private float maxSprintSpeed = 10f;
@@ -43,15 +41,9 @@ public class PlayerMovement : NetworkBehaviour {
     private float walkableAngleRaycastRange = 0.4f;
     private RaycastHit slopeHit;
 
-    private float stepRaycastDistance = 0.4f;
-    private float stepHeight = 2f;
-    private float stepRaycastRange = 0.6f;
-
     private void Start() {
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.freezeRotation = true;
-        standingCapsuleCollider = standingCapsule.GetComponent<CapsuleCollider>();
-        crouchingCapsuleCollider = crouchingCapsule.GetComponent<CapsuleCollider>();
     }
 
     public override void OnStartClient() {
@@ -63,7 +55,6 @@ public class PlayerMovement : NetworkBehaviour {
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
-        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
     }
 
     private void Update() {
@@ -89,11 +80,8 @@ public class PlayerMovement : NetworkBehaviour {
             return;
         }
 
-        ToggleGravityIfOnWalkableAngle();
         MovePlayer();
-        if (moveDirection != Vector3.zero) {
-            ClimbStep();
-        }
+
         SpeedControl();
     }
 
@@ -151,10 +139,6 @@ public class PlayerMovement : NetworkBehaviour {
         currentMoveState = MoveState.Walking;
     }
 
-    private void GameInput_OnCrouchAction(object sender, System.EventArgs e) {
-        ToggleCrouchState();
-    }
-
     private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
         Jump();
     }
@@ -167,12 +151,6 @@ public class PlayerMovement : NetworkBehaviour {
             rigidBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             jumpTimer = jumpTimerCooldown;
         }
-    }
-
-    private void ToggleGravityIfOnWalkableAngle() {
-        //rigidBody.useGravity = !isOnWalkableAngle;
-        // TODO: TESTING
-        rigidBody.useGravity = true;
     }
 
     private void MovePlayer() {
@@ -226,57 +204,6 @@ public class PlayerMovement : NetworkBehaviour {
 
     }
 
-    private void ClimbStep() {
-        Vector3 stepRaycastLowerPosition = groundPoint.transform.position;
-        Vector3 stepRaycastUpperPosition = new Vector3(stepRaycastLowerPosition.x, stepRaycastLowerPosition.y + stepRaycastDistance, stepRaycastLowerPosition.z);
-
-        if (Physics.Raycast(stepRaycastLowerPosition, moveDirection, stepRaycastRange, walkableLayer)) {
-            if (!Physics.Raycast(stepRaycastUpperPosition, moveDirection, stepRaycastRange + 0.1f, walkableLayer)) {
-                rigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
-            }
-        }
-        else if (Physics.Raycast(stepRaycastLowerPosition, moveDirection + new Vector3(1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
-            if (!Physics.Raycast(stepRaycastUpperPosition, moveDirection + new Vector3(1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
-                rigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
-            }
-        }
-        else if (Physics.Raycast(stepRaycastLowerPosition, moveDirection + new Vector3(-1.5f, 0, 1), stepRaycastRange, walkableLayer)) {
-            if (!Physics.Raycast(stepRaycastUpperPosition, moveDirection + new Vector3(-1.5f, 0, 1), stepRaycastRange + 0.1f, walkableLayer)) {
-                rigidBody.transform.position += new Vector3(0f, stepHeight * Time.deltaTime, 0f);
-            }
-        }
-    }
-
-    private void ToggleCrouchState() {
-        ToggleRigidBodyForCrouchState();
-        ToggleCrouchingServerRpc(base.ObjectId);
-    }
-
-    public void ToggleRigidBodyForCrouchState() {
-        // checks for standingCapsuleCollider instead of currentMoveState because currentMoveState is not guaranteed set by this function
-        if (standingCapsuleCollider.enabled) {
-            standingCapsuleCollider.enabled = false;
-            crouchingCapsuleCollider.enabled = true;
-            cameraPosition.transform.position -= new Vector3(0f, 0.8f, 0f);
-        }
-        else {
-            standingCapsuleCollider.enabled = true;
-            crouchingCapsuleCollider.enabled = false;
-            cameraPosition.transform.position += new Vector3(0f, 0.8f, 0f);
-        }
-    }
-
-    [ServerRpc]
-    private void ToggleCrouchingServerRpc(int playerId) {
-        ToggleCrouchingObserversRpc(playerId);
-    }
-
-    [ObserversRpc(ExcludeOwner = true)]
-    private void ToggleCrouchingObserversRpc(int playerId) {
-        Player player = PlayerManager.Instance.GetPlayer(playerId);
-        player.GetPlayerMovement().ToggleRigidBodyForCrouchState();
-    }
-
     public bool IsWalking() {
         if (currentMoveState == MoveState.Walking && moveDirection != Vector3.zero) {
             return true;
@@ -295,6 +222,5 @@ public class PlayerMovement : NetworkBehaviour {
         GameInput.Instance.OnJumpAction -= GameInput_OnJumpAction;
         GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
-        GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
     }
 }
