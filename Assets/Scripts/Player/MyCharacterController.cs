@@ -171,6 +171,22 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
 
     public void PostGroundingUpdate(float deltaTime) {
         // This is called after the motor has finished its ground probing, but before PhysicsMover/Velocity/etc.... handling
+
+        // Handle landing and leaving ground
+        if (motor.GroundingStatus.IsStableOnGround && !motor.LastGroundingStatus.IsStableOnGround) {
+            OnLanded();
+        }
+        else if (!motor.GroundingStatus.IsStableOnGround && motor.LastGroundingStatus.IsStableOnGround) {
+            OnLeaveStableGround();
+        }
+    }
+
+    private void OnLanded() {
+        // This is called when player lands on ground
+    }
+
+    private void OnLeaveStableGround() {
+        // This is called when player leaves ground
     }
 
     public void OnDiscreteCollisionDetected(Collider hitCollider) {
