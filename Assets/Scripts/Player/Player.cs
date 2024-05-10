@@ -22,6 +22,13 @@ public class Player : NetworkBehaviour {
         if (!base.IsOwner) {
             return;
         }
+
+        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+
+    }
+
+    private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
+        characterController.RequestJump();
     }
 
     private void FixedUpdate() {

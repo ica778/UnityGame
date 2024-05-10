@@ -24,6 +24,18 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     // camera rotation
     private Quaternion lookRotation;
 
+    // jumping
+    private bool allowJumpingWhenSliding = false;
+    private float jumpSpeed = 10f;
+    private float jumpPreGroundingGraceTime = 0f;
+    private float jumpPostGroundingGraceTime = 0f;
+
+    private bool jumpRequested = false;
+    private bool jumpConsumed = false;
+    private bool jumpedThisFrame = false;
+    private float timeSinceJumpRequested = Mathf.Infinity;
+    private float timeSinceLastAbleToJump = 0f;
+
     // misc
     private Vector3 gravity = new Vector3 (0, -30f, 0);
 
@@ -37,6 +49,11 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
 
     public void SetMovementVectorInput(Vector3 movementVectorInput) {
         moveVector = movementVectorInput;
+    }
+
+    public void RequestJump() {
+        timeSinceJumpRequested = 0f;
+        jumpRequested = true;
     }
 
     public void BeforeCharacterUpdate(float deltaTime) {
@@ -84,10 +101,55 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
             // Drag
             currentVelocity *= (1f / (1f + (drag * deltaTime)));
         }
+
+        // Handle jumping
+        jumpedThisFrame = false;
+        timeSinceJumpRequested += deltaTime;
+        if (jumpRequested) {
+            // See if we actually are allowed to jump
+            if (!jumpConsumed && ((allowJumpingWhenSliding ? motor.GroundingStatus.FoundAnyGround : motor.GroundingStatus.IsStableOnGround) || timeSinceLastAbleToJump <= jumpPostGroundingGraceTime)) {
+                // Calculate jump direction before ungrounding
+                Vector3 jumpDirection = motor.CharacterUp;
+                if (motor.GroundingStatus.FoundAnyGround && !motor.GroundingStatus.IsStableOnGround) {
+                    jumpDirection = motor.GroundingStatus.GroundNormal;
+                }
+
+                // Makes the character skip ground probing/snapping on its next update. 
+                // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
+                motor.ForceUnground(0.1f);
+
+                // Add to the return velocity and reset jump state
+                currentVelocity += (jumpDirection * jumpSpeed) - Vector3.Project(currentVelocity, motor.CharacterUp);
+                jumpRequested = false;
+                jumpConsumed = true;
+                jumpedThisFrame = true;
+            }
+        }
     }
 
     public void AfterCharacterUpdate(float deltaTime) {
         // This is called after the motor has finished everything in its update
+
+        // Handle jump-related values
+        {
+            // Handle jumping pre-ground grace period
+            if (jumpRequested && timeSinceJumpRequested > jumpPreGroundingGraceTime) {
+                jumpRequested = false;
+            }
+
+            // Handle jumping while sliding
+            if (allowJumpingWhenSliding ? motor.GroundingStatus.FoundAnyGround : motor.GroundingStatus.IsStableOnGround) {
+                // If we're on a ground surface, reset jumping values
+                if (!jumpedThisFrame) {
+                    jumpConsumed = false;
+                }
+                timeSinceLastAbleToJump = 0f;
+            }
+            else {
+                // Keep track of time since we were last able to jump (for grace period)
+                timeSinceLastAbleToJump += deltaTime;
+            }
+        }
     }
 
     public bool IsColliderValidForCollisions(Collider coll) {
