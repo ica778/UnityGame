@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerVisual : NetworkBehaviour {
-
     private MeshRenderer[] meshRenderers;
 
     private void Update() {
@@ -13,8 +12,6 @@ public class PlayerVisual : NetworkBehaviour {
         }
 
         MakePlayerCharacterInvisibleToOwnCamera();
-
-        transform.rotation = PlayerLook.Instance.GetCameraQuaternionOnlyYAxis();
     }
 
     private void MakePlayerCharacterInvisibleToOwnCamera() {

@@ -1,8 +1,10 @@
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : NetworkBehaviour {
     [SerializeField] private PlayerLook playerLook;
+    [SerializeField] private MyCharacterController characterController;
 
     private int playerID;
 
@@ -22,6 +24,9 @@ public class Player : NetworkBehaviour {
         }
     }
 
+    private void FixedUpdate() {
+        HandleCharacterMovementInput();
+    }
 
     private void Update() {
 
@@ -32,13 +37,19 @@ public class Player : NetworkBehaviour {
     }
 
     private void HandleCameraInput() {
-        lookXInput = GameInput.Instance.GetLookX() * Time.deltaTime * lookSensitivity;
-        lookYInput = GameInput.Instance.GetLookY() * Time.deltaTime * lookSensitivity;
+        lookXInput = GameInput.Instance.GetLookX() * lookSensitivity;
+        lookYInput = GameInput.Instance.GetLookY() * lookSensitivity;
 
-        playerLook.UpdateWithInput(lookXInput, lookYInput);
+        playerLook.UpdateWithInput(lookXInput, lookYInput, Time.deltaTime);
         playerLook.RotateCamera();
+        characterController.SetLookRotationInput(playerLook.GetYRotation());
     }
 
+    private void HandleCharacterMovementInput() {
+        Transform orientation = characterController.transform;
+        Vector3 moveDirection = orientation.forward * GameInput.Instance.GetMoveVector().y + orientation.right * GameInput.Instance.GetMoveVector().x;
+        characterController.SetMovementVectorInput(moveDirection);
+    }
 
     public int GetPlayerID() {
         return playerID;
