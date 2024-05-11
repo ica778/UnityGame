@@ -24,7 +24,11 @@ public class Player : NetworkBehaviour {
         }
 
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
+        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
+    }
 
+    private void GameInput_OnCrouchAction(object sender, System.EventArgs e) {
+        characterController.ToggleCrouchingState();
     }
 
     private void GameInput_OnJumpAction(object sender, System.EventArgs e) {

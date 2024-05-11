@@ -9,7 +9,8 @@ using UnityEngine;
 
 public class MyCharacterController : MonoBehaviour, ICharacterController {
 
-    [SerializeField] private KinematicCharacterMotor motor;
+    [SerializeField] public KinematicCharacterMotor motor;
+    [SerializeField] private Transform meshRoot;
 
     // ground movement
     private float maxMoveSpeed = 10f;
@@ -36,8 +37,14 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     private float timeSinceJumpRequested = Mathf.Infinity;
     private float timeSinceLastAbleToJump = 0f;
 
+    // crouching
+    private bool shouldBeCrouching = false;
+    private bool isCrouching = false;
+
     // misc
     private Vector3 gravity = new Vector3 (0, -30f, 0);
+    private Vector3 internalVelocityAdd = Vector3.zero;
+    private Collider[] probedColliders = new Collider[8];
 
     private void Start() {
         motor.CharacterController = this;
@@ -54,6 +61,42 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     public void RequestJump() {
         timeSinceJumpRequested = 0f;
         jumpRequested = true;
+    }
+
+    public void ToggleCrouchingState() {
+        if (!isCrouching) {
+            shouldBeCrouching = true;
+            RequestCrouch();
+        }
+        else {
+            shouldBeCrouching = false;
+            RequestUncrouch();
+        }
+    }
+
+    private void RequestCrouch() {
+        isCrouching = true;
+        motor.SetCapsuleDimensions(0.4f, 1f, 0.5f);
+        meshRoot.localScale = new Vector3(1f, 0.5f, 1f);
+    }
+
+    private void RequestUncrouch() {
+        if (isCrouching && !shouldBeCrouching) {
+            // Do an overlap test with the character's standing height to see if there are any obstructions
+            motor.SetCapsuleDimensions(0.4f, 1.8f, 0.9f);
+            if (motor.CharacterCollisionsOverlap(
+                    motor.TransientPosition,
+                    motor.TransientRotation,
+                    probedColliders) > 0) {
+                // If obstructions, just stick to crouching dimensions
+                motor.SetCapsuleDimensions(0.4f, 1f, 0.5f);
+            }
+            else {
+                // If no obstructions, uncrouch
+                meshRoot.localScale = new Vector3(1f, 1f, 1f);
+                isCrouching = false;
+            }
+        }
     }
 
     public void BeforeCharacterUpdate(float deltaTime) {
@@ -83,7 +126,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
         else {
             // Add move input
             if (moveVector.sqrMagnitude > 0f) {
-                targetMovementVelocity = moveVector * maxMoveSpeed;
+                targetMovementVelocity = moveVector * maxAirMoveSpeed;
 
                 // Prevent climbing on un-stable slopes with air movement
                 if (motor.GroundingStatus.FoundAnyGround) {
@@ -124,6 +167,12 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
                 jumpConsumed = true;
                 jumpedThisFrame = true;
             }
+        }
+
+        // Take into account additive velocity
+        if (internalVelocityAdd.sqrMagnitude > 0f) {
+            currentVelocity += internalVelocityAdd;
+            internalVelocityAdd = Vector3.zero;
         }
     }
 
@@ -191,5 +240,10 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
 
     public void OnDiscreteCollisionDetected(Collider hitCollider) {
         // This is called by the motor when it is detecting a collision that did not result from a "movement hit".
+    }
+
+    public void AddVelocity(Vector3 velocity) {
+        // This is used to add velocity for things like knockback, explosions, windzones, etc
+        internalVelocityAdd += velocity;
     }
 }

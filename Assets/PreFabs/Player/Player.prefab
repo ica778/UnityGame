@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   motor: {fileID: 8554326872386180907}
+  meshRoot: {fileID: 1749501541563791029}
   moveSharpness: 15
 --- !u!114 &8554326872386180907
 MonoBehaviour:
@@ -656,7 +657,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCameraHolder: {fileID: 8876804267105334431}
-  orientation: {fileID: 0}
   virtualCamera: {fileID: 4688808042333508043}
 --- !u!114 &9105335133483199130
 MonoBehaviour:
