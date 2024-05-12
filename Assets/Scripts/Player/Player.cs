@@ -25,10 +25,20 @@ public class Player : NetworkBehaviour {
 
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
+        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
+    }
+
+    private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
+        characterController.RequestSprint();
+    }
+
+    private void GameInput_OnSprintCancelledAction(object sender, System.EventArgs e) {
+        characterController.RequestWalk();
     }
 
     private void GameInput_OnCrouchAction(object sender, System.EventArgs e) {
-        characterController.ToggleCrouchingState();
+        ToggleCrouchingState();
     }
 
     private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
@@ -45,6 +55,15 @@ public class Player : NetworkBehaviour {
 
     private void LateUpdate() {
         HandleCameraInput();
+    }
+
+    private void ToggleCrouchingState() {
+        if (!characterController.isCrouching) {
+            characterController.RequestCrouch();
+        }
+        else {
+            characterController.RequestUncrouch();
+        }
     }
 
     private void HandleCameraInput() {
