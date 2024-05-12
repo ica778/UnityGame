@@ -16,8 +16,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     [SerializeField] private Transform meshRoot;
 
     // ground movement
-    private float maxMoveSpeed = 1f;
-    private Vector3 moveVector = Vector3.zero;
+    private float currentMaxMoveSpeed = 1f;
+    private Vector3 moveInputVector = Vector3.zero;
     private float moveSharpness = 15f;
     private float maxWalkingMoveSpeed = 10f;
     private float maxSprintingMoveSpeed = 20f;
@@ -71,13 +71,13 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     private void OnStateEnter(CharacterMovementState state, CharacterMovementState fromState) {
         switch (state) {
             case CharacterMovementState.Walking:
-                maxMoveSpeed = maxWalkingMoveSpeed;
+                currentMaxMoveSpeed = maxWalkingMoveSpeed;
                 break;
             case CharacterMovementState.Sprinting:
-                maxMoveSpeed = maxSprintingMoveSpeed;
+                currentMaxMoveSpeed = maxSprintingMoveSpeed;
                 break;
             case CharacterMovementState.Crouching:
-                maxMoveSpeed = maxCrouchingMoveSpeed;
+                currentMaxMoveSpeed = maxCrouchingMoveSpeed;
                 break;
         }
     }
@@ -110,7 +110,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     public void SetMovementVectorInput(Vector3 movementVectorInput) {
-        moveVector = movementVectorInput;
+        moveInputVector = movementVectorInput;
     }
 
     public void RequestJump() {
@@ -168,17 +168,17 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
             currentVelocity = motor.GetDirectionTangentToSurface(currentVelocity, motor.GroundingStatus.GroundNormal) * currentVelocity.magnitude;
 
             // Calculate target velocity
-            Vector3 inputRight = Vector3.Cross(moveVector, motor.CharacterUp);
-            Vector3 reorientedInput = Vector3.Cross(motor.GroundingStatus.GroundNormal, inputRight).normalized * moveVector.magnitude;
-            targetMovementVelocity = reorientedInput * maxMoveSpeed;
+            Vector3 inputRight = Vector3.Cross(moveInputVector, motor.CharacterUp);
+            Vector3 reorientedInput = Vector3.Cross(motor.GroundingStatus.GroundNormal, inputRight).normalized * moveInputVector.magnitude;
+            targetMovementVelocity = reorientedInput * currentMaxMoveSpeed;
 
             // Smooth movement Velocity
             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1 - Mathf.Exp(-moveSharpness * deltaTime));
         }
         else {
             // Add move input
-            if (moveVector.sqrMagnitude > 0f) {
-                targetMovementVelocity = moveVector * maxAirMoveSpeed;
+            if (moveInputVector.sqrMagnitude > 0f) {
+                targetMovementVelocity = moveInputVector * maxAirMoveSpeed;
 
                 // Prevent climbing on un-stable slopes with air movement
                 if (motor.GroundingStatus.FoundAnyGround) {
@@ -285,12 +285,13 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
         }
     }
 
-    private void OnLanded() {
-        // This is called when player lands on ground
-    }
-
     private void OnLeaveStableGround() {
         // This is called when player leaves ground
+        maxAirMoveSpeed = currentMaxMoveSpeed;
+    }
+
+    private void OnLanded() {
+        // This is called when player lands on ground
     }
 
     public void OnDiscreteCollisionDetected(Collider hitCollider) {
