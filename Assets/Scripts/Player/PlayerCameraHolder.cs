@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerCameraHolder : NetworkBehaviour {
     [SerializeField] private Transform playerCharacterCameraPosition;
 
-    private void Update() {
+    private void LateUpdate() {
         transform.position = playerCharacterCameraPosition.position;
     }
 }

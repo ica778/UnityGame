@@ -45,12 +45,8 @@ public class Player : NetworkBehaviour {
         characterController.RequestJump();
     }
 
-    private void FixedUpdate() {
-        HandleCharacterMovementInput();
-    }
-
     private void Update() {
-
+        HandleCharacterMovementInput();
     }
 
     private void LateUpdate() {
