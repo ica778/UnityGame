@@ -46,10 +46,18 @@ public class Player : NetworkBehaviour {
     }
 
     private void Update() {
+        if (!base.IsOwner) {
+            return;
+        }
+
         HandleCharacterMovementInput();
     }
 
     private void LateUpdate() {
+        if (!base.IsOwner) {
+            return;
+        }
+
         HandleCameraInput();
     }
 
