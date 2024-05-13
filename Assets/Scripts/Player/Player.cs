@@ -1,4 +1,5 @@
 using FishNet.Object;
+using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,6 +21,7 @@ public class Player : NetworkBehaviour {
 
     public override void OnStartClient() {
         if (!base.IsOwner) {
+            KinematicCharacterSystem.UnregisterCharacterMotor(characterController.motor);
             return;
         }
 
