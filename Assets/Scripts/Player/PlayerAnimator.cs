@@ -8,8 +8,6 @@ public class PlayerAnimator : NetworkBehaviour {
     private const string IS_WALKING = "IsWalking";
     private const string IS_SPRINTING = "IsSprinting";
 
-    [SerializeField] private PlayerMovement playerMovement;
-
     private Animator animator;
 
     private void Awake() {
@@ -29,7 +27,7 @@ public class PlayerAnimator : NetworkBehaviour {
             return;
         }
 
-        animator.SetBool(IS_WALKING, playerMovement.IsWalking());
-        animator.SetBool(IS_SPRINTING, playerMovement.IsSprinting());
+        //animator.SetBool(IS_WALKING, playerMovement.IsWalking());
+        //animator.SetBool(IS_SPRINTING, playerMovement.IsSprinting());
     }
 }
