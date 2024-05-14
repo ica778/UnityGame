@@ -56,7 +56,7 @@ MonoBehaviour:
   - {fileID: 2229417435511697251}
   - {fileID: 3723500434429363174}
   - {fileID: 9105335133483199130}
-  - {fileID: 2567524272177143564}
+  - {fileID: 0}
   - {fileID: 5220087816515759343}
   - {fileID: 3521916825876690042}
   - {fileID: 1506340452738421455}
@@ -93,6 +93,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4792983976827827601}
   playerLook: {fileID: 3723500434429363174}
   characterController: {fileID: 7022245045335939396}
+  animator: {fileID: 2400051290594098371}
 --- !u!1 &2084073704904182840
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,7 +796,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3417157665645705589}
   - component: {fileID: 2400051290594098371}
-  - component: {fileID: 2567524272177143564}
   - component: {fileID: 5220087816515759343}
   - component: {fileID: 3521916825876690042}
   - component: {fileID: 1506340452738421455}
@@ -844,22 +844,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2567524272177143564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7816579382987770891}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8128854a48f22ce4b91114a3a09bc798, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 5
-  _addedNetworkObject: {fileID: 4792983976827827601}
-  _networkObjectCache: {fileID: 4792983976827827601}
-  playerMovement: {fileID: 0}
 --- !u!114 &5220087816515759343
 MonoBehaviour:
   m_ObjectHideFlags: 0

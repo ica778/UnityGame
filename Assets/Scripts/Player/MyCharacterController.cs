@@ -53,7 +53,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     private Vector3 internalVelocityAdd = Vector3.zero;
     private Collider[] probedColliders = new Collider[8];
 
-    private CharacterMovementState currentCharacterMovementState;
+    public CharacterMovementState currentCharacterMovementState { get; private set; }
 
     private void Start() {
         motor.CharacterController = this;

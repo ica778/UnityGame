@@ -13,6 +13,13 @@ public class Player : NetworkBehaviour {
     private float lookXInput;
     private float lookYInput;
 
+    private Vector3 moveDirection;
+
+    // Animations
+    private const string IS_WALKING = "IsWalking";
+    private const string IS_SPRINTING = "IsSprinting";
+    [SerializeField] private Animator animator;
+
     private void Start() {
         playerID = base.ObjectId;
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
@@ -45,6 +52,7 @@ public class Player : NetworkBehaviour {
         }
 
         HandleCameraInput();
+        HandleMovementAnimation();
     }
 
     private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
@@ -61,6 +69,18 @@ public class Player : NetworkBehaviour {
 
     private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
         characterController.RequestJump();
+    }
+
+    // TODO: CURRENT SYSTEM OF HANDLING ANIMATIONS IS EXTREMELY GHETTO. FIND BETTER WAY OF DOING IT.
+    private void HandleMovementAnimation() {
+        if (moveDirection.magnitude > 0) {
+            animator.SetBool(IS_WALKING, characterController.currentCharacterMovementState == CharacterMovementState.Walking);
+            animator.SetBool(IS_SPRINTING, characterController.currentCharacterMovementState == CharacterMovementState.Sprinting);
+        }
+        else {
+            animator.SetBool(IS_WALKING, false);
+            animator.SetBool(IS_SPRINTING, false);
+        }
     }
 
     private void ToggleCrouchingState() {
@@ -83,7 +103,7 @@ public class Player : NetworkBehaviour {
 
     private void HandleCharacterMovementInput() {
         Transform orientation = characterController.transform;
-        Vector3 moveDirection = orientation.forward * GameInput.Instance.GetMoveVector().y + orientation.right * GameInput.Instance.GetMoveVector().x;
+        moveDirection = orientation.forward * GameInput.Instance.GetMoveVector().y + orientation.right * GameInput.Instance.GetMoveVector().x;
         characterController.SetMovementVectorInput(moveDirection);
     }
 
