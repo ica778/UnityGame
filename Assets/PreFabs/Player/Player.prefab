@@ -130,10 +130,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerLook: {fileID: 3723500434429363174}
+  playerInventoryHandler: {fileID: 8710234622301106129}
   interactableLayer:
     serializedVersion: 2
     m_Bits: 128
-  playerInventoryHandler: {fileID: 8710234622301106129}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &2084073704904182840
 GameObject:
   m_ObjectHideFlags: 0

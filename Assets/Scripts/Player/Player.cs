@@ -133,5 +133,8 @@ public class Player : NetworkBehaviour {
         GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
+
+        GameInput.Instance.OnInteractAction -= GameInput_OnInteractAction;
+        GameInput.Instance.OnDropAction -= GameInput_OnDropAction;
     }
 }

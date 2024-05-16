@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.LowLevel;
 
 public class InteractionSystem : MonoBehaviour {
     [SerializeField] private PlayerLook playerLook;
-    [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
+    [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private LayerMask obstacleLayer;
 
     private float interactDistance = 5f;
     private RaycastHit raycastHit;
@@ -17,13 +15,16 @@ public class InteractionSystem : MonoBehaviour {
     }
 
     private void DetectInteractableObject() {
-        if (Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out raycastHit, interactDistance, interactableLayer)) {
-            interactableObject = raycastHit.transform.GetComponent<InteractableObjectBase>();
-        }
-        else {
-            interactableObject = null;
+        if (Physics.Raycast(playerLook.transform.position, playerLook.transform.forward, out raycastHit, interactDistance, interactableLayer | obstacleLayer)) {
+            GameObject tempObject = raycastHit.collider.gameObject;
+
+            if ((interactableLayer.value & (1 << tempObject.layer)) != 0) {
+                interactableObject = tempObject.GetComponent<InteractableObjectBase>();
+                return;
+            }
         }
 
+        interactableObject = null;
     }
 
     public void InteractWithObject() {
