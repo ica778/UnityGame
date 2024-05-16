@@ -98,16 +98,22 @@ public class BasicEnemyAI : NetworkBehaviour {
 
         float distanceToTarget = GetDistanceToTarget(targetPosition);
         RaycastHit hitInfo;
-        bool hit = Physics.Raycast(currentTransform.position, directionToTarget, out hitInfo, distanceToTarget, targetLayer | obstacleLayer);
+
+        // NOTE: drawray for testing
         Debug.DrawRay(currentTransform.position, directionToTarget, Color.green, 1f);
 
-        if (hit && hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("playerLayer")) {
-            return true;
+        if (Physics.Raycast(currentTransform.position, directionToTarget, out hitInfo, distanceToTarget, targetLayer | obstacleLayer)) {
+            GameObject hitObject = hitInfo.collider.gameObject;
+
+            if ((targetLayer.value & (1 << hitObject.layer)) != 0) {
+                return true;
+            }
         }
 
         return false;
     }
 
+    // TODO: make dedicated hitbox for detection for the player
     private Transform DetectTarget() {
         Collider[] collidersInRange = Physics.OverlapSphere(currentTransform.position, detectionRadius, targetLayer);
         List<Collider> sortedColliders = collidersInRange.OrderBy(collider => Vector3.Distance(collider.transform.position, currentTransform.position)).ToList();
@@ -118,6 +124,7 @@ public class BasicEnemyAI : NetworkBehaviour {
             // this checks if target detectable by vision
             foreach (Vector3 pos in visionRaycastPositions) {
                 if (CheckIfTargetIsVisible(currentTargetTransform.position + pos)) {
+                    // target is detected with this raycast
                     return currentTargetTransform;
                 }
             }
