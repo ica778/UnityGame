@@ -17,7 +17,7 @@ public class ItemDatabase : MonoBehaviour {
     }
 
     public ItemSO GetItem(GroundLoot groundLoot) {
-        return itemList[groundLoot.GetID()];
+        return itemList[groundLoot.Id];
     }
 
     public GroundLoot GetGroundLoot(int ID) {

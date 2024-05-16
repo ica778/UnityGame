@@ -47,4 +47,8 @@ public class PlayerLook : NetworkBehaviour {
     public float GetYRotation() {
         return yRotation;
     }
+
+    public Quaternion GetCameraQuaternionOnlyYAxis() {
+        return Quaternion.Euler(0, yRotation, 0);
+    }
 }

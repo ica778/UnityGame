@@ -2,25 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundLoot : MonoBehaviour {
-    [SerializeField] private int ID;
+public class GroundLoot : InteractableObjectBase {
     [SerializeField] private ItemSO item;
 
-    private int count;
+    public int Id { get; private set; }
+    public int Count { get; private set; }
+
+    private void Awake() {
+        Id = item.GetID();
+        base.Type = InteractableObjectType.GroundLoot;
+    }
 
     public ItemSO GetItem() {
         return item;
     }
 
     public void SetCount(int count) {
-        this.count = count;
-    }
-
-    public int GetCount() {
-        return count;
-    }
-
-    public int GetID() {
-        return ID;
+        this.Count = count;
     }
 }

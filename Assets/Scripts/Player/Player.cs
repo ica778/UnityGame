@@ -6,19 +6,23 @@ using UnityEngine.EventSystems;
 public class Player : NetworkBehaviour {
     [SerializeField] private PlayerLook playerLook;
     [SerializeField] private MyCharacterController characterController;
+    [SerializeField] private Animator animator;
+    [SerializeField] private InteractionSystem interactableObjectHandler;
+    [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
 
     private int playerID;
 
+    // Looking
     private float lookSensitivity = 20f;
     private float lookXInput;
     private float lookYInput;
 
+    // Movement
     private Vector3 moveDirection;
 
     // Animations
     private const string IS_WALKING = "IsWalking";
     private const string IS_SPRINTING = "IsSprinting";
-    [SerializeField] private Animator animator;
 
     private void Start() {
         playerID = base.ObjectId;
@@ -36,7 +40,12 @@ public class Player : NetworkBehaviour {
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
         GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
+
+        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
+        GameInput.Instance.OnDropAction += GameInput_OnDropAction;
     }
+
+
 
     private void Update() {
         if (!base.IsOwner) {
@@ -44,6 +53,7 @@ public class Player : NetworkBehaviour {
         }
 
         HandleCharacterMovementInput();
+        HandleMovementAnimation();
     }
 
     private void LateUpdate() {
@@ -52,7 +62,14 @@ public class Player : NetworkBehaviour {
         }
 
         HandleCameraInput();
-        HandleMovementAnimation();
+    }
+
+    private void GameInput_OnDropAction(object sender, System.EventArgs e) {
+        playerInventoryHandler.DropCurrentItem();
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
+        interactableObjectHandler.InteractWithObject();
     }
 
     private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
@@ -74,8 +91,8 @@ public class Player : NetworkBehaviour {
     // TODO: CURRENT SYSTEM OF HANDLING ANIMATIONS IS EXTREMELY GHETTO. FIND BETTER WAY OF DOING IT.
     private void HandleMovementAnimation() {
         if (moveDirection.magnitude > 0) {
-            animator.SetBool(IS_WALKING, characterController.currentCharacterMovementState == CharacterMovementState.Walking);
-            animator.SetBool(IS_SPRINTING, characterController.currentCharacterMovementState == CharacterMovementState.Sprinting);
+            animator.SetBool(IS_WALKING, characterController.CurrentCharacterMovementState == CharacterMovementState.Walking);
+            animator.SetBool(IS_SPRINTING, characterController.CurrentCharacterMovementState == CharacterMovementState.Sprinting);
         }
         else {
             animator.SetBool(IS_WALKING, false);
@@ -84,7 +101,7 @@ public class Player : NetworkBehaviour {
     }
 
     private void ToggleCrouchingState() {
-        if (!characterController.isCrouching) {
+        if (!characterController.IsCrouching) {
             characterController.RequestCrouch();
         }
         else {
@@ -111,4 +128,10 @@ public class Player : NetworkBehaviour {
         return playerID;
     }
 
+    private void OnDestroy() {
+        GameInput.Instance.OnJumpAction -= GameInput_OnJumpAction;
+        GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
+        GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
+    }
 }

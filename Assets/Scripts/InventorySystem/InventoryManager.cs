@@ -30,10 +30,6 @@ public class InventoryManager : MonoBehaviour {
         GameInput.Instance.OnLeftClickPressedAction += GameInput_OnLeftClickPressedAction;
     }
 
-    private void Update() {
-
-    }
-
     private void GameInput_OnLeftClickPressedAction(object sender, System.EventArgs e) {
         ItemSO equippedItem = GetSelectedItem(false);
         if (equippedItem) {
@@ -42,11 +38,11 @@ public class InventoryManager : MonoBehaviour {
     }
 
     private void GameInput_OnScrollUpAction(object sender, System.EventArgs e) {
-        IncrementSelectedSlotIndex();
+        DecrementSelectedSlotIndex();
     }
 
     private void GameInput_OnScrollDownAction(object sender, System.EventArgs e) {
-        DecrementSelectedSlotIndex();
+        IncrementSelectedSlotIndex();
     }
 
     private void ChangeSelectedSlotIndex(int slotIndex) {

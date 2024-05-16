@@ -45,15 +45,15 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     private float timeSinceLastAbleToJump = 0f;
 
     // crouching
-    public bool shouldBeCrouching { get; private set; } = false;
-    public bool isCrouching { get; private set; } = false;
+    public bool ShouldBeCrouching { get; private set; } = false;
+    public bool IsCrouching { get; private set; } = false;
 
     // misc
     private Vector3 gravity = new Vector3 (0, -30f, 0);
     private Vector3 internalVelocityAdd = Vector3.zero;
     private Collider[] probedColliders = new Collider[8];
 
-    public CharacterMovementState currentCharacterMovementState { get; private set; }
+    public CharacterMovementState CurrentCharacterMovementState { get; private set; }
 
     private void Start() {
         motor.CharacterController = this;
@@ -62,9 +62,9 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     private void TransitionToState(CharacterMovementState newState) {
-        CharacterMovementState initialState = currentCharacterMovementState;
+        CharacterMovementState initialState = CurrentCharacterMovementState;
         OnStateExit(initialState, newState);
-        currentCharacterMovementState = newState;
+        CurrentCharacterMovementState = newState;
         OnStateEnter(newState, initialState);
     }
 
@@ -94,13 +94,13 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     public void RequestSprint() {
-        if (currentCharacterMovementState == CharacterMovementState.Walking) {
+        if (CurrentCharacterMovementState == CharacterMovementState.Walking) {
             TransitionToState(CharacterMovementState.Sprinting);
         }
     }
 
     public void RequestWalk() {
-        if (currentCharacterMovementState == CharacterMovementState.Sprinting) {
+        if (CurrentCharacterMovementState == CharacterMovementState.Sprinting) {
             TransitionToState(CharacterMovementState.Walking);
         }
     }
@@ -114,7 +114,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     public void RequestJump() {
-        if (currentCharacterMovementState == CharacterMovementState.Crouching) {
+        if (CurrentCharacterMovementState == CharacterMovementState.Crouching) {
             RequestUncrouch();
         }
         timeSinceJumpRequested = 0f;
@@ -122,8 +122,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     public void RequestCrouch() {
-        shouldBeCrouching = true;
-        isCrouching = true;
+        ShouldBeCrouching = true;
+        IsCrouching = true;
         motor.SetCapsuleDimensions(0.4f, 1f, 0.5f);
         meshRoot.localScale = new Vector3(1f, 0.5f, 1f);
 
@@ -131,8 +131,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     }
 
     public void RequestUncrouch() {
-        shouldBeCrouching = false;
-        if (isCrouching && !shouldBeCrouching) {
+        ShouldBeCrouching = false;
+        if (IsCrouching && !ShouldBeCrouching) {
             // Do an overlap test with the character's standing height to see if there are any obstructions
             motor.SetCapsuleDimensions(0.4f, 1.8f, 0.9f);
             if (motor.CharacterCollisionsOverlap(
@@ -145,7 +145,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
             else {
                 // If no obstructions, uncrouch
                 meshRoot.localScale = new Vector3(1f, 1f, 1f);
-                isCrouching = false;
+                IsCrouching = false;
                 TransitionToState(CharacterMovementState.Walking);
             }
         }
@@ -202,7 +202,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
         timeSinceJumpRequested += deltaTime;
         if (jumpRequested) {
             // See if we are in correct stance to jump
-            if (currentCharacterMovementState == CharacterMovementState.Walking || currentCharacterMovementState == CharacterMovementState.Sprinting) {
+            if (CurrentCharacterMovementState == CharacterMovementState.Walking || CurrentCharacterMovementState == CharacterMovementState.Sprinting) {
                 // See if we actually are allowed to jump
                 if (!jumpConsumed && ((allowJumpingWhenSliding ? motor.GroundingStatus.FoundAnyGround : motor.GroundingStatus.IsStableOnGround) || timeSinceLastAbleToJump <= jumpPostGroundingGraceTime)) {
                     // Calculate jump direction before ungrounding
