@@ -1,6 +1,7 @@
+using FishNet.Object;
 using UnityEngine;
 
-public class InteractionSystem : MonoBehaviour {
+public class InteractionSystem : NetworkBehaviour {
     [SerializeField] private PlayerLook playerLook;
     [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
     [SerializeField] private LayerMask interactableLayer;
@@ -11,7 +12,9 @@ public class InteractionSystem : MonoBehaviour {
     private InteractableObjectBase interactableObject;
 
     private void LateUpdate() {
-        DetectInteractableObject();
+        if (base.IsOwner) {
+            DetectInteractableObject();
+        }
     }
 
     private void DetectInteractableObject() {
