@@ -7,7 +7,7 @@ public class Player : NetworkBehaviour {
     [SerializeField] private PlayerLook playerLook;
     [SerializeField] private MyCharacterController characterController;
     [SerializeField] private Animator animator;
-    [SerializeField] private InteractionSystem interactableObjectHandler;
+    [SerializeField] private InteractionSystem interactionSystem;
     [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
 
     private int playerID;
@@ -69,7 +69,7 @@ public class Player : NetworkBehaviour {
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
-        interactableObjectHandler.InteractWithObject();
+        interactionSystem.InteractWithObject();
     }
 
     private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {

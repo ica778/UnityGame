@@ -55,6 +55,7 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 2476288708210685873}
   - {fileID: 8710234622301106129}
+  - {fileID: 5806635779731111300}
   - {fileID: 2031473103192852575}
   - {fileID: 2229417435511697251}
   - {fileID: 3723500434429363174}
@@ -96,7 +97,7 @@ MonoBehaviour:
   playerLook: {fileID: 3723500434429363174}
   characterController: {fileID: 7022245045335939396}
   animator: {fileID: 2400051290594098371}
-  interactableObjectHandler: {fileID: 5806635779731111300}
+  interactionSystem: {fileID: 5806635779731111300}
   playerInventoryHandler: {fileID: 8710234622301106129}
 --- !u!114 &8710234622301106129
 MonoBehaviour:
@@ -129,6 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144540eaf56058c4bb35f3544cdfce0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 4792983976827827601}
+  _networkObjectCache: {fileID: 4792983976827827601}
   playerLook: {fileID: 3723500434429363174}
   playerInventoryHandler: {fileID: 8710234622301106129}
   interactableLayer:
@@ -477,7 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 0
@@ -680,7 +684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9009e256bab1042af71ac871b522c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCharacterCameraPosition: {fileID: 3377963034221982641}
@@ -696,7 +700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c267a9d57e7ca428354dba8e76fdd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCameraHolder: {fileID: 8876804267105334431}
@@ -713,7 +717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 0
@@ -899,7 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   IgnoredParameters: []
@@ -920,7 +924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d10b834d91ffb4a8e43d31bd908b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
 --- !u!114 &1506340452738421455
@@ -935,7 +939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 8
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 0
