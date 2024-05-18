@@ -24,17 +24,16 @@ public class Player : NetworkBehaviour {
     private const string IS_WALKING = "IsWalking";
     private const string IS_SPRINTING = "IsSprinting";
 
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            this.enabled = false;
+        }
+    }
+
     private void Start() {
         playerID = base.ObjectId;
         PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
         Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
-    }
-
-    public override void OnStartClient() {
-        if (!base.IsOwner) {
-            KinematicCharacterSystem.UnregisterCharacterMotor(characterController.motor);
-            return;
-        }
 
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
@@ -45,22 +44,12 @@ public class Player : NetworkBehaviour {
         GameInput.Instance.OnDropAction += GameInput_OnDropAction;
     }
 
-
-
     private void Update() {
-        if (!base.IsOwner) {
-            return;
-        }
-
         HandleCharacterMovementInput();
         HandleMovementAnimation();
     }
 
     private void LateUpdate() {
-        if (!base.IsOwner) {
-            return;
-        }
-
         HandleCameraInput();
     }
 

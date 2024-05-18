@@ -8,6 +8,12 @@ public class PlayerInventoryHandler : NetworkBehaviour {
     [SerializeField] private PlayerLook playerLook;
     [SerializeField] private LayerMask layersYouCantDropItemInto;
 
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            this.enabled = false;
+        }
+    }
+
     public void DropCurrentItem() {
         ItemSO item = InventoryManager.Instance.GetSelectedItem(true);
         if (item) {

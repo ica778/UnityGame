@@ -11,10 +11,14 @@ public class InteractionSystem : NetworkBehaviour {
     private RaycastHit raycastHit;
     private InteractableObjectBase interactableObject;
 
-    private void LateUpdate() {
-        if (base.IsOwner) {
-            DetectInteractableObject();
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            this.enabled = false;
         }
+    }
+
+    private void LateUpdate() {
+        DetectInteractableObject();
     }
 
     private void DetectInteractableObject() {

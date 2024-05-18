@@ -1,8 +1,10 @@
+using FishNet.Object;
 using KinematicCharacterController;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public enum CharacterMovementState {
     Walking,
@@ -10,7 +12,7 @@ public enum CharacterMovementState {
     Crouching,
 }
 
-public class MyCharacterController : MonoBehaviour, ICharacterController {
+public class MyCharacterController : NetworkBehaviour, ICharacterController {
 
     [SerializeField] public KinematicCharacterMotor motor;
     [SerializeField] private Transform meshRoot;
@@ -54,6 +56,13 @@ public class MyCharacterController : MonoBehaviour, ICharacterController {
     private Collider[] probedColliders = new Collider[8];
 
     public CharacterMovementState CurrentCharacterMovementState { get; private set; }
+
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            motor.enabled = false;
+            this.enabled = false;
+        }
+    }
 
     private void Start() {
         motor.CharacterController = this;

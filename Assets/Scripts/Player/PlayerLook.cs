@@ -16,7 +16,7 @@ public class PlayerLook : NetworkBehaviour {
 
     public override void OnStartNetwork() {
         if (!Owner.IsLocalClient) {
-            return;
+            this.enabled = false;
         }
     }
 
@@ -29,7 +29,6 @@ public class PlayerLook : NetworkBehaviour {
         else {
             cinemachineVirtualCamera.Priority = 10;
         }
-
         GameInput.Instance.LockCursor();
     }
 
