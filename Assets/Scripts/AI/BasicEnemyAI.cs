@@ -36,6 +36,19 @@ public class BasicEnemyAI : NetworkBehaviour {
     private void Awake() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         currentTransform = transform;
+        this.enabled = false;
+    }
+
+    // This makes AI script run only on the host
+    public override void OnStartClient() {
+        EnableScriptForServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void EnableScriptForServerRpc() {
+        if (base.IsHost) {
+            this.enabled = true;
+        }
     }
 
     private void Update() {
@@ -48,7 +61,6 @@ public class BasicEnemyAI : NetworkBehaviour {
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
     private void EnemyBehaviour() {
         Transform detectedTargetTransform = DetectTarget();
 
@@ -57,7 +69,6 @@ public class BasicEnemyAI : NetworkBehaviour {
                 if (detectedTargetTransform) {
                     currentState = State.Chasing;
                 }
-
                 break;
             case State.Chasing:
                 if (!detectedTargetTransform) {
@@ -66,12 +77,9 @@ public class BasicEnemyAI : NetworkBehaviour {
                 else {
                     navMeshAgent.SetDestination(detectedTargetTransform.position);
                 }
-
                 break;
         }
     }
-
-
 
     private Vector3 GetDirectionToTarget(Vector3 targetPosition) {
         return (targetPosition - currentTransform.position);
