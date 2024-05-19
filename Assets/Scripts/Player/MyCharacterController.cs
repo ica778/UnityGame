@@ -135,8 +135,10 @@ public class MyCharacterController : NetworkBehaviour, ICharacterController {
         IsCrouching = true;
         motor.SetCapsuleDimensions(0.4f, 1f, 0.5f);
         meshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-
+        
         TransitionToState(CharacterMovementState.Crouching);
+
+        CrouchServerRpc(base.ObjectId);
     }
 
     public void RequestUncrouch() {
@@ -156,8 +158,36 @@ public class MyCharacterController : NetworkBehaviour, ICharacterController {
                 meshRoot.localScale = new Vector3(1f, 1f, 1f);
                 IsCrouching = false;
                 TransitionToState(CharacterMovementState.Walking);
+
+                UncrouchServerRpc(base.ObjectId);
             }
         }
+    }
+
+    // TODO: IMPLEMENT THIS
+    [ServerRpc]
+    private void CrouchServerRpc(int playerId) {
+        CrouchObserversRpc(playerId);
+    }
+
+    // TODO: IMPLEMENT THIS
+    [ObserversRpc(ExcludeOwner = true)]
+    private void CrouchObserversRpc(int playerId) {
+        // Crouching logic here
+        Debug.Log("TESTING PLAYER ID: " + playerId + " IS CROUCHING");
+    }
+
+    // TODO: IMPLEMENT THIS
+    [ServerRpc]
+    private void UncrouchServerRpc(int playerId) {
+        UncrouchObserversRpc(playerId);
+    }
+
+    // TODO: IMPLEMENT THIS
+    [ObserversRpc(ExcludeOwner = true)]
+    private void UncrouchObserversRpc(int playerId) {
+        // Uncrouching logic here
+        Debug.Log("TESTING PLAYER ID: " + playerId + " IS NO LONGER CROUCHING");
     }
 
     public void BeforeCharacterUpdate(float deltaTime) {
