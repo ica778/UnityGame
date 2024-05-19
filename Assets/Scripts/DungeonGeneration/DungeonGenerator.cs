@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
-    [SerializeField] private GameObject entranceRoom;
 
     [SerializeField] private LayerMask dungeonRoomOpeningColliderLayer;
     [SerializeField] private GameObject doorway;
@@ -15,7 +14,7 @@ public class DungeonGenerator : NetworkBehaviour {
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 50;
+    private int maxRooms = 10;
     private int currentRoomCount = 0;
 
 
@@ -47,8 +46,7 @@ public class DungeonGenerator : NetworkBehaviour {
     }
 
     private void DungeonGeneration() {
-        GameObject entrance = Instantiate(entranceRoom, transform.position, Quaternion.identity);
-        RoomHandler entranceRoomScript = entrance.GetComponent<RoomHandler>();
+        RoomHandler entranceRoomScript = GetComponent<RoomHandler>();
 
         foreach (RoomConnectorHandler i in entranceRoomScript.GetRoomConnectors()) {
             stack.Push(i);
