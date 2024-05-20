@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
+    [SerializeField] private Transform dungeonParent;
 
     [SerializeField] private LayerMask dungeonRoomOpeningColliderLayer;
     [SerializeField] private GameObject doorway;
@@ -14,13 +15,8 @@ public class DungeonGenerator : NetworkBehaviour {
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
     private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
 
-    private int maxRooms = 10;
+    private int maxRooms = 50;
     private int currentRoomCount = 0;
-
-
-    private void Start () {
-
-    }
 
     public override void OnStartClient() {
         base.OnStartClient();
@@ -160,6 +156,7 @@ public class DungeonGenerator : NetworkBehaviour {
             spawnRoomPosition,
             rotationOfNewRoomObject
             );
+        newRoomObject.transform.SetParent(dungeonParent);
         RoomHandler newRoomHandler = newRoomObject.GetComponent<RoomHandler>();
         return newRoomHandler;
     }
@@ -187,7 +184,8 @@ public class DungeonGenerator : NetworkBehaviour {
                 if (door2) {
                     door2.OpenEntrance();
                 }
-                Instantiate(doorway, overlappingColliders[0].transform.position, overlappingColliders[0].transform.rotation);
+                GameObject newDoorwayObject = Instantiate(doorway, overlappingColliders[0].transform.position, overlappingColliders[0].transform.rotation);
+                newDoorwayObject.transform.SetParent(dungeonParent);
             }
         }
     }
