@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NetworkingScene.unity
     guid: 599a359ff79cd8f46bf8c95e59aedcff
+  - enabled: 1
+    path: Assets/Scenes/NetworkingSceneTest.unity
+    guid: 5ead632b1688e084888e6b40f2d1cb2c
   m_configObjects: {}
