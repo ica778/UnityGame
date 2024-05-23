@@ -36,6 +36,16 @@ public class DefaultMenuManager : MonoBehaviour {
     }
 
     public void OnClickJoinButton() {
+        StartCoroutine(StartNetworkingScene());        
+    }
+
+    private IEnumerator StartNetworkingScene() {
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("NetworkingScene", LoadSceneMode.Additive);
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+
         MainMenuManager.Instance.ShowLobbyBrowser();
     }
 }
