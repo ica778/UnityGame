@@ -38,6 +38,7 @@ public class LobbyHandler : MonoBehaviour {
         }
     }
 
+    // NOTE: maybe duplicate code
     private IEnumerator StartGameScenes() {
         UnityEngine.AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
 
@@ -55,17 +56,6 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
-        //JoinLobbyAsGuest(lobbyData);
-        StartCoroutine(StartNetworkingScene(lobbyData));
-    }
-
-    private IEnumerator StartNetworkingScene(LobbyData lobbyData) {
-        UnityEngine.AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("NetworkingScene", LoadSceneMode.Additive);
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
         JoinLobbyAsGuest(lobbyData);
     }
 

@@ -11,17 +11,12 @@ public class DefaultMenuManager : MonoBehaviour {
         StartCoroutine(StartHost());
     }
 
+    // NOTE: maybe duplicate code
     private IEnumerator StartHost() {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("NetworkingScene", LoadSceneMode.Additive);
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
         LobbyHandler.Instance.CreateLobby();
         ConnectionManager.Instance.StartHost();
-        
-        asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
+
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
 
         while (!asyncOperation.isDone) {
             yield return null;
@@ -36,16 +31,6 @@ public class DefaultMenuManager : MonoBehaviour {
     }
 
     public void OnClickJoinButton() {
-        StartCoroutine(StartNetworkingScene());        
-    }
-
-    private IEnumerator StartNetworkingScene() {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("NetworkingScene", LoadSceneMode.Additive);
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
         MainMenuManager.Instance.ShowLobbyBrowser();
     }
 }
