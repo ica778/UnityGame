@@ -14,6 +14,6 @@ public class GameManager : MonoBehaviour {
         ConnectionManager.Instance.Disconnect();
         GameInput.Instance.UnlockCursor();
         LobbyHandler.Instance.DestroySelf();
-        SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
+        SceneHandler.Load(SceneHandler.Scenes.MainMenuScene);
     }
 }

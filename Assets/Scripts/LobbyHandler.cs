@@ -15,7 +15,6 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
         lobbyManager.evtCreated.AddListener(OnLobbyCreateSuccess);
-        DontDestroyOnLoad(gameObject);
     }
 
     public void Testing() {
@@ -29,7 +28,7 @@ public class LobbyHandler : MonoBehaviour {
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
         if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyData.Owner.user.id)) {
-            SceneLoader.Load(SceneLoader.Scene.GameScene);
+            SceneHandler.Load(SceneHandler.Scenes.GameScene);
         }
     }
 

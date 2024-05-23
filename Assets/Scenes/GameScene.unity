@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: c9b9949a58e9aec4db7a6b333edb5ef5,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -3631,7 +3632,6 @@ GameObject:
   - component: {fileID: 667200848}
   - component: {fileID: 667200847}
   - component: {fileID: 667200846}
-  - component: {fileID: 667200849}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -3702,22 +3702,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 651412107}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &667200849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667200845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211a9f6ec51ddc14f908f5acc0cd0423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 4792983976827827601, guid: ae643d837ed1a8d498539c646d254669,
-    type: 3}
-  _addToDefaultScene: 1
-  Spawns: []
 --- !u!1 &729742163
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,12 +20,12 @@ public class TestMainMenuManager : MonoBehaviour {
         hostButton.onClick.AddListener(() => {
             networkManager.ServerManager.StartConnection();
             networkManager.ClientManager.StartConnection();
-            SceneLoader.Load(SceneLoader.Scene.GameScene);
+            SceneHandler.Load(SceneHandler.Scenes.GameScene);
         });
 
         joinButton.onClick.AddListener(() => {
             networkManager.ClientManager.StartConnection();
-            SceneLoader.Load(SceneLoader.Scene.GameScene);
+            SceneHandler.Load(SceneHandler.Scenes.GameScene);
         });
     }
 }
