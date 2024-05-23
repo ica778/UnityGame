@@ -33,7 +33,6 @@ public class DefaultMenuManager : MonoBehaviour {
         InstanceFinder.SceneManager.LoadGlobalScenes(sld);
         
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene"));
-
     }
 
     public void OnClickJoinButton() {
