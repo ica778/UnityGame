@@ -1,17 +1,12 @@
 using FishNet;
 using FishNet.Managing;
-using FishNet.Managing.Scened;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DefaultMenuManager : MonoBehaviour {
     [SerializeField] private GameObject playerObject;
 
-    // NOTE: this is for testing multiplayer without steam
-    [SerializeField] private NetworkManager offlineNetworkManager;
-
     public void OnClickHostButton() {
+        Debug.LogError("TODO: FEATURE NOT IMPLEMENTED YET, STILL HAVE TO MAKE HOSTING WORK FOR STEAM");
         LobbyHandler.Instance.CreateLobby();
         ConnectionManager.Instance.StartHost();
 
@@ -33,6 +28,7 @@ public class DefaultMenuManager : MonoBehaviour {
     public void OnClickTestJoinButton() {
         ConnectionManager.Instance.StartConnectionAsGuestOffline();
 
-        SceneHandler.Instance.LoadFromMainMenuToGameScene();
+        SceneHandler.Instance.UnloadMainMenuScene();
+        
     }
 }

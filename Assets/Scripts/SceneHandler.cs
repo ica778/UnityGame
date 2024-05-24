@@ -44,25 +44,29 @@ public class SceneHandler : MonoBehaviour {
 
     }
 
-    private IEnumerator LoadNewGlobalAdditiveSceneAsync(SceneName newScene, bool newSceneAsActiveScene = false) {
+    private IEnumerator LoadNewGlobalAdditiveSceneAsync(SceneName newScene, bool newSceneAsActiveScene) {
         AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(newScene.ToString(), LoadSceneMode.Additive);
 
         while (!asyncOperation.isDone) {
             yield return null;
         }
 
-        SceneLoadData sld = new SceneLoadData(SceneName.GameScene.ToString());
+        SceneLoadData sld = new SceneLoadData(newScene.ToString());
         InstanceFinder.SceneManager.LoadGlobalScenes(sld);
 
         if (newSceneAsActiveScene) {
-            UnityEngine.SceneManagement.SceneManager.SetActiveScene(GetScene(newScene));
+            sld.PreferredActiveScene = new SceneLookupData(newScene.ToString());
         }
     }
 
     public void LoadFromMainMenuToGameScene() {
-        StartCoroutine(LoadNewGlobalAdditiveSceneAsync(SceneName.PlayerScene, true));
+        StartCoroutine(LoadNewGlobalAdditiveSceneAsync(SceneName.PlayerScene, false));
         StartCoroutine(LoadNewGlobalAdditiveSceneAsync(SceneName.GameScene, true));
 
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
+    }
+
+    public void UnloadMainMenuScene() {
         UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
     }
 }

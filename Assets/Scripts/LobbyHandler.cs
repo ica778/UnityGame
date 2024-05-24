@@ -33,7 +33,6 @@ public class LobbyHandler : MonoBehaviour {
 
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
         if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyData.Owner.user.id)) {
-            //SceneHandler.Load(SceneHandler.Scenes.GameScene);
             StartCoroutine(StartGameScenes());
         }
     }
