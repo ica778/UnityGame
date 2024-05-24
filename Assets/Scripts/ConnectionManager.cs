@@ -1,3 +1,4 @@
+using FishNet.Managing;
 using HeathenEngineering.SteamworksIntegration;
 using Steamworks;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class ConnectionManager : MonoBehaviour {
     public static ConnectionManager Instance { get; private set; }
 
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
+
+    // TODO: this serialized field is for testing multiplayer without having to use steam
+    [SerializeField] private NetworkManager offlineNetworkManager;
 
     private bool isHost = false;
 
@@ -44,5 +48,15 @@ public class ConnectionManager : MonoBehaviour {
             fishySteamworks.StopConnection(false);
         }
         isHost = false;
+    }
+
+    // NOTE: this is for testing multiplayer without having to use steam
+    public void StartHostOffline() {
+        offlineNetworkManager.ServerManager.StartConnection();
+        offlineNetworkManager.ClientManager.StartConnection();
+    }
+
+    public void StartConnectionAsGuestOffline() {
+        offlineNetworkManager.ClientManager.StartConnection();
     }
 }
