@@ -100,8 +100,8 @@ namespace FishNet.Component.Spawning
 
             NetworkObject nob = _networkManager.GetPooledInstantiated(_playerPrefab, position, rotation, true);
 
-            // this line has been modified to spawn player prefab in scene "NetworkingScene"
-            _networkManager.ServerManager.Spawn(nob, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("NetworkingScene"));
+            // this line has been modified to spawn player prefab in specified scene
+            _networkManager.ServerManager.Spawn(nob, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("PlayerScene"));
 
             //If there are no global scenes 
             if (_addToDefaultScene)
