@@ -31,9 +31,9 @@ public class Player : NetworkBehaviour {
     }
 
     private void Start() {
-        playerID = base.ObjectId;
-        PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
-        Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
+        playerID = Owner.ClientId;
+        PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
+        Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
 
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
