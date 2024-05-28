@@ -21,14 +21,14 @@ public class DefaultMenuManager : MonoBehaviour {
     public void OnClickTestHostButton() {
         ConnectionManager.Instance.StartHostOffline();
 
-        SceneHandler.Instance.LoadFromMainMenuToGameScene();
+        //SceneHandler.Instance.LoadFromMainMenuToGameScene();
     }
 
     // NOTE: this is for testing multiplayer without steam
     public void OnClickTestJoinButton() {
         ConnectionManager.Instance.StartConnectionAsGuestOffline();
 
-        SceneHandler.Instance.UnloadMainMenuScene();
+        //SceneHandler.Instance.UnloadMainMenuScene();
         
     }
 }

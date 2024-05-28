@@ -1,8 +1,7 @@
 using FishNet;
-using FishNet.Managing;
+using FishNet.Connection;
 using FishNet.Managing.Scened;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,10 +20,6 @@ public class SceneHandler : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-    }
-
-    private void Start() {
-        StartCoroutine(LoadNewAdditiveSceneAsync(SceneName.MainMenuScene, true));
     }
 
     private Scene GetScene(SceneName scene) {
@@ -59,9 +54,40 @@ public class SceneHandler : MonoBehaviour {
         }
     }
 
+    private IEnumerator TestingStartHost() {
+        NetworkConnection conn = InstanceFinder.ClientManager.Connection;
+        Debug.Log("TESTING NETWORK CONN: " + conn.ClientId);
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(SceneName.PlayerScene.ToString(), LoadSceneMode.Additive);
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+
+        SceneLoadData sld = new SceneLoadData(SceneName.PlayerScene.ToString());
+        //InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
+        InstanceFinder.SceneManager.LoadGlobalScenes(sld);
+        
+        asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(SceneName.GameScene.ToString(), LoadSceneMode.Additive);
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+
+        sld = new SceneLoadData(SceneName.GameScene.ToString());
+        //InstanceFinder.SceneManager.LoadConnectionScenes(conn, sld);
+        InstanceFinder.SceneManager.LoadGlobalScenes(sld);
+
+        sld.PreferredActiveScene = new SceneLookupData(SceneName.GameScene.ToString());
+    }
+
     public void LoadFromMainMenuToGameScene() {
-        StartCoroutine(LoadNewGlobalAdditiveSceneAsync(SceneName.PlayerScene, false));
-        StartCoroutine(LoadNewGlobalAdditiveSceneAsync(SceneName.GameScene, true));
+        StartCoroutine(TestingStartHost());
+
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
+    }
+
+    public void LoadFromMainMenuToGameSceneAsGuest() {
+        //StartCoroutine(TestingStartHost());
 
         UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
     }

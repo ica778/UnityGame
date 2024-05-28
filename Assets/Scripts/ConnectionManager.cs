@@ -1,6 +1,8 @@
+using FishNet;
 using FishNet.Managing;
 using HeathenEngineering.SteamworksIntegration;
 using Steamworks;
+using System.Collections;
 using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour {
@@ -12,9 +14,16 @@ public class ConnectionManager : MonoBehaviour {
     [SerializeField] private NetworkManager offlineNetworkManager;
 
     private bool isHost = false;
+    private bool isConnected = false;
 
     private void Start () {
         Instance = this;
+
+        offlineNetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+    }
+
+    private void ClientManager_OnAuthenticated() {
+        isConnected = true;
     }
 
     // start server and join as host
@@ -52,11 +61,45 @@ public class ConnectionManager : MonoBehaviour {
 
     // NOTE: this is for testing multiplayer without having to use steam
     public void StartHostOffline() {
+        //offlineNetworkManager.ServerManager.StartConnection();
+        //offlineNetworkManager.ClientManager.StartConnection();
+        StartCoroutine(ConnectAsHostAsync());
+    }
+
+    // TODO: MAKE THIS FUNCTION CLEANER, DONT CALL NEXT ONE INSIDE THE SAME COROUTINE OR SOMETHING IDK
+    private IEnumerator ConnectAsHostAsync() {
+        float timer = 5f;
         offlineNetworkManager.ServerManager.StartConnection();
         offlineNetworkManager.ClientManager.StartConnection();
+
+        while (!isConnected || timer <= 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        SceneHandler.Instance.LoadFromMainMenuToGameScene();
     }
 
     public void StartConnectionAsGuestOffline() {
+        //offlineNetworkManager.ClientManager.StartConnection();
+        StartCoroutine(ConnectAsGuestAsync());
+    }
+
+    private IEnumerator ConnectAsGuestAsync() {
+        float timer = 5f;
         offlineNetworkManager.ClientManager.StartConnection();
+
+        while (!isConnected || timer <= 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (isConnected) {
+            SceneHandler.Instance.LoadFromMainMenuToGameSceneAsGuest();
+        }
+        else {
+            Debug.LogError("ERROR: DID NOT CONNECT IN TIME ================================");
+        }
+
     }
 }
