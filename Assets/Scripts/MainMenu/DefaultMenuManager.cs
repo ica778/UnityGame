@@ -10,7 +10,7 @@ public class DefaultMenuManager : MonoBehaviour {
         LobbyHandler.Instance.CreateLobby();
         ConnectionManager.Instance.StartHost();
 
-        SceneHandler.Instance.LoadFromMainMenuToGameScene();
+        SceneHandler.Instance.LoadIntoGame();
     }
 
     public void OnClickJoinButton() {
@@ -19,16 +19,11 @@ public class DefaultMenuManager : MonoBehaviour {
 
     // NOTE: this is for testing multiplayer without steam
     public void OnClickTestHostButton() {
-        ConnectionManager.Instance.StartHostOffline();
-
-        SceneHandler.Instance.LoadFromMainMenuToGameScene();
+        ConnectionManager.Instance.StartGameAsHostOffline();
     }
 
     // NOTE: this is for testing multiplayer without steam
     public void OnClickTestJoinButton() {
-        ConnectionManager.Instance.StartConnectionAsGuestOffline();
-
-        SceneHandler.Instance.UnloadMainMenuScene();
-        
+        ConnectionManager.Instance.StartGameAsClientOffline();
     }
 }

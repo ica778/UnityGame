@@ -11,10 +11,11 @@ using UnityEngine.SceneManagement;
 public class SceneHandler : MonoBehaviour {
     public enum SceneName {
         None,
-        BootStrapScene,
+        BootstrapScene,
         MainMenuScene,
         PlayerScene,
         GameScene,
+        GameBootstrapScene,
     }
 
     public static SceneHandler Instance { get; private set; }
@@ -23,14 +24,27 @@ public class SceneHandler : MonoBehaviour {
         Instance = this;
     }
 
-    private void Start() {
-        StartCoroutine(LoadNewAdditiveSceneAsync(SceneName.MainMenuScene, true));
-    }
-
     private Scene GetScene(SceneName scene) {
         return UnityEngine.SceneManagement.SceneManager.GetSceneByName(scene.ToString());
     }
 
+    private IEnumerator LoadIntoGameAsync() {
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(SceneName.GameBootstrapScene.ToString(), LoadSceneMode.Additive);
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(GetScene(SceneName.GameBootstrapScene));
+
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
+    }
+
+    public void LoadIntoGame() {
+        StartCoroutine(LoadIntoGameAsync());
+    }
+
+    /*
     private IEnumerator LoadNewAdditiveSceneAsync(SceneName newScene, bool newSceneAsActiveScene = false) {
         AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(newScene.ToString(), LoadSceneMode.Additive);
 
@@ -69,4 +83,5 @@ public class SceneHandler : MonoBehaviour {
     public void UnloadMainMenuScene() {
         UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
     }
+    */
 }
