@@ -71,7 +71,7 @@ public class ConnectionManager : MonoBehaviour {
         offlineNetworkManager.ServerManager.StartConnection();
         offlineNetworkManager.ClientManager.StartConnection();
 
-        while (!isConnected || timer <= 0) {
+        while (!isConnected && timer > 0) {
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -93,7 +93,7 @@ public class ConnectionManager : MonoBehaviour {
 
         offlineNetworkManager.ClientManager.StartConnection();
 
-        while (!isConnected || timer <= 0) {
+        while (!isConnected && timer > 0) {
             timer -= Time.deltaTime;
             yield return null;
         }

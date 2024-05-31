@@ -41,7 +41,9 @@ public class SceneHandler : MonoBehaviour {
     }
 
     public void LoadIntoGame() {
-        StartCoroutine(LoadIntoGameAsync());
+        Debug.Log("TESTIING123123");
+        SceneLoadData sld = new SceneLoadData("GameBootstrapScene");
+        InstanceFinder.SceneManager.LoadGlobalScenes(sld);
     }
 
     /*

@@ -32,7 +32,7 @@ public class Player : NetworkBehaviour {
 
     private void Start() {
         playerID = Owner.ClientId;
-        PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
+        //PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
         Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
 
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;

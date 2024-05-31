@@ -40,7 +40,7 @@ public class BasicEnemyAI : NetworkBehaviour {
     }
 
     // This makes AI script run only on the host
-    public override void OnStartClient() {
+    public override void OnStartNetwork() {
         EnableScriptForServerRpc();
     }
 
