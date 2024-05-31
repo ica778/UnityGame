@@ -1,4 +1,4 @@
-﻿using GameKit.Utilities;
+﻿using GameKit.Dependencies.Utilities;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -58,6 +58,16 @@ namespace FishNet.Object
         }
 
         /// <summary>
+        /// Returns if this TransformProperties equals anothers values.
+        /// </summary>
+        public bool ValuesEquals(TransformPropertiesCls properties)
+        {
+            return (this.Position == properties.Position
+                && this.Rotation == properties.Rotation
+                && this.LocalScale == properties.LocalScale);
+        }
+
+        /// <summary>
         /// Returns this classes values as the struct version of TransformProperties.
         /// </summary>
         /// <returns></returns>
@@ -111,6 +121,38 @@ namespace FishNet.Object
             Position = position;
             Rotation = rotation;
             LocalScale = localScale;
+        }
+
+        /// <summary>
+        /// Adds another transformProperties onto this.
+        /// </summary>
+        /// <param name="tp"></param>
+        public void Add(TransformProperties tp)
+        {
+            Position += tp.Position;
+            Rotation *= tp.Rotation;
+            LocalScale += tp.LocalScale;
+        }
+
+        /// <summary>
+        /// Subtracts another transformProperties from this.
+        /// </summary>
+        /// <param name="tp"></param>
+        public void Subtract(TransformProperties tp)
+        {
+            Position -= tp.Position;
+            Rotation *= Quaternion.Inverse(tp.Rotation);
+            LocalScale -= tp.LocalScale;
+        }
+
+        /// <summary>
+        /// Returns if this TransformProperties equals anothers values.
+        /// </summary>
+        public bool ValuesEquals(TransformProperties properties)
+        {
+            return (this.Position == properties.Position
+                && this.Rotation == properties.Rotation
+                && this.LocalScale == properties.LocalScale);
         }
     }
 }

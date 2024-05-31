@@ -39,7 +39,6 @@ namespace FishNet.Component.Spawning
         /// Areas in which players may spawn.
         /// </summary>
         [Tooltip("Areas in which players may spawn.")]
-        [FormerlySerializedAs("_spawns")]//Remove on 2024/01/01
         public Transform[] Spawns = new Transform[0];
         #endregion
 
@@ -99,8 +98,7 @@ namespace FishNet.Component.Spawning
             SetSpawn(_playerPrefab.transform, out position, out rotation);
 
             NetworkObject nob = _networkManager.GetPooledInstantiated(_playerPrefab, position, rotation, true);
-            // this line has been modified to spawn player prefab in specified scene
-            _networkManager.ServerManager.Spawn(nob, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("PlayerScene"));
+            _networkManager.ServerManager.Spawn(nob, conn);
 
             //If there are no global scenes 
             if (_addToDefaultScene)
