@@ -46,7 +46,7 @@ public class BasicEnemyAI : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     private void EnableScriptForServerRpc() {
-        if (base.IsHost) {
+        if (base.IsHostInitialized) {
             this.enabled = true;
         }
     }

@@ -21,7 +21,7 @@ public class DungeonGenerator : NetworkBehaviour {
     public override void OnStartClient() {
         base.OnStartClient();
 
-        if (IsServer) {
+        if (base.IsServerInitialized) {
             int seed = CreateSeed();
             GenerateDungeon(seed);
         }
