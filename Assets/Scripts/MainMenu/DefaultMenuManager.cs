@@ -10,7 +10,7 @@ public class DefaultMenuManager : MonoBehaviour {
         LobbyHandler.Instance.CreateLobby();
         ConnectionManager.Instance.StartHost();
 
-        SceneHandler.Instance.LoadIntoGame();
+        //SceneHandler.Instance.LoadIntoGame();
     }
 
     public void OnClickJoinButton() {

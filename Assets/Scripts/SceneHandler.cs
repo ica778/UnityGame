@@ -40,10 +40,12 @@ public class SceneHandler : MonoBehaviour {
         UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
     }
 
-    public void LoadIntoGame() {
-        Debug.Log("TESTIING123123");
-        SceneLoadData sld = new SceneLoadData("GameBootstrapScene");
-        InstanceFinder.SceneManager.LoadGlobalScenes(sld);
+    public void LoadIntoGame(bool asHost) {
+        if (asHost) {
+            SceneLoadData sld = new SceneLoadData("GameBootstrapScene");
+            InstanceFinder.SceneManager.LoadGlobalScenes(sld);
+        }
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
     }
 
     /*

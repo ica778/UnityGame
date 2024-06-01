@@ -77,7 +77,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            SceneHandler.Instance.LoadIntoGame();
+            SceneHandler.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -98,7 +98,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            SceneHandler.Instance.LoadIntoGame();
+            SceneHandler.Instance.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
