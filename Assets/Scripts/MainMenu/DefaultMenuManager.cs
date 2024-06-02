@@ -1,5 +1,6 @@
 using FishNet;
 using FishNet.Managing;
+using System.Collections;
 using UnityEngine;
 
 public class DefaultMenuManager : MonoBehaviour {
@@ -24,6 +25,12 @@ public class DefaultMenuManager : MonoBehaviour {
 
     // NOTE: this is for testing multiplayer without steam
     public void OnClickTestJoinButton() {
+        ConnectionManager.Instance.StartGameAsClientOffline();
+        //StartCoroutine(TestingStartGameAfterDelay());
+    }
+
+    private IEnumerator TestingStartGameAfterDelay() {
+        yield return new WaitForSeconds(5);
         ConnectionManager.Instance.StartGameAsClientOffline();
     }
 }
