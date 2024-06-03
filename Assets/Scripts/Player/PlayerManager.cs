@@ -5,6 +5,7 @@ using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FishNet.Object.Synchronizing;
 
 public class PlayerManager : NetworkBehaviour {
     public static PlayerManager Instance { get; private set; }
@@ -23,18 +24,21 @@ public class PlayerManager : NetworkBehaviour {
         SpawnPlayerServerRpc(conn);
     }
     
+    // TODO: CONFIRM THIS IS THE BEST WAY OF SPAWNING PLAYER OBJECTS IN THE CORRECT SCENE
     [ServerRpc(RequireOwnership = false)]
     private void SpawnPlayerServerRpc(NetworkConnection conn) {
 
         GameObject newPlayer = Instantiate(playerPrefab);
         base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
 
-        MovePlayerToCorrectSceneObserversRpc(newPlayer);
+        MovePlayersToCorrectSceneObserversRpc(newPlayer);
     }
 
     [ObserversRpc]
-    private void MovePlayerToCorrectSceneObserversRpc(GameObject newPlayer) {
-        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(newPlayer, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+    private void MovePlayersToCorrectSceneObserversRpc(GameObject newPlayer) {
+        foreach (Player currentPlayer in players.Values) {
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(currentPlayer.gameObject, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+        }
     }
     
     public bool HasPlayer(int playerId) {
@@ -52,9 +56,4 @@ public class PlayerManager : NetworkBehaviour {
     public void RemovePlayer(int playerId) {
         players.Remove(playerId);
     }
-
-    public Dictionary<int, Player> GetPlayersList() {
-        return players;
-    }
-
 }

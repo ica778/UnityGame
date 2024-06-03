@@ -10,7 +10,7 @@ public class Player : NetworkBehaviour {
     [SerializeField] private InteractionSystem interactionSystem;
     [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
 
-    private int playerID;
+    private int playerId;
 
     // Looking
     private float lookSensitivity = 20f;
@@ -30,8 +30,8 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    private void Start() {
-        playerID = Owner.ClientId;
+    public override void OnStartClient() {
+        playerId = Owner.ClientId;
         PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
         Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
 
@@ -114,7 +114,7 @@ public class Player : NetworkBehaviour {
     }
 
     public int GetPlayerID() {
-        return playerID;
+        return playerId;
     }
 
     private void OnDestroy() {
