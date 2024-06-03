@@ -25,7 +25,7 @@ public class PlayerManager : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void SpawnPlayerServerRpc(NetworkConnection conn) {
         GameObject newPlayer = Instantiate(player);
-        base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("PlayerScene"));
+        base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
     }
 
     public bool HasPlayer(int playerId) {
