@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerManager : NetworkBehaviour {
     public static PlayerManager Instance { get; private set; }
 
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerPrefab;
 
     private Dictionary<int, Player> players = new Dictionary<int, Player>();
 
@@ -19,15 +19,24 @@ public class PlayerManager : NetworkBehaviour {
 
     public override void OnStartClient() {
         NetworkConnection conn = base.ClientManager.Connection;
+
         SpawnPlayerServerRpc(conn);
     }
-
+    
     [ServerRpc(RequireOwnership = false)]
     private void SpawnPlayerServerRpc(NetworkConnection conn) {
-        GameObject newPlayer = Instantiate(player);
+
+        GameObject newPlayer = Instantiate(playerPrefab);
         base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+
+        MovePlayerToCorrectSceneObserversRpc(newPlayer);
     }
 
+    [ObserversRpc]
+    private void MovePlayerToCorrectSceneObserversRpc(GameObject newPlayer) {
+        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(newPlayer, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+    }
+    
     public bool HasPlayer(int playerId) {
         return players.ContainsKey(playerId);
     }
