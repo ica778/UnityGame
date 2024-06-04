@@ -15,6 +15,7 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnSprintCancelledAction;
     public event EventHandler OnPauseAction;
     public event EventHandler OnInteractAction;
+    public event EventHandler OnInteractAlternateAction;
     public event EventHandler OnInventoryAction;
     public event EventHandler OnDropAction;
     public event EventHandler OnScrollUpAction;
@@ -34,6 +35,8 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Pause.performed += Pause_performed;
 
         playerInputActions.Player.Interact.performed += Interact_performed;
+        playerInputActions.Player.InteractAlternate.performed += InteractAlternate_performed;
+
         playerInputActions.Player.Inventory.performed += Inventory_performed;
         playerInputActions.Player.Drop.performed += Drop_performed;
 
@@ -65,6 +68,10 @@ public class GameInput : MonoBehaviour {
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         OnInteractAction?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void InteractAlternate_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnInteractAlternateAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
