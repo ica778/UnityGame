@@ -4,126 +4,73 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using FishNet.Connection;
+using System.Collections.Generic;
+using System.Linq;
 
 public class GameSceneManager : NetworkBehaviour {
+
+    private string persistentObjectScene = "GamePersistentObjectsScene";
+    private string gameScene = "GameScene";
+    private string gameScene1 = "GameScene1";
+    private string gameScene2 = "GameScene2";
+
+    private List<SceneLoadData> sldList = new();
+
     public override void OnStartClient() {
         GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
-            LoadScenesForHostServerRpc(conn);
+            StartGameAsHostServerRpc(conn);
         }
         else {
-            StartCoroutine(LoadingScenesForClientAsync(conn));
+            StartGameAsClientServerRpc(conn);
         }
     }
 
     private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e) {
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
-            LoadNextGameSceneForHostServerRpc(conn);
-            //StartCoroutine(TestingTestingTestingHostLoadScenes(conn));
-            LoadNextGameScenesForClients();
+            LoadNewLevelScene(gameScene);
+        }
+        else {
+            LoadNewLevelScene(gameScene2);
         }
     }
 
+    // NOTE: this function works with the assumption the last scene is the level scene
     [ServerRpc(RequireOwnership = false)]
-    private void LoadNextGameSceneForHostServerRpc(NetworkConnection conn) {
-        SceneUnloadData sud = new SceneUnloadData("GameScene1");
-        base.SceneManager.UnloadConnectionScenes(conn, sud);
+    private void LoadNewLevelScene(string sceneToSwitchTo) {
+        NetworkConnection[] conns = base.ServerManager.Clients.Values.ToArray();
 
-        SceneLoadData sld = new SceneLoadData("GameScene2");
-        base.SceneManager.LoadConnectionScenes(conn, sld);
-        SceneLookupData slud = new SceneLookupData("GameScene2");
+        SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
+        base.SceneManager.UnloadConnectionScenes(conns, sud);
+
+        sldList.RemoveAt(sldList.Count - 1);
+
+        SceneLoadData sld = new SceneLoadData(sceneToSwitchTo);
+        base.SceneManager.LoadConnectionScenes(conns, sld);
+        SceneLookupData slud = new SceneLookupData(sceneToSwitchTo);
         sld.PreferredActiveScene = new PreferredScene(slud);
-    }
-
-    /*
-    private IEnumerator TestingTestingTestingHostLoadScenes(NetworkConnection conn) {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("GameScene1");
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene"));
-
-        TestingTestingTestingServerRpc(conn);
+        sldList.Add(sld);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void TestingTestingTestingServerRpc(NetworkConnection conn) {
-        base.SceneManager.AddConnectionToScene(conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene"));
-
-        SceneLookupData slud = new SceneLookupData("GameScene1");
-        SceneUnloadData sud = new SceneUnloadData(slud);
-        base.SceneManager.UnloadConnectionScenes(conn, sud);
+    private void StartGameAsClientServerRpc(NetworkConnection conn) {
+        foreach (SceneLoadData sld in sldList) {
+            base.SceneManager.LoadConnectionScenes(conn, sld);
+        }
     }
-    */
 
     [ServerRpc(RequireOwnership = false)]
-    private void LoadScenesForHostServerRpc(NetworkConnection conn) {
-        SceneLoadData sld = new SceneLoadData("GamePersistentObjectsScene");
+    private void StartGameAsHostServerRpc(NetworkConnection conn) {
+        SceneLoadData sld = new SceneLoadData(persistentObjectScene);
         base.SceneManager.LoadConnectionScenes(conn, sld);
+        sldList.Add(sld);
 
-        sld = new SceneLoadData("GameScene1");
+        sld = new SceneLoadData(gameScene1);
         base.SceneManager.LoadConnectionScenes(conn, sld);
-        SceneLookupData slud = new SceneLookupData("GameScene1");
+        SceneLookupData slud = new SceneLookupData(gameScene1);
         sld.PreferredActiveScene = new PreferredScene(slud);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void AddClientToConnectionSceneServerRpc(NetworkConnection conn) {
-        base.SceneManager.AddConnectionToScene(conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
-        base.SceneManager.AddConnectionToScene(conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene"));
-    }
-
-    private IEnumerator LoadingScenesForClientAsync(NetworkConnection conn) {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GamePersistentObjectsScene", LoadSceneMode.Additive);
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene1", LoadSceneMode.Additive);
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene1"));
-
-        AddClientToConnectionSceneServerRpc(conn);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void AddClientToNextGameSceneServerRpc(NetworkConnection conn) {
-        base.SceneManager.AddConnectionToScene(conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene2"));
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void LoadNextGameScenesForClients() {
-        LoadingNextGameScenesForClients();
-    }
-
-    [ObserversRpc(ExcludeServer = true)]
-    private void LoadingNextGameScenesForClients() {
-        NetworkConnection conn = base.ClientManager.Connection;
-        StartCoroutine(LoadingNextGameScenesForClientAsync(conn));
-    }
-
-    private IEnumerator LoadingNextGameScenesForClientAsync(NetworkConnection conn) {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene2", LoadSceneMode.Additive);
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("GameScene1");
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene2"));
-
-        AddClientToNextGameSceneServerRpc(conn);
+        sldList.Add(sld);
     }
 }
