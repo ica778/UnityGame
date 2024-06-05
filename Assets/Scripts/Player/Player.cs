@@ -25,16 +25,15 @@ public class Player : NetworkBehaviour {
     private const string IS_SPRINTING = "IsSprinting";
 
     public override void OnStartNetwork() {
-        if (!Owner.IsLocalClient) {
-            this.enabled = false;
-        }
-    }
-
-    public override void OnStartClient() {
-        playerId = Owner.ClientId;
         PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
         Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
 
+        if (!Owner.IsLocalClient) {
+            this.enabled = false;
+            return;
+        }
+
+        playerId = Owner.ClientId;
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
