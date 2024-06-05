@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class DefaultMenuUI : MonoBehaviour {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button joinButton;
+    [SerializeField] private Button testHostButton;
+    [SerializeField] private Button testJoinButton;
 
     private DefaultMenuManager defaultMenuManager;
 
@@ -19,6 +21,14 @@ public class DefaultMenuUI : MonoBehaviour {
 
         joinButton.onClick.AddListener(() => {
             defaultMenuManager.OnClickJoinButton();
+        });
+
+        testHostButton.onClick.AddListener(() => {
+            defaultMenuManager.OnClickTestHostButton();
+        });
+
+        testJoinButton.onClick.AddListener(() => {
+            defaultMenuManager.OnClickTestJoinButton();
         });
     }
 }

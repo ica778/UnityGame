@@ -10,7 +10,7 @@ public class Player : NetworkBehaviour {
     [SerializeField] private InteractionSystem interactionSystem;
     [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
 
-    private int playerID;
+    private int playerId;
 
     // Looking
     private float lookSensitivity = 20f;
@@ -25,16 +25,15 @@ public class Player : NetworkBehaviour {
     private const string IS_SPRINTING = "IsSprinting";
 
     public override void OnStartNetwork() {
+        PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
+        Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
+
         if (!Owner.IsLocalClient) {
             this.enabled = false;
+            return;
         }
-    }
 
-    private void Start() {
-        playerID = base.ObjectId;
-        PlayerManager.Instance.AddPlayer(base.ObjectId, GetComponent<Player>());
-        Debug.Log("CLIENT CONNECTED WITH ID: " + base.ObjectId);
-
+        playerId = Owner.ClientId;
         GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
         GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
@@ -114,7 +113,7 @@ public class Player : NetworkBehaviour {
     }
 
     public int GetPlayerID() {
-        return playerID;
+        return playerId;
     }
 
     private void OnDestroy() {

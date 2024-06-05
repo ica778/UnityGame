@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour {
     }
 
     public void QuitGame() {
+        Debug.LogError("TODO: FEATURE NOT IMPLEMENTED YET");
+
         ConnectionManager.Instance.Disconnect();
         GameInput.Instance.UnlockCursor();
         LobbyHandler.Instance.DestroySelf();
-        SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
+        
     }
 }
