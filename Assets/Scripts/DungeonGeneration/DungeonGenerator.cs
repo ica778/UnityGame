@@ -1,4 +1,5 @@
 using FishNet.Object;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
@@ -30,12 +31,12 @@ public class DungeonGenerator : NetworkBehaviour {
 
     [ObserversRpc(BufferLast = true)]
     private void GenerateDungeonObserversRpc(int seed) {
-        Random.InitState(seed);
-
-        StartCoroutine(GenerateDungeonAsync());
+        StartCoroutine(GenerateDungeonAsync(seed));
     }
 
-    private IEnumerator GenerateDungeonAsync() {
+    private IEnumerator GenerateDungeonAsync(int seed) {
+        Random.InitState(seed);
+
         yield return StartCoroutine(DungeonGenerationAsync());
         yield return StartCoroutine(ConnectRoomsAsync());
         navMeshSurface.BuildNavMesh();
@@ -86,7 +87,6 @@ public class DungeonGenerator : NetworkBehaviour {
                             }
                             BoxCollider collider = x.GetDoorwayCollider();
 
-                            //Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 center = currentNewRoomObjectPosition + currentNewRoomObjectRotation * collider.transform.position;
                             Vector3 extents = collider.bounds.extents;
                             Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);

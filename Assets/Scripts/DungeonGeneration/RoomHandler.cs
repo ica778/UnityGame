@@ -5,9 +5,6 @@ public class RoomHandler : MonoBehaviour {
     [SerializeField] private RoomConnectorHandler[] roomSpawnConnectors;
     [SerializeField] private DungeonValidator dungeonValidator;
 
-    private void Start() {
-    }
-
     public RoomConnectorHandler[] GetRoomConnectors() {
         return roomEntrances;
     }
