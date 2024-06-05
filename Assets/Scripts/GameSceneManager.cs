@@ -73,4 +73,8 @@ public class GameSceneManager : NetworkBehaviour {
         sld.PreferredActiveScene = new PreferredScene(slud);
         sldList.Add(sld);
     }
+
+    public override void OnStopClient() {
+        GameInput.Instance.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
+    }
 }

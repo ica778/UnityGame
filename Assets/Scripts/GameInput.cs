@@ -133,6 +133,7 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Player.Pause.performed -= Pause_performed;
 
         playerInputActions.Player.Interact.performed -= Interact_performed;
+        playerInputActions.Player.InteractAlternate.performed -= InteractAlternate_performed;
         playerInputActions.Player.Inventory.performed -= Inventory_performed;
         playerInputActions.Player.Drop.performed -= Drop_performed;
 
