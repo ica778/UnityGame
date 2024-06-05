@@ -24,25 +24,29 @@ public class DungeonGenerator : NetworkBehaviour {
 
         if (base.IsServerInitialized) {
             int seed = CreateSeed();
-            GenerateDungeon(seed);
+            GenerateDungeonObserversRpc(seed);
         }
     }
 
     [ObserversRpc(BufferLast = true)]
-    private void GenerateDungeon(int seed) {
+    private void GenerateDungeonObserversRpc(int seed) {
         Random.InitState(seed);
 
-        StartCoroutine(DungeonGeneration());
-        //ConnectRooms();
-
-        //navMeshSurface.BuildNavMesh();
+        StartCoroutine(GenerateDungeonAsync());
     }
+
+    private IEnumerator GenerateDungeonAsync() {
+        yield return StartCoroutine(DungeonGenerationAsync());
+        yield return StartCoroutine(ConnectRoomsAsync());
+        navMeshSurface.BuildNavMesh();
+    }
+
 
     private int CreateSeed() {
         return Random.Range(int.MinValue, int.MaxValue);
     }
 
-    private IEnumerator DungeonGeneration() {
+    private IEnumerator DungeonGenerationAsync() {
         RoomHandler entranceRoomScript = GetComponent<RoomHandler>();
 
         foreach (RoomConnectorHandler i in entranceRoomScript.GetRoomConnectors()) {
@@ -141,8 +145,10 @@ public class DungeonGenerator : NetworkBehaviour {
             
         }
         Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
+    }
 
-        // BEGIN INLINE DOORWAY GENERATION ==============================
+    // TODO: you might be able to optimize this by reducing potential duplicates
+    private IEnumerator ConnectRoomsAsync() {
         foreach (RoomConnectorHandler connector in connectors) {
             BoxCollider collider = connector.GetDoorwayCollider();
             Vector3 center = collider.transform.position;
@@ -157,13 +163,16 @@ public class DungeonGenerator : NetworkBehaviour {
                 if (door2) {
                     door2.OpenEntrance();
                 }
-                GameObject newDoorwayObject = Instantiate(doorway, overlappingColliders[0].transform.position, overlappingColliders[0].transform.rotation);
+                AsyncInstantiateOperation<GameObject> asyncInstantiateOperation = InstantiateAsync<GameObject>(doorway, overlappingColliders[0].transform.position, overlappingColliders[0].transform.rotation);
+
+                while (!asyncInstantiateOperation.isDone) {
+                    yield return null;
+                }
+
+                GameObject newDoorwayObject = asyncInstantiateOperation.Result[0];
                 newDoorwayObject.transform.SetParent(dungeonParent);
             }
         }
-        // END INLINE DOORWAY GENERATION ==========================
-
-        yield break;
     }
 
     private void ShuffleArray<T>(T[] array) {
@@ -185,45 +194,10 @@ public class DungeonGenerator : NetworkBehaviour {
         return prefabRoomHandler.GetRoomSpawnVector(parentRoomConnectorHandler, newRoomConnectorHandler);
     }
 
-    private IEnumerator<RoomHandler> SpawnRoomObject(GameObject prefab, Vector3 spawnRoomPosition, Quaternion rotationOfNewRoomObject) {
-        AsyncInstantiateOperation<GameObject> asyncInstantiateOperation = InstantiateAsync<GameObject>(prefab, spawnRoomPosition, rotationOfNewRoomObject);
-
-        while (!asyncInstantiateOperation.isDone) {
-            yield return null;
-        }
-
-        GameObject newRoomObject = asyncInstantiateOperation.Result[0];
-        newRoomObject.transform.SetParent(dungeonParent);
-        RoomHandler roomHandler = newRoomObject.GetComponent<RoomHandler>();
-        yield return roomHandler;
-    }
-
     private bool ValidateRoomGeneration(RoomHandler prefabRoomHandler, RoomConnectorHandler parentRoomConnectorHandler, RoomConnectorHandler newRoomConnectorHandler) {
         if (prefabRoomHandler.GetDungeonValidator().CheckIfSpaceIsClear(parentRoomConnectorHandler, newRoomConnectorHandler)) {
             return true;
         }
         return false;
-    }
-
-    // TODO: could probably optimize this by reducing potential duplicates
-    private void ConnectRooms() {
-        foreach (RoomConnectorHandler connector in connectors) {
-            BoxCollider collider = connector.GetDoorwayCollider();
-            Vector3 center = collider.transform.position;
-            Vector3 extents = collider.bounds.extents;
-            Collider[] overlappingColliders = Physics.OverlapBox(center, extents, Quaternion.identity, dungeonRoomOpeningColliderLayer);
-            if (overlappingColliders.Length == 2) {
-                RoomConnectorHandler door1 = overlappingColliders[0].GetComponentInParent<RoomConnectorHandler>();
-                RoomConnectorHandler door2 = overlappingColliders[1].GetComponentInParent<RoomConnectorHandler>();
-                if (door1) {
-                    door1.OpenEntrance();
-                }
-                if (door2) {
-                    door2.OpenEntrance();
-                }
-                GameObject newDoorwayObject = Instantiate(doorway, overlappingColliders[0].transform.position, overlappingColliders[0].transform.rotation);
-                newDoorwayObject.transform.SetParent(dungeonParent);
-            }
-        }
     }
 }
