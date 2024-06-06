@@ -7,11 +7,8 @@ public class DefaultMenuManager : MonoBehaviour {
     [SerializeField] private GameObject playerObject;
 
     public void OnClickHostButton() {
-        Debug.LogError("TODO: FEATURE NOT IMPLEMENTED YET, STILL HAVE TO MAKE HOSTING WORK FOR STEAM");
         LobbyHandler.Instance.CreateLobby();
-        ConnectionManager.Instance.StartHost();
-
-        //SceneHandler.Instance.LoadIntoGame();
+        ConnectionManager.Instance.StartGameAsHostSteam();
     }
 
     public void OnClickJoinButton() {

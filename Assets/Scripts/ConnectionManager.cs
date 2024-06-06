@@ -1,3 +1,4 @@
+using FishNet;
 using FishNet.Managing;
 using HeathenEngineering.SteamworksIntegration;
 using Steamworks;
@@ -9,9 +10,6 @@ public class ConnectionManager : MonoBehaviour {
 
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
-    // TODO: this serialized field is for testing multiplayer without having to use steam
-    [SerializeField] private NetworkManager offlineNetworkManager;
-
     private bool isHost = false;
     private bool isConnected = false;
 
@@ -20,34 +18,63 @@ public class ConnectionManager : MonoBehaviour {
     private void Awake () {
         Instance = this;
 
-        offlineNetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
     }
 
     private void ClientManager_OnAuthenticated() {
         isConnected = true;
     }
 
-    // start server and join as host
-    public bool StartHost() {
-        if (fishySteamworks.StartConnection(true)) {
-            if (fishySteamworks.StartConnection(false)) {
-                isHost = true;
-                return true;
-            }
-        }
+    private IEnumerator StartGameAsHostSteamAsync() {
+        float timer = connectTimer;
 
-        return false;
+        fishySteamworks.StartConnection(true);
+        fishySteamworks.StartConnection(false);
+
+        while (!isConnected && timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        if (isConnected) {
+            isHost = true;
+            SceneHandler.Instance.LoadIntoGame(true);
+        }
+        else {
+            Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
+        }
     }
 
-    // join server as guest using host CSteamID
-    public bool StartConnectionAsGuest(CSteamID hostCSteamID) {
+    // start server and join as host
+    public void StartGameAsHostSteam() {
+        StartCoroutine(StartGameAsHostSteamAsync());
+    }
+
+    private IEnumerator StartGameAsClientSteamAsync(CSteamID hostCSteamID) {
+        float timer = connectTimer;
         UserData hostUser = UserData.Get(hostCSteamID);
 
         if (!hostUser.IsValid) {
             Debug.LogError("TESTING HOST USER IS NOT VALID");
         }
+
         fishySteamworks.SetClientAddress(hostCSteamID.ToString());
-        return fishySteamworks.StartConnection(false);
+        fishySteamworks.StartConnection(false);
+
+        while (!isConnected && timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        if (isConnected) {
+            SceneHandler.Instance.LoadIntoGame(true);
+        }
+        else {
+            Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
+        }
+    }
+
+    // join server as guest using host CSteamID
+    public void StartGameAsClientSteam(CSteamID hostCSteamID) {
+        StartCoroutine(StartGameAsClientSteamAsync(hostCSteamID));
     }
 
     public void Disconnect() {
@@ -68,8 +95,8 @@ public class ConnectionManager : MonoBehaviour {
     private IEnumerator StartGameAsHostOfflineAsync() {
         float timer = connectTimer;
 
-        offlineNetworkManager.ServerManager.StartConnection();
-        offlineNetworkManager.ClientManager.StartConnection();
+        InstanceFinder.NetworkManager.ServerManager.StartConnection();
+        InstanceFinder.NetworkManager.ClientManager.StartConnection();
 
         while (!isConnected && timer > 0) {
             timer -= Time.deltaTime;
@@ -91,7 +118,7 @@ public class ConnectionManager : MonoBehaviour {
     private IEnumerator StartGameAsClientOfflineAsync() {
         float timer = connectTimer;
 
-        offlineNetworkManager.ClientManager.StartConnection();
+        InstanceFinder.NetworkManager.ClientManager.StartConnection();
 
         while (!isConnected && timer > 0) {
             timer -= Time.deltaTime;

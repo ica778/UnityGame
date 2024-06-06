@@ -24,22 +24,6 @@ public class SceneHandler : MonoBehaviour {
         Instance = this;
     }
 
-    private Scene GetScene(SceneName scene) {
-        return UnityEngine.SceneManagement.SceneManager.GetSceneByName(scene.ToString());
-    }
-
-    private IEnumerator LoadIntoGameAsync() {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(SceneName.GameBootstrapScene.ToString(), LoadSceneMode.Additive);
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(GetScene(SceneName.GameBootstrapScene));
-
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.MainMenuScene.ToString());
-    }
-
     public void LoadIntoGame(bool asHost) {
         if (asHost) {
             SceneLoadData sld = new SceneLoadData("GameBootstrapScene");

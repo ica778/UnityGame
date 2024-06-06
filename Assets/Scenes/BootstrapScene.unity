@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishySteamworks: {fileID: 834084765}
-  offlineNetworkManager: {fileID: 1056260736}
 --- !u!4 &99333388
 Transform:
   m_ObjectHideFlags: 0
@@ -312,14 +311,13 @@ GameObject:
   - component: {fileID: 834084763}
   - component: {fileID: 834084762}
   - component: {fileID: 834084765}
-  - component: {fileID: 834084766}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &834084762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,22 +387,6 @@ MonoBehaviour:
   _maximumClients: 9001
   _peerToPeer: 1
   _clientAddress: 
---- !u!114 &834084766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 834084760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211a9f6ec51ddc14f908f5acc0cd0423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 4792983976827827601, guid: ae643d837ed1a8d498539c646d254669,
-    type: 3}
-  _addToDefaultScene: 0
-  Spawns: []
 --- !u!1 &841126273
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,7 +644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1056260735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -731,7 +713,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1119709199
 MonoBehaviour:
   m_ObjectHideFlags: 0
