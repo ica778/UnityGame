@@ -9,12 +9,12 @@ public class BootstrapManager : MonoBehaviour {
     }
 
     private IEnumerator LoadMainMenuScene() {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("MainMenuScene", LoadSceneMode.Additive);
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(SceneName.MainMenuScene.ToString(), LoadSceneMode.Additive);
 
         while (!asyncOperation.isDone) {
             yield return null;
         }
 
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("MainMenuScene"));
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.MainMenuScene.ToString()));
     }
 }

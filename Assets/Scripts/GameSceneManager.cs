@@ -8,15 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class GameSceneManager : NetworkBehaviour {
-
-    private string persistentObjectScene = "GamePersistentObjectsScene";
-    private string gameScene = "GameScene";
-    private string gameScene1 = "GameScene1";
-    private string gameScene2 = "GameScene2";
-
     private List<SceneLoadData> sldList = new();
 
     public override void OnStartClient() {
+        // THIS EVENT IS FOR TESTING
         GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
@@ -30,10 +25,10 @@ public class GameSceneManager : NetworkBehaviour {
     private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e) {
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
-            LoadNewLevelScene(gameScene);
+            LoadNewLevelScene(SceneName.GameScene.ToString());
         }
         else {
-            LoadNewLevelScene(gameScene2);
+            LoadNewLevelScene(SceneName.GameScene2.ToString());
         }
     }
 
@@ -63,17 +58,18 @@ public class GameSceneManager : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     private void StartGameAsHostServerRpc(NetworkConnection conn) {
-        SceneLoadData sld = new SceneLoadData(persistentObjectScene);
+        SceneLoadData sld = new SceneLoadData(SceneName.GamePersistentObjectsScene.ToString());
         base.SceneManager.LoadConnectionScenes(conn, sld);
         sldList.Add(sld);
 
-        sld = new SceneLoadData(gameScene1);
+        sld = new SceneLoadData(SceneName.GameScene1.ToString());
         base.SceneManager.LoadConnectionScenes(conn, sld);
-        SceneLookupData slud = new SceneLookupData(gameScene1);
+        SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
         sldList.Add(sld);
     }
 
+    // THIS IS FOR TESTING
     public override void OnStopClient() {
         GameInput.Instance.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
     }

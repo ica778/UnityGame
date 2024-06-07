@@ -37,7 +37,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            SceneHandler.Instance.LoadIntoGame(true);
+            MainMenuToGameSceneHandler.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -65,7 +65,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            SceneHandler.Instance.LoadIntoGame(true);
+            MainMenuToGameSceneHandler.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -104,7 +104,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            SceneHandler.Instance.LoadIntoGame(true);
+            MainMenuToGameSceneHandler.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -125,7 +125,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            SceneHandler.Instance.LoadIntoGame(false);
+            MainMenuToGameSceneHandler.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
