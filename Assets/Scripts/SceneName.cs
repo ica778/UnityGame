@@ -11,4 +11,5 @@ public enum SceneName {
     GameScene,
     GameScene1,
     GameScene2,
+    CaravanScene,
 }
