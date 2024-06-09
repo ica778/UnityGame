@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class GameSceneManager : NetworkBehaviour {
+    public static GameSceneManager Instance { get; private set; }
+
     private List<SceneLoadData> sldList = new();
 
     public override void OnStartClient() {
-        // THIS EVENT IS FOR TESTING
-        GameInput.Instance.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
+        Instance = this;
+        
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
             StartGameAsHostServerRpc(conn);
@@ -22,13 +24,18 @@ public class GameSceneManager : NetworkBehaviour {
         }
     }
 
-    private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e) {
-        NetworkConnection conn = base.ClientManager.Connection;
-        if (base.IsServerInitialized) {
+    public void OnCaravanLeverPulled() {
+        SwitchScenesFromCaravanLeverServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SwitchScenesFromCaravanLeverServerRpc() {
+        Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        if (activeScene == UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.GameScene1.ToString())) {
             LoadNewLevelScene(SceneName.GameScene.ToString());
         }
-        else {
-            LoadNewLevelScene(SceneName.GameScene2.ToString());
+        else if (activeScene == UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.GameScene.ToString())) {
+            LoadNewLevelScene(SceneName.GameScene1.ToString());
         }
     }
 
@@ -62,15 +69,14 @@ public class GameSceneManager : NetworkBehaviour {
         base.SceneManager.LoadConnectionScenes(conn, sld);
         sldList.Add(sld);
 
+        sld = new SceneLoadData(SceneName.CaravanScene.ToString());
+        base.SceneManager.LoadConnectionScenes(conn, sld);
+        sldList.Add(sld);
+
         sld = new SceneLoadData(SceneName.GameScene1.ToString());
         base.SceneManager.LoadConnectionScenes(conn, sld);
         SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
         sldList.Add(sld);
-    }
-
-    // THIS IS FOR TESTING
-    public override void OnStopClient() {
-        GameInput.Instance.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
     }
 }

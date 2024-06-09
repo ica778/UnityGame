@@ -16,7 +16,7 @@ TagManager:
   - playerLayer
   - dungeonValidatorColliderLayer
   - dungeonRoomOpeningColliderLayer
-  - 
+  - caravanInsideColliderLayer
   - 
   - 
   - 

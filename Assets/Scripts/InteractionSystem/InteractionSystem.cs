@@ -40,6 +40,9 @@ public class InteractionSystem : NetworkBehaviour {
                 case InteractableObjectType.GroundLoot:
                     playerInventoryHandler.PickupGroundLoot((GroundLoot)interactableObject);
                     break;
+                case InteractableObjectType.CaravanLever:
+                    (interactableObject as CaravanLever)?.Trigger();
+                    break;
             }
         }
     }

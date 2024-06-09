@@ -5,6 +5,8 @@ using UnityEngine;
 public enum InteractableObjectType {
     None,
     GroundLoot,
+    CaravanLever,
+    InteractableTrigger,
 }
 
 public abstract class InteractableObjectBase : MonoBehaviour {
