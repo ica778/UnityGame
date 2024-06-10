@@ -2,16 +2,9 @@ using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public struct MyMovingPlatformState {
-    public PhysicsMoverState MoverState;
-    public float DirectorTime;
-}
-
-public class MyMovingPlatform : MonoBehaviour, IMoverController {
+public class CaravanMovingPlatform : MonoBehaviour, IMoverController {
     public PhysicsMover Mover;
-
-    public PlayableDirector Director;
-
+    public Animator animator;
     private Transform _transform;
 
     private void Start() {
@@ -27,7 +20,7 @@ public class MyMovingPlatform : MonoBehaviour, IMoverController {
         Quaternion _rotationBeforeAnim = _transform.rotation;
 
         // Update animation
-        EvaluateAtTime(Time.time);
+        animator.Update(0);
 
         // Set our platform's goal pose to the animation's
         goalPosition = _transform.position;
@@ -37,10 +30,5 @@ public class MyMovingPlatform : MonoBehaviour, IMoverController {
         // This is so that the real movement can be handled by the physics mover; not the animation
         _transform.position = _positionBeforeAnim;
         _transform.rotation = _rotationBeforeAnim;
-    }
-
-    public void EvaluateAtTime(double time) {
-        Director.time = time % Director.duration;
-        Director.Evaluate();
     }
 }
