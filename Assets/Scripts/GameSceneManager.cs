@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using FishNet.Connection;
 using System.Collections.Generic;
 using System.Linq;
+using FishNet;
 
 public class GameSceneManager : NetworkBehaviour {
     public static GameSceneManager Instance { get; private set; }
