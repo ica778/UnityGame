@@ -25,7 +25,7 @@ public class GameSceneManager : NetworkBehaviour {
         }
     }
 
-    public void OnCaravanLeverPulled() {
+    public void LoadCaravanLeverPulledScenes() {
         SwitchScenesFromCaravanLeverServerRpc();
     }
 

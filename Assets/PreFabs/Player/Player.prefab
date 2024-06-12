@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1905778609659339781}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -57,23 +57,38 @@ MonoBehaviour:
   - {fileID: 8710234622301106129}
   - {fileID: 5806635779731111300}
   - {fileID: 2031473103192852575}
+  - {fileID: 7022245045335939396}
   - {fileID: 2229417435511697251}
   - {fileID: 3723500434429363174}
   - {fileID: 9105335133483199130}
   - {fileID: 5220087816515759343}
   - {fileID: 3521916825876690042}
   - {fileID: 1506340452738421455}
-  <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField: []
+  <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
+  <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
-    Position: {x: 0, y: 10, z: 0}
+    Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
+  _isSpawnable: 1
   _isGlobal: 0
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
   <PrefabId>k__BackingField: 10
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
@@ -526,6 +541,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347310ac7bb95fb4f896c021937c44c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 4
+  _addedNetworkObject: {fileID: 4792983976827827601}
+  _networkObjectCache: {fileID: 4792983976827827601}
   motor: {fileID: 8554326872386180907}
   meshRoot: {fileID: 1749501541563791029}
 --- !u!114 &8554326872386180907
@@ -684,7 +702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9009e256bab1042af71ac871b522c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCharacterCameraPosition: {fileID: 3377963034221982641}
@@ -700,7 +718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c267a9d57e7ca428354dba8e76fdd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   playerCameraHolder: {fileID: 8876804267105334431}
@@ -717,7 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 0
@@ -903,11 +921,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   IgnoredParameters: []
   _animator: {fileID: 2400051290594098371}
+  _synchronizeWhenDisabled: 0
   _smoothFloats: 1
   _interpolation: 2
   _clientAuthoritative: 1
@@ -924,7 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83d10b834d91ffb4a8e43d31bd908b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 8
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
 --- !u!114 &1506340452738421455
@@ -939,7 +958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 9
+  _componentIndexCache: 10
   _addedNetworkObject: {fileID: 4792983976827827601}
   _networkObjectCache: {fileID: 4792983976827827601}
   _componentConfiguration: 0

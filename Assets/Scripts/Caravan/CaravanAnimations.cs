@@ -34,7 +34,7 @@ public class CaravanAnimations : MonoBehaviour {
 
     public void PauseAnimation() {
         animator.speed = 0f;
-        GameSceneManager.Instance.OnCaravanLeverPulled();
+        GameSceneManager.Instance.LoadCaravanLeverPulledScenes();
     }
 
     public void ResumeAnimation() {
