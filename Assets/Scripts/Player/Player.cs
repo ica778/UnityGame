@@ -34,10 +34,10 @@ public class Player : NetworkBehaviour {
         }
 
         playerId = Owner.ClientId;
-        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
-        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
+        GameInput.Instance.OnJumpStartedAction += GameInput_OnJumpAction;
+        GameInput.Instance.OnCrouchStartedAction += GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
-        GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
+        GameInput.Instance.OnSprintCanceledAction += GameInput_OnSprintCancelledAction;
 
         GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
         GameInput.Instance.OnDropAction += GameInput_OnDropAction;
@@ -117,10 +117,10 @@ public class Player : NetworkBehaviour {
     }
 
     private void OnDestroy() {
-        GameInput.Instance.OnJumpAction -= GameInput_OnJumpAction;
-        GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
+        GameInput.Instance.OnJumpStartedAction -= GameInput_OnJumpAction;
+        GameInput.Instance.OnCrouchStartedAction -= GameInput_OnCrouchAction;
         GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
-        GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
+        GameInput.Instance.OnSprintCanceledAction -= GameInput_OnSprintCancelledAction;
 
         GameInput.Instance.OnInteractAction -= GameInput_OnInteractAction;
         GameInput.Instance.OnDropAction -= GameInput_OnDropAction;

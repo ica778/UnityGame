@@ -807,7 +807,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: FISHNET;STEAMWORKS_NET;FISHNET_V4;FISHNET_DISABLE_V3TOV4_HELPERS
+    Standalone: FISHNET;STEAMWORKS_NET;FISHNET_V4;FISHNET_DISABLE_V3TOV4_HELPERS;FISHNET_STABLE_MODE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

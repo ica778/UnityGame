@@ -110,11 +110,40 @@ public class PlayerController : MonoBehaviour {
         standingVirtualCamera.SetActive(true);
     }
 
+    private void GameInput_OnCrouchStartedAction(object sender, System.EventArgs e) {
+        /*
+        if (_character.IsCrouched()) {
+            _character.UnCrouch();
+        }
+        else {
+            _character.Crouch();
+        }
+        */
+        _character.Crouch();
+    }
+
+    private void GameInput_OnCrouchCanceledAction(object sender, System.EventArgs e) {
+        _character.UnCrouch();
+    }
+
+    private void GameInput_OnJumpStartedAction(object sender, System.EventArgs e) {
+        _character.Jump();
+    }
+
+    private void GameInput_OnJumpCancelledAction(object sender, System.EventArgs e) {
+        _character.StopJumping();
+    }
+
     private void OnEnable() {
         // Subscribe to Character events
 
         _character.Crouched += OnCrouched;
         _character.UnCrouched += OnUnCrouched;
+
+        GameInput.Instance.OnCrouchStartedAction += GameInput_OnCrouchStartedAction;
+        GameInput.Instance.OnCrouchCanceledAction += GameInput_OnCrouchCanceledAction;
+        GameInput.Instance.OnJumpStartedAction += GameInput_OnJumpStartedAction;
+        GameInput.Instance.OnJumpCanceledAction += GameInput_OnJumpCancelledAction;
     }
 
     private void OnDisable() {
@@ -122,5 +151,9 @@ public class PlayerController : MonoBehaviour {
 
         _character.Crouched -= OnCrouched;
         _character.UnCrouched -= OnUnCrouched;
+
+        GameInput.Instance.OnCrouchStartedAction -= GameInput_OnCrouchStartedAction;
+        GameInput.Instance.OnJumpStartedAction -= GameInput_OnJumpStartedAction;
+        GameInput.Instance.OnJumpCanceledAction -= GameInput_OnJumpCancelledAction;
     }
 }
