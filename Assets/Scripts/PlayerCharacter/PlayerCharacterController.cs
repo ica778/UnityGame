@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerCharacterController : Character {
 
     private void Update() {
-        HandleMovementInput();
+        //HandleMovementInput();
     }
 
     private void HandleMovementInput() {

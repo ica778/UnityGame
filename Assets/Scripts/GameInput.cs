@@ -105,21 +105,27 @@ public class GameInput : MonoBehaviour {
     }
 
     public float GetLookX() {
+        /*
         if (Cursor.lockState == CursorLockMode.Locked) {
             return playerInputActions.Player.Look.ReadValue<Vector2>().x;
         }
         else {
             return 0f;
         }
+        */
+        return playerInputActions.Player.Look.ReadValue<Vector2>().x;
     }
 
     public float GetLookY() {
+        /*
         if (Cursor.lockState == CursorLockMode.Locked) {
             return playerInputActions.Player.Look.ReadValue<Vector2>().y;
         }
         else {
             return 0f;
         }
+        */
+        return playerInputActions.Player.Look.ReadValue<Vector2>().y;
     }
     public Vector2 GetMoveVector() {
         return playerInputActions.Player.Move.ReadValue<Vector2>();
