@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 
 public class PlayerController : MonoBehaviour {
-    [SerializeField] private ECM2.Character _character;
+    [SerializeField] private PlayerCharacter _character;
 
     [SerializeField] private GameObject cameraTarget;
     [SerializeField] private GameObject standingVirtualCamera;
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 
         // Disable Character's rotation mode, we'll handle it here
 
-        _character.SetRotationMode(ECM2.Character.RotationMode.None);
+        _character.SetRotationMode(PlayerCharacter.RotationMode.None);
     }
 
     private void Update() {
@@ -111,19 +111,25 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void GameInput_OnCrouchStartedAction(object sender, System.EventArgs e) {
-        /*
         if (_character.IsCrouched()) {
             _character.UnCrouch();
         }
         else {
             _character.Crouch();
         }
-        */
-        _character.Crouch();
+        //_character.Crouch();
     }
 
     private void GameInput_OnCrouchCanceledAction(object sender, System.EventArgs e) {
-        _character.UnCrouch();
+        //_character.UnCrouch();
+    }
+
+    private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
+        _character.Sprint();
+    }
+
+    private void GameInput_OnSprintCanceledAction(object sender, System.EventArgs e) {
+        _character.StopSprinting();
     }
 
     private void GameInput_OnJumpStartedAction(object sender, System.EventArgs e) {
@@ -142,6 +148,10 @@ public class PlayerController : MonoBehaviour {
 
         GameInput.Instance.OnCrouchStartedAction += GameInput_OnCrouchStartedAction;
         GameInput.Instance.OnCrouchCanceledAction += GameInput_OnCrouchCanceledAction;
+
+        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCanceledAction += GameInput_OnSprintCanceledAction;
+
         GameInput.Instance.OnJumpStartedAction += GameInput_OnJumpStartedAction;
         GameInput.Instance.OnJumpCanceledAction += GameInput_OnJumpCancelledAction;
     }
@@ -153,6 +163,11 @@ public class PlayerController : MonoBehaviour {
         _character.UnCrouched -= OnUnCrouched;
 
         GameInput.Instance.OnCrouchStartedAction -= GameInput_OnCrouchStartedAction;
+        GameInput.Instance.OnCrouchCanceledAction -= GameInput_OnCrouchCanceledAction;
+
+        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
+        GameInput.Instance.OnSprintCanceledAction += GameInput_OnSprintCanceledAction;
+
         GameInput.Instance.OnJumpStartedAction -= GameInput_OnJumpStartedAction;
         GameInput.Instance.OnJumpCanceledAction -= GameInput_OnJumpCancelledAction;
     }

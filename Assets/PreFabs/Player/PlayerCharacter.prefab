@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 1183358284349567624}
   - component: {fileID: 3340778564077829131}
   - component: {fileID: 4551930309003470098}
-  - component: {fileID: 4086620014270481062}
+  - component: {fileID: 940702606622023337}
   - component: {fileID: 2889029744516627718}
   - component: {fileID: 4291617446350686336}
   - component: {fileID: 8161632430955983755}
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0118b1a9b07725469bc0418e66849bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _character: {fileID: 4086620014270481062}
+  _character: {fileID: 940702606622023337}
   cameraTarget: {fileID: 5801548885214189099}
   standingVirtualCamera: {fileID: 478695505232741521}
   crouchingVirtualCamera: {fileID: 2668488509467121120}
@@ -241,7 +241,7 @@ MonoBehaviour:
     impartPlatformRotation: 1
     impartPlatformVelocity: 1
   _minSlopeLimit: 0.7069833
---- !u!114 &4086620014270481062
+--- !u!114 &940702606622023337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1964866599150383791}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4cf32970eac4c9498a96ba8d86aad38, type: 3}
+  m_Script: {fileID: 11500000, guid: 80b7e383a06a4db48ab94ac410c78317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rotationMode: 0
@@ -267,7 +267,7 @@ MonoBehaviour:
   _maxWalkSpeedCrouched: 3
   _maxFallSpeed: 40
   _brakingDecelerationFalling: 0
-  _fallingLateralFriction: 0.3
+  _fallingLateralFriction: 0
   _airControl: 0.3
   _canEverJump: 1
   _canJumpWhileCrouching: 1
@@ -296,6 +296,7 @@ MonoBehaviour:
   _pushForceScale: 1
   _standingDownwardForceScale: 1
   _camera: {fileID: 1548314291865263949}
+  maxSprintSpeed: 20
 --- !u!136 &2889029744516627718
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -454,7 +455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6882058326850033939
 Transform:
   m_ObjectHideFlags: 0
@@ -572,7 +573,7 @@ Transform:
   m_GameObject: {fileID: 3745129884934203113}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.95, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
