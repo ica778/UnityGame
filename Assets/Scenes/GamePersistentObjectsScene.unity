@@ -2499,7 +2499,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 667200846}
   _networkObjectCache: {fileID: 667200846}
-  playerPrefab: {fileID: 1964866599150383791, guid: 80c8c1bd123c18a4c8a8644b37eaa7f3,
+  playerPrefab: {fileID: 6055023810911421436, guid: ae643d837ed1a8d498539c646d254669,
     type: 3}
 --- !u!4 &667200848
 Transform:

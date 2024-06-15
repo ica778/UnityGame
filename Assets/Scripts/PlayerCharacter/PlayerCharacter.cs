@@ -8,6 +8,20 @@ public class PlayerCharacter : ECM2.Character {
     private bool _isSprinting;
     private bool _sprintInputPressed;
 
+    // call this when player parented to moving platform like the caravan
+    public void DisablePlatformMovement() {
+        base.impartPlatformVelocity = false;
+        base.impartPlatformMovement = false;
+        base.impartPlatformRotation = false;
+    }
+
+    // call this when player is not parented to moving platform like the caravan
+    public void EnablePlatformMovement() {
+        base.impartPlatformVelocity = true;
+        base.impartPlatformMovement = true;
+        base.impartPlatformRotation = true;
+    }
+
     public void Sprint() {
         _sprintInputPressed = true;
     }
