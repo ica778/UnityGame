@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class PlayerInventory : NetworkBehaviour {
+public class PlayerInventoryActions : NetworkBehaviour {
     [SerializeField] private GameObject cameraTarget;
     [SerializeField] private LayerMask layersYouCantDropItemInto;
 
     public override void OnStartNetwork() {
         if (!Owner.IsLocalClient) {
             this.enabled = false;
+            return;
         }
     }
 

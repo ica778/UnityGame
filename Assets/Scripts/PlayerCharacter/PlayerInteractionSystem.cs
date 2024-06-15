@@ -1,17 +1,25 @@
+using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class PlayerInteractionSystem : MonoBehaviour {
+public class PlayerInteractionSystem : NetworkBehaviour {
     [SerializeField] private GameObject cameraTarget;
-    [SerializeField] private PlayerInventory playerInventoryHandler;
+    [SerializeField] private PlayerInventoryActions playerInventoryHandler;
     [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private LayerMask obstacleLayer;
 
     private float interactDistance = 5f;
     private RaycastHit raycastHit;
     private InteractableObjectBase interactableObject;
+
+    public override void OnStartNetwork() {
+        if (!Owner.IsLocalClient) {
+            this.enabled = false;
+            return;
+        }
+    }
 
     private void LateUpdate() {
         DetectInteractableObject();

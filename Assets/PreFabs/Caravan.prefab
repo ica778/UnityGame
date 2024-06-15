@@ -1051,8 +1051,6 @@ GameObject:
   m_Component:
   - component: {fileID: 894534277767948006}
   - component: {fileID: 8878361757272032178}
-  - component: {fileID: 7859890323192433023}
-  - component: {fileID: 1056875541069595895}
   - component: {fileID: 4011928468112882915}
   - component: {fileID: 7379942657238242510}
   - component: {fileID: 3953391746376552805}
@@ -1110,34 +1108,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7859890323192433023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8683575928059354002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 075ccbe9837b0744985e09ba3f015b9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 8878361757272032178}
-  MoveWithPhysics: 1
---- !u!114 &1056875541069595895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8683575928059354002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06f69fd02047b8d4da95fa6e88ac7ba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Mover: {fileID: 7859890323192433023}
-  animator: {fileID: 4011928468112882915}
 --- !u!95 &4011928468112882915
 Animator:
   serializedVersion: 5
@@ -1150,7 +1120,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 68b288b082d010540b5c345f0bf4675e, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -1184,6 +1154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9eb01e3cbdde04281fcb259cd021fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 8112429731769856999}
+  _networkObjectCache: {fileID: 8112429731769856999}
   animator: {fileID: 4011928468112882915}
 --- !u!114 &8112429731769856999
 MonoBehaviour:
@@ -1200,7 +1173,8 @@ MonoBehaviour:
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
-  _networkBehaviours: []
+  _networkBehaviours:
+  - {fileID: 3953391746376552805}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:

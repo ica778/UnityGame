@@ -1,6 +1,5 @@
 using ECM2;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class PlayerController : MonoBehaviour {
     [SerializeField] private PlayerCharacter _character;

@@ -150,6 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1183358284349567624}
+  - component: {fileID: 8192158248835820628}
   - component: {fileID: 3340778564077829131}
   - component: {fileID: 4551930309003470098}
   - component: {fileID: 940702606622023337}
@@ -185,6 +186,28 @@ Transform:
   - {fileID: 8178184028841349277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8192158248835820628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964866599150383791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4647cf5b259ad634aab8adfad5c0bf86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 8161632430955983755}
+  _networkObjectCache: {fileID: 8161632430955983755}
+  clientSideScripts:
+  - {fileID: 3340778564077829131}
+  - {fileID: 4551930309003470098}
+  - {fileID: 940702606622023337}
+  clientSideObjects:
+  - {fileID: 478695505232741521}
+  - {fileID: 3745129884934203113}
 --- !u!114 &3340778564077829131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +387,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
+  - {fileID: 8192158248835820628}
   - {fileID: 7663721174369285008}
+  - {fileID: 3275875844680010986}
   - {fileID: 7441810967618128067}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
@@ -408,10 +433,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8161632430955983755}
   _networkObjectCache: {fileID: 8161632430955983755}
-  _componentConfiguration: 0
+  _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
     Position: 1
@@ -960,6 +985,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a27d5ec07112a4381007af72c003ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 8161632430955983755}
+  _networkObjectCache: {fileID: 8161632430955983755}
   cameraTarget: {fileID: 5801548885214189099}
   playerInventoryHandler: {fileID: 7441810967618128067}
   interactableLayer:
@@ -980,7 +1008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ef3956a1b0d3243bf97af266784979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 8161632430955983755}
   _networkObjectCache: {fileID: 8161632430955983755}
   cameraTarget: {fileID: 5801548885214189099}
