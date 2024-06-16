@@ -25,6 +25,7 @@ public class GameSceneManager : NetworkBehaviour {
         }
     }
 
+    // TODO: FIND A WAY TO SET SCENE IN GAME
     public void LoadCaravanLeverPulledScenes() {
         SwitchScenesFromCaravanLeverServerRpc();
     }

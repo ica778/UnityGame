@@ -7,24 +7,13 @@ public class CaravanManager : NetworkBehaviour {
     [SerializeField] private CaravanLeverInteractableObject caravanLever;
     [SerializeField] private CaravanMovement caravanMovement;
 
-    private bool leverAlreadyPulledLock = false;
-
     [ServerRpc(RequireOwnership = false)]
-    public void StartMovingCaravanServerRpc() {
-        if (leverAlreadyPulledLock) {
-            return;
-        }
-        
-        leverAlreadyPulledLock = true;
-        caravanMovement.StartMovingCaravanObserversRpc();
-    }
-
-    public void OnCaravanFinishedMoving() {
-        leverAlreadyPulledLock = false;
+    private void MoveCaravanServerRpc() {
+        caravanMovement.StartMovingCaravan();
     }
 
     private void CaravanLever_OnLeverPulled(object sender, EventArgs e) {
-        StartMovingCaravanServerRpc();
+        MoveCaravanServerRpc();
     }
 
     private void OnEnable() {
