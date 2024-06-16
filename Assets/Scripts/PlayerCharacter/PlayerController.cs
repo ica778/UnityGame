@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 
     private float _cameraTargetPitch;
 
-    private Rigidbody rigidbody;
+    private Rigidbody rb;
 
     private void Start() {
         Cursor.lockState = CursorLockMode.Locked;
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 
         _character.SetRotationMode(PlayerCharacter.RotationMode.None);
 
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update() {
@@ -36,9 +36,9 @@ public class PlayerController : MonoBehaviour {
         DetectCameraLookInput();
 
         // TODO: SET PLAYER OBJECT OWNER CORRECTLY SO THAT NETWORK TRANSPORT DOESNT DISABLE RIGIDBODY INTERPOLATION
-        if (rigidbody.interpolation == RigidbodyInterpolation.None) {
-            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-            rigidbody.isKinematic = true;
+        if (rb.interpolation == RigidbodyInterpolation.None) {
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.isKinematic = true;
         }
     }
 

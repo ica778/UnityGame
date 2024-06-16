@@ -45,7 +45,7 @@ public class PlayerInteractionSystem : NetworkBehaviour {
                     playerInventoryHandler.PickupGroundLoot((GroundLoot)interactableObject);
                     break;
                 case InteractableObjectType.CaravanLever:
-                    (interactableObject as CaravanLever)?.Trigger();
+                    (interactableObject as CaravanLeverInteractableObject)?.Trigger();
                     break;
             }
         }

@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 6879612184950407826}
   - component: {fileID: 7278205812321057534}
   - component: {fileID: 4622572493911742786}
-  - component: {fileID: 5688689602139457744}
+  - component: {fileID: 3776490845506617221}
   m_Layer: 7
   m_Name: Hitbox
   m_TagString: Untagged
@@ -191,7 +191,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5688689602139457744
+--- !u!114 &3776490845506617221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,10 +200,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1837864293418642388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82fbebe8153eff4ba91072c5a89721e, type: 3}
+  m_Script: {fileID: 11500000, guid: 067a44849c6d9144eb0a1c9455aa7c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caravanManager: {fileID: 7379942657238242510}
 --- !u!1 &3288580382293502603
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,7 +1140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2da04d765323da4cb5f005725845e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caravanAnimations: {fileID: 3953391746376552805}
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 8112429731769856999}
+  _networkObjectCache: {fileID: 8112429731769856999}
+  caravanLever: {fileID: 3776490845506617221}
+  caravanMovement: {fileID: 3953391746376552805}
 --- !u!114 &3953391746376552805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1154,10 +1157,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9eb01e3cbdde04281fcb259cd021fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8112429731769856999}
   _networkObjectCache: {fileID: 8112429731769856999}
   animator: {fileID: 4011928468112882915}
+  caravanManager: {fileID: 7379942657238242510}
 --- !u!114 &8112429731769856999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1174,6 +1178,7 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
+  - {fileID: 7379942657238242510}
   - {fileID: 3953391746376552805}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
