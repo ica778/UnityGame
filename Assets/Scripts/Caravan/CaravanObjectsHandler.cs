@@ -6,7 +6,6 @@ public class CaravanObjectsHandler : MonoBehaviour {
     [SerializeField] private BoxCollider interiorCollider;
     [SerializeField] private Transform caravanContentsParent;
 
-    // TODO: RESEARCH REBUILDOBSERVERS() FISHNET FUNCTION WHEN MOVING OBJECTS TO DIFFERENT SCENEct 
     private void OnTriggerEnter(Collider other) {
         Transform obj = GetTopmostParent(other.transform);
         obj.SetParent(caravanContentsParent);
@@ -15,7 +14,7 @@ public class CaravanObjectsHandler : MonoBehaviour {
     private void OnTriggerExit(Collider other) {
         Transform obj = GetTopmostParent(other.transform);
         obj.SetParent(null);
-        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj.gameObject, UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.GamePersistentObjectsScene.ToString()));
+        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj.gameObject, UnityEngine.SceneManagement.SceneManager.GetActiveScene());
     }
 
     private Transform GetTopmostParent(Transform obj) {

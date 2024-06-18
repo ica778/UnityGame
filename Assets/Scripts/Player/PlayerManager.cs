@@ -25,9 +25,9 @@ public class PlayerManager : NetworkBehaviour {
     private void SpawnPlayerServerRpc(NetworkConnection conn) {
 
         GameObject newPlayer = Instantiate(playerPrefab);
-        base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+        base.NetworkManager.ServerManager.Spawn(newPlayer, conn);
 
-        MovePlayersToCorrectSceneObserversRpc(newPlayer);
+        //MovePlayersToCorrectSceneObserversRpc(newPlayer);
     }
 
     [ObserversRpc]
