@@ -13,3 +13,9 @@ public enum SceneName {
     GameScene2,
     CaravanScene,
 }
+
+public static class SceneHelper {
+    public static UnityEngine.SceneManagement.Scene GetScene(SceneName sceneName) {
+        return UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName.ToString());
+    }
+}

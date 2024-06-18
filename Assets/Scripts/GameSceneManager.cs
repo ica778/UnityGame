@@ -33,10 +33,10 @@ public class GameSceneManager : NetworkBehaviour {
     [ServerRpc(RequireOwnership = false)]
     private void SwitchScenesFromCaravanLeverServerRpc() {
         Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        if (activeScene == UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.GameScene1.ToString())) {
+        if (activeScene == SceneHelper.GetScene(SceneName.GameScene1)) {
             LoadNewLevelScene(SceneName.GameScene.ToString());
         }
-        else if (activeScene == UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.GameScene.ToString())) {
+        else if (activeScene == SceneHelper.GetScene(SceneName.GameScene)) {
             LoadNewLevelScene(SceneName.GameScene1.ToString());
         }
     }

@@ -14,7 +14,9 @@ public class CaravanMovement : NetworkBehaviour {
     private const string TRIGGER_CARAVAN_MOVE = "TriggerCaravanMove";
 
     private bool caravanMovingLock = false;
-    private SceneName destination;
+
+    // NOTE: THIS VARIABLE NOT IN USE YET, PLANNED TO USE THIS VARIABLE WHEN SELECTING CARAVAN DESTINATIONS IN GAME
+    private UnityEngine.SceneManagement.Scene destination;
 
     public void StartMovingCaravan() {
         if (base.IsServerInitialized && !caravanMovingLock) {
@@ -22,10 +24,10 @@ public class CaravanMovement : NetworkBehaviour {
 
             // TODO: THESE CONDITIONS ARE FOR TESTING, FIND A WAY TO SET THE SCENES IN GAME
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene() == UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene1")) {
-                this.destination = SceneName.GameScene1;
+                this.destination = SceneHelper.GetScene(SceneName.GameScene1);
             }
             else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene() == UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene")) {
-                this.destination = SceneName.GameScene;
+                this.destination = SceneHelper.GetScene(SceneName.GameScene);
             }
             
             StartMovingCaravanObserversRpc();
@@ -60,7 +62,9 @@ public class CaravanMovement : NetworkBehaviour {
     public void OnCaravanMovementEnd() {
         if (base.IsServerInitialized) {
             caravanMovingLock = false;
-            this.destination = SceneName.GameScene1;
+
+            // Set caravan destination back to hub scene
+            this.destination = SceneHelper.GetScene(SceneName.GameScene1);
         }
     }
 

@@ -15,6 +15,6 @@ public class BootstrapManager : MonoBehaviour {
             yield return null;
         }
 
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName(SceneName.MainMenuScene.ToString()));
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(SceneHelper.GetScene(SceneName.MainMenuScene));
     }
 }
