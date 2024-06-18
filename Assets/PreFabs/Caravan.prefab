@@ -980,7 +980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2683022533523348988}
   m_Layer: 0
-  m_Name: Trunk
+  m_Name: Contents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1054,6 +1054,7 @@ GameObject:
   - component: {fileID: 7379942657238242510}
   - component: {fileID: 3953391746376552805}
   - component: {fileID: 8112429731769856999}
+  - component: {fileID: 5041363375553047864}
   m_Layer: 0
   m_Name: Caravan
   m_TagString: Untagged
@@ -1074,9 +1075,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2683022533523348988}
   - {fileID: 6843381280280259334}
   - {fileID: 7261026612744324050}
-  - {fileID: 2683022533523348988}
   - {fileID: 7550652476688877315}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1161,7 +1162,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8112429731769856999}
   _networkObjectCache: {fileID: 8112429731769856999}
   animator: {fileID: 4011928468112882915}
-  caravanManager: {fileID: 7379942657238242510}
 --- !u!114 &8112429731769856999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,6 +1210,20 @@ MonoBehaviour:
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17110967233017107723
+--- !u!114 &5041363375553047864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683575928059354002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f101a0d22a2cde346901d16ec78e8879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interiorCollider: {fileID: 2742201597581166348}
+  caravanContentsParent: {fileID: 2683022533523348988}
 --- !u!1 &8886931940538628284
 GameObject:
   m_ObjectHideFlags: 0
