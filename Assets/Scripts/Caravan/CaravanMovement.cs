@@ -5,6 +5,7 @@ using FishNet.Object;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CaravanMovement : NetworkBehaviour {
@@ -16,7 +17,7 @@ public class CaravanMovement : NetworkBehaviour {
     private bool caravanMovingLock = false;
 
     // NOTE: THIS VARIABLE NOT IN USE YET, PLANNED TO USE THIS VARIABLE WHEN SELECTING CARAVAN DESTINATIONS IN GAME
-    private UnityEngine.SceneManagement.Scene destination;
+    private SceneName destination;
 
     public void StartMovingCaravan() {
         if (base.IsServerInitialized && !caravanMovingLock) {
@@ -24,10 +25,10 @@ public class CaravanMovement : NetworkBehaviour {
 
             // TODO: THESE CONDITIONS ARE FOR TESTING, FIND A WAY TO SET THE SCENES IN GAME
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene() == UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene1")) {
-                this.destination = SceneHelper.GetScene(SceneName.GameScene1);
+                this.destination = SceneName.GameScene;
             }
             else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene() == UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene")) {
-                this.destination = SceneHelper.GetScene(SceneName.GameScene);
+                this.destination = SceneName.GameScene1;
             }
             
             StartMovingCaravanObserversRpc();
@@ -64,31 +65,37 @@ public class CaravanMovement : NetworkBehaviour {
             caravanMovingLock = false;
 
             // Set caravan destination back to hub scene
-            this.destination = SceneHelper.GetScene(SceneName.GameScene1);
+            this.destination = SceneName.GameScene1;
         }
     }
 
     private IEnumerator WaitForAllClientsToLoad() {
         // TODO: REPLACE THIS testingSceneArr IN THE FUTURE WITH ACTUAL ARRAY OF SCENES TO CHECK
-        UnityEngine.SceneManagement.Scene[] testingSceneArr = new UnityEngine.SceneManagement.Scene[] { UnityEngine.SceneManagement.SceneManager.GetSceneByName(this.destination.ToString()) };
+        SceneName[] testingSceneArr = new SceneName[] { this.destination };
 
-        while (HaveConnectedClientsLoadedScenes(testingSceneArr)) {
+        while (!HaveConnectedClientsLoadedScenes(testingSceneArr)) {
             yield return new WaitForSeconds(0.5f);
         }
 
         ResumeMovingCaravan();
     }
 
-    private bool HaveConnectedClientsLoadedScenes(UnityEngine.SceneManagement.Scene[] scenes) {
+    private bool HaveConnectedClientsLoadedScenes(SceneName[] sceneNames) {
         Dictionary<UnityEngine.SceneManagement.Scene, HashSet<NetworkConnection>> sceneConnections = InstanceFinder.SceneManager.SceneConnections;
 
-        foreach (UnityEngine.SceneManagement.Scene scene in scenes) {
+        foreach (SceneName sceneName in sceneNames) {
+            UnityEngine.SceneManagement.Scene currentScene = SceneHelper.GetScene(sceneName);
             foreach (NetworkConnection conn in InstanceFinder.ClientManager.Clients.Values) {
-                if (!sceneConnections.ContainsKey(scene) || !sceneConnections[scene].Contains(conn)) {
+                if (!sceneConnections.ContainsKey(currentScene) || !sceneConnections[currentScene].Contains(conn)) {
+                    Debug.Log("TESTING SCENES NOT LOADED FOR EVERYONE YET");
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private void OnEnable() {
+
     }
 }

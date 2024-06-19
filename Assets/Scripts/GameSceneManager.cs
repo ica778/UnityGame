@@ -7,9 +7,12 @@ using FishNet.Connection;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet;
+using System;
 
 public class GameSceneManager : NetworkBehaviour {
     public static GameSceneManager Instance { get; private set; }
+
+    public event EventHandler OnFinishedLoadingScenes;
 
     private List<SceneLoadData> sldList = new();
 
@@ -18,7 +21,7 @@ public class GameSceneManager : NetworkBehaviour {
         
         NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
-            StartGameAsHostServerRpc(conn);
+            StartGameAsHost(conn);
         }
         else {
             StartGameAsClientServerRpc(conn);
@@ -27,23 +30,21 @@ public class GameSceneManager : NetworkBehaviour {
 
     // TODO: FIND A WAY TO SET SCENE IN GAME
     public void LoadCaravanLeverPulledScenes() {
-        SwitchScenesFromCaravanLeverServerRpc();
+        SwitchScenesFromCaravanLever();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SwitchScenesFromCaravanLeverServerRpc() {
+    private void SwitchScenesFromCaravanLever() {
         Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
         if (activeScene == SceneHelper.GetScene(SceneName.GameScene1)) {
-            LoadNewLevelScene(SceneName.GameScene.ToString());
+            SwitchSceneForAllClients(SceneName.GameScene);
         }
         else if (activeScene == SceneHelper.GetScene(SceneName.GameScene)) {
-            LoadNewLevelScene(SceneName.GameScene1.ToString());
+            SwitchSceneForAllClients(SceneName.GameScene1);
         }
     }
 
     // NOTE: this function works with the assumption the last scene is the level scene
-    [ServerRpc(RequireOwnership = false)]
-    private void LoadNewLevelScene(string sceneToSwitchTo) {
+    private void SwitchSceneForAllClients(SceneName sceneToSwitchTo) {
         NetworkConnection[] conns = base.ServerManager.Clients.Values.ToArray();
 
         SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
@@ -51,9 +52,9 @@ public class GameSceneManager : NetworkBehaviour {
 
         sldList.RemoveAt(sldList.Count - 1);
 
-        SceneLoadData sld = new SceneLoadData(sceneToSwitchTo);
+        SceneLoadData sld = new SceneLoadData(sceneToSwitchTo.ToString());
         base.SceneManager.LoadConnectionScenes(conns, sld);
-        SceneLookupData slud = new SceneLookupData(sceneToSwitchTo);
+        SceneLookupData slud = new SceneLookupData(sceneToSwitchTo.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
         sldList.Add(sld);
     }
@@ -65,8 +66,7 @@ public class GameSceneManager : NetworkBehaviour {
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void StartGameAsHostServerRpc(NetworkConnection conn) {
+    private void StartGameAsHost(NetworkConnection conn) {
         SceneLoadData sld = new SceneLoadData(SceneName.GamePersistentObjectsScene.ToString());
         base.SceneManager.LoadConnectionScenes(conn, sld);
         sldList.Add(sld);
@@ -80,5 +80,10 @@ public class GameSceneManager : NetworkBehaviour {
         SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
         sldList.Add(sld);
+    }
+
+    public void LoadScenes(Scene sceneToLoad) {
+        Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+
     }
 }
