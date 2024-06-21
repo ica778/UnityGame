@@ -12,6 +12,7 @@ using System;
 public class GameSceneManager : NetworkBehaviour {
     public static GameSceneManager Instance { get; private set; }
 
+    public event EventHandler OnClientFinishedLoadingScenes;
     public event EventHandler OnAllClientsOnServerFinishedLoadingScenes;
 
     private List<SceneLoadData> sldList = new();
@@ -22,25 +23,12 @@ public class GameSceneManager : NetworkBehaviour {
         if (base.IsServerInitialized) {
             StartGameAsHost();
         }
+
+
     }
 
-    // TODO: FIND A WAY TO SET SCENE IN GAME
-    public void LoadCaravanLeverPulledScenes() {
-        SwitchScenesFromCaravanLever();
-    }
-
-    private void SwitchScenesFromCaravanLever() {
-        Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        if (activeScene == SceneHelper.GetScene(SceneName.GameScene1)) {
-            SwitchSceneForAllClients(SceneName.GameScene);
-        }
-        else if (activeScene == SceneHelper.GetScene(SceneName.GameScene)) {
-            SwitchSceneForAllClients(SceneName.GameScene1);
-        }
-    }
-
-    // NOTE: this function works with the assumption the last scene is the level scene
-    private void SwitchSceneForAllClients(SceneName sceneToSwitchTo) {
+    // NOTE: this function works with the assumption the last scene is the current level scene
+    public void SwitchLevelSceneForAllClients(SceneName sceneToSwitchTo) {
         SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
         base.SceneManager.UnloadGlobalScenes(sud);
 
@@ -71,9 +59,10 @@ public class GameSceneManager : NetworkBehaviour {
         sld.PreferredActiveScene = new PreferredScene(slud);
     }
 
+    // TODO: make the next 2 functions run clientside instead of serverside
     // Check if all clients on server have loaded scenes
     public IEnumerator WaitForAllClientsToLoad(SceneName[] scenes) {
-        while (!HaveConnectedClientsLoadedScenes(scenes)) {
+        while (!HaveClientsLoadedScenes(scenes)) {
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -81,7 +70,7 @@ public class GameSceneManager : NetworkBehaviour {
     }
 
     // Check if all clients on server have loaded scenes
-    private bool HaveConnectedClientsLoadedScenes(SceneName[] scenes) {
+    private bool HaveClientsLoadedScenes(SceneName[] scenes) {
         Dictionary<UnityEngine.SceneManagement.Scene, HashSet<NetworkConnection>> sceneConnections = InstanceFinder.SceneManager.SceneConnections;
 
         foreach (SceneName sceneName in scenes) {

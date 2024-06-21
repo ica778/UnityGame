@@ -48,7 +48,14 @@ public class CaravanMovement : NetworkBehaviour {
        
         if (base.IsServerInitialized) {
             // TODO: REPLACE SCENE LOADING FUNCTION WITH A FUNCTION THAT CAN LOAD SCENES SELECTED IN GAME
-            GameSceneManager.Instance.LoadCaravanLeverPulledScenes();
+
+            UnityEngine.SceneManagement.Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if (activeScene == SceneHelper.GetScene(SceneName.GameScene1)) {
+                GameSceneManager.Instance.SwitchLevelSceneForAllClients(SceneName.GameScene);
+            }
+            else if (activeScene == SceneHelper.GetScene(SceneName.GameScene)) {
+                GameSceneManager.Instance.SwitchLevelSceneForAllClients(SceneName.GameScene1);
+            }
 
             SceneName[] testingSceneArr = new SceneName[] { this.destination };
 
