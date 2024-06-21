@@ -19,12 +19,8 @@ public class GameSceneManager : NetworkBehaviour {
     public override void OnStartClient() {
         Instance = this;
         
-        NetworkConnection conn = base.ClientManager.Connection;
         if (base.IsServerInitialized) {
-            StartGameAsHost(conn);
-        }
-        else {
-            StartGameAsClientServerRpc(conn);
+            StartGameAsHost();
         }
     }
 
@@ -45,41 +41,34 @@ public class GameSceneManager : NetworkBehaviour {
 
     // NOTE: this function works with the assumption the last scene is the level scene
     private void SwitchSceneForAllClients(SceneName sceneToSwitchTo) {
-        NetworkConnection[] conns = base.ServerManager.Clients.Values.ToArray();
-
         SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
-        base.SceneManager.UnloadConnectionScenes(conns, sud);
+        base.SceneManager.UnloadGlobalScenes(sud);
 
         sldList.RemoveAt(sldList.Count - 1);
 
         SceneLoadData sld = new SceneLoadData(sceneToSwitchTo.ToString());
-        base.SceneManager.LoadConnectionScenes(conns, sld);
+        base.SceneManager.LoadGlobalScenes(sld);
+        sldList.Add(sld);
+
         SceneLookupData slud = new SceneLookupData(sceneToSwitchTo.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
-        sldList.Add(sld);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void StartGameAsClientServerRpc(NetworkConnection conn) {
-        foreach (SceneLoadData sld in sldList) {
-            base.SceneManager.LoadConnectionScenes(conn, sld);
-        }
-    }
-
-    private void StartGameAsHost(NetworkConnection conn) {
+    private void StartGameAsHost() {
         SceneLoadData sld = new SceneLoadData(SceneName.GamePersistentObjectsScene.ToString());
-        base.SceneManager.LoadConnectionScenes(conn, sld);
+        base.SceneManager.LoadGlobalScenes(sld);
         sldList.Add(sld);
 
         sld = new SceneLoadData(SceneName.CaravanScene.ToString());
-        base.SceneManager.LoadConnectionScenes(conn, sld);
+        base.SceneManager.LoadGlobalScenes(sld);
         sldList.Add(sld);
 
         sld = new SceneLoadData(SceneName.GameScene1.ToString());
-        base.SceneManager.LoadConnectionScenes(conn, sld);
+        base.SceneManager.LoadGlobalScenes(sld);
+        sldList.Add(sld);
+
         SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
-        sldList.Add(sld);
     }
 
     public void LoadScenes(Scene sceneToLoad) {
