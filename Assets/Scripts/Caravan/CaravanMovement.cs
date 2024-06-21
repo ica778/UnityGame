@@ -15,6 +15,7 @@ public class CaravanMovement : NetworkBehaviour {
     private const string TRIGGER_CARAVAN_MOVE = "TriggerCaravanMove";
 
     private bool caravanMovingLock = false;
+    private bool nextScenesLoadedLock = false;
 
     // NOTE: THIS VARIABLE NOT IN USE YET, PLANNED TO USE THIS VARIABLE WHEN SELECTING CARAVAN DESTINATIONS IN GAME
     private SceneName destination;
@@ -41,7 +42,10 @@ public class CaravanMovement : NetworkBehaviour {
     }
 
     public void PauseMovingCaravan() {
-        animator.speed = 0f;
+        if (!nextScenesLoadedLock) {
+            animator.speed = 0f;
+        }
+       
         if (base.IsServerInitialized) {
             // TODO: REPLACE SCENE LOADING FUNCTION WITH A FUNCTION THAT CAN LOAD SCENES SELECTED IN GAME
             GameSceneManager.Instance.LoadCaravanLeverPulledScenes();
@@ -57,10 +61,12 @@ public class CaravanMovement : NetworkBehaviour {
 
     [ObserversRpc]
     private void ResumeMovingCaravanObserversRpc() {
+        nextScenesLoadedLock = true;
         animator.speed = 1f;
     }
 
     public void OnCaravanMovementEnd() {
+        nextScenesLoadedLock = false;
         if (base.IsServerInitialized) {
             caravanMovingLock = false;
 

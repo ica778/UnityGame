@@ -144,7 +144,7 @@ public class DungeonGenerator : NetworkBehaviour {
             }
             
         }
-        Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
+        //Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
     }
 
     // TODO: you might be able to optimize this by reducing potential duplicates
@@ -173,6 +173,7 @@ public class DungeonGenerator : NetworkBehaviour {
                 newDoorwayObject.transform.SetParent(dungeonParent);
             }
         }
+        Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " + currentRoomCount);
     }
 
     private void ShuffleArray<T>(T[] array) {
