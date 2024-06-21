@@ -12,7 +12,7 @@ using System;
 public class GameSceneManager : NetworkBehaviour {
     public static GameSceneManager Instance { get; private set; }
 
-    public event EventHandler OnFinishedLoadingScenes;
+    public event EventHandler OnAllClientsOnServerFinishedLoadingScenes;
 
     private List<SceneLoadData> sldList = new();
 
@@ -71,8 +71,27 @@ public class GameSceneManager : NetworkBehaviour {
         sld.PreferredActiveScene = new PreferredScene(slud);
     }
 
-    public void LoadScenes(Scene sceneToLoad) {
-        Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+    // Check if all clients on server have loaded scenes
+    public IEnumerator WaitForAllClientsToLoad(SceneName[] scenes) {
+        while (!HaveConnectedClientsLoadedScenes(scenes)) {
+            yield return new WaitForSeconds(0.5f);
+        }
 
+        OnAllClientsOnServerFinishedLoadingScenes?.Invoke(this, EventArgs.Empty);
+    }
+
+    // Check if all clients on server have loaded scenes
+    private bool HaveConnectedClientsLoadedScenes(SceneName[] scenes) {
+        Dictionary<UnityEngine.SceneManagement.Scene, HashSet<NetworkConnection>> sceneConnections = InstanceFinder.SceneManager.SceneConnections;
+
+        foreach (SceneName sceneName in scenes) {
+            UnityEngine.SceneManagement.Scene currentScene = SceneHelper.GetScene(sceneName);
+            foreach (NetworkConnection conn in InstanceFinder.ClientManager.Clients.Values) {
+                if (!sceneConnections.ContainsKey(currentScene) || !sceneConnections[currentScene].Contains(conn)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

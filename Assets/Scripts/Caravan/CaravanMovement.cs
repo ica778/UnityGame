@@ -49,13 +49,10 @@ public class CaravanMovement : NetworkBehaviour {
         if (base.IsServerInitialized) {
             // TODO: REPLACE SCENE LOADING FUNCTION WITH A FUNCTION THAT CAN LOAD SCENES SELECTED IN GAME
             GameSceneManager.Instance.LoadCaravanLeverPulledScenes();
-            StartCoroutine(WaitForAllClientsToLoad());
-        }
-    }
 
-    private void ResumeMovingCaravan() {
-        if (base.IsServerInitialized) {
-            ResumeMovingCaravanObserversRpc();
+            SceneName[] testingSceneArr = new SceneName[] { this.destination };
+
+            StartCoroutine(GameSceneManager.Instance.WaitForAllClientsToLoad(testingSceneArr));
         }
     }
 
@@ -75,33 +72,20 @@ public class CaravanMovement : NetworkBehaviour {
         }
     }
 
-    private IEnumerator WaitForAllClientsToLoad() {
-        // TODO: REPLACE THIS testingSceneArr IN THE FUTURE WITH ACTUAL ARRAY OF SCENES TO CHECK
-        SceneName[] testingSceneArr = new SceneName[] { this.destination };
-
-        while (!HaveConnectedClientsLoadedScenes(testingSceneArr)) {
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        ResumeMovingCaravan();
+    // NOTE: this event will only fire on the server
+    private void GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes(object sender, EventArgs e) {
+        ResumeMovingCaravanObserversRpc();
     }
 
-    private bool HaveConnectedClientsLoadedScenes(SceneName[] sceneNames) {
-        Dictionary<UnityEngine.SceneManagement.Scene, HashSet<NetworkConnection>> sceneConnections = InstanceFinder.SceneManager.SceneConnections;
-
-        foreach (SceneName sceneName in sceneNames) {
-            UnityEngine.SceneManagement.Scene currentScene = SceneHelper.GetScene(sceneName);
-            foreach (NetworkConnection conn in InstanceFinder.ClientManager.Clients.Values) {
-                if (!sceneConnections.ContainsKey(currentScene) || !sceneConnections[currentScene].Contains(conn)) {
-                    Debug.Log("TESTING SCENES NOT LOADED FOR EVERYONE YET");
-                    return false;
-                }
-            }
+    public override void OnStartNetwork() {
+        if (base.IsServerInitialized) {
+            GameSceneManager.Instance.OnAllClientsOnServerFinishedLoadingScenes += GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes;
         }
-        return true;
     }
 
-    private void OnEnable() {
-
+    public override void OnStopNetwork() {
+        if (base.IsServerInitialized) {
+            GameSceneManager.Instance.OnAllClientsOnServerFinishedLoadingScenes -= GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes;
+        }
     }
 }
