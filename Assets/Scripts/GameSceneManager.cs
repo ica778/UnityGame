@@ -16,6 +16,7 @@ public class GameSceneManager : NetworkBehaviour {
     public event EventHandler OnAllClientsOnServerFinishedLoadingScenes;
 
     private List<SceneLoadData> sldList = new();
+    private Dictionary<NetworkConnection, bool> clientsLoaded;
 
     public override void OnStartClient() {
         Instance = this;
@@ -23,23 +24,6 @@ public class GameSceneManager : NetworkBehaviour {
         if (base.IsServerInitialized) {
             StartGameAsHost();
         }
-
-
-    }
-
-    // NOTE: this function works with the assumption the last scene is the current level scene
-    public void SwitchLevelSceneForAllClients(SceneName sceneToSwitchTo) {
-        SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
-        base.SceneManager.UnloadGlobalScenes(sud);
-
-        sldList.RemoveAt(sldList.Count - 1);
-
-        SceneLoadData sld = new SceneLoadData(sceneToSwitchTo.ToString());
-        base.SceneManager.LoadGlobalScenes(sld);
-        sldList.Add(sld);
-
-        SceneLookupData slud = new SceneLookupData(sceneToSwitchTo.ToString());
-        sld.PreferredActiveScene = new PreferredScene(slud);
     }
 
     private void StartGameAsHost() {
@@ -59,28 +43,87 @@ public class GameSceneManager : NetworkBehaviour {
         sld.PreferredActiveScene = new PreferredScene(slud);
     }
 
-    // TODO: make the next 2 functions run clientside instead of serverside
-    // Check if all clients on server have loaded scenes
-    public IEnumerator WaitForAllClientsToLoad(SceneName[] scenes) {
-        while (!HaveClientsLoadedScenes(scenes)) {
+    // NOTE: this function works with the assumption the last scene is the current level scene
+    public void SwitchLevelSceneForAllClients(SceneName sceneToSwitchTo) {
+        if (!base.IsServerInitialized) {
+            Debug.LogError("ERROR: SwitchLevelSceneForAllClients CALLED BY CLIENT");
+        }
+
+        clientsLoaded = new();
+        foreach (NetworkConnection conn in base.ClientManager.Clients.Values) {
+            clientsLoaded[conn] = false;
+        }
+
+        WaitForClientsToLoadScenes(new int[] {sceneToSwitchTo.GetHashCode()});
+
+        SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
+        base.SceneManager.UnloadGlobalScenes(sud);
+
+        sldList.RemoveAt(sldList.Count - 1);
+
+        SceneLoadData sld = new SceneLoadData(sceneToSwitchTo.ToString());
+        base.SceneManager.LoadGlobalScenes(sld);
+        sldList.Add(sld);
+
+        SceneLookupData slud = new SceneLookupData(sceneToSwitchTo.ToString());
+        sld.PreferredActiveScene = new PreferredScene(slud);
+    }
+
+
+    /// <summary>
+    /// ObserversRpc that tells clients to wait for themselves to load scenes then notifies server when done loading.
+    /// </summary>
+    /// <param name="sceneNameHashCodes">Integer array of SceneName HashCodes</param>
+    [ObserversRpc]
+    private void WaitForClientsToLoadScenes(int[] sceneNameHashCodes) {
+        SceneName[] sceneNames = new SceneName[sceneNameHashCodes.Length];
+
+        for (int i = 0; i < sceneNameHashCodes.Length; i++) {
+            sceneNames[i] = (SceneName)sceneNameHashCodes[i];
+        }
+
+        StartCoroutine(WaitForClientToLoadScenes(sceneNames));
+        
+    }
+
+    private IEnumerator WaitForClientToLoadScenes(SceneName[] sceneNames) {
+        int timesToCheck = 20;
+        while (!CheckIfScenesAreLoaded(sceneNames) && timesToCheck > 0) {
+            timesToCheck--;
             yield return new WaitForSeconds(0.5f);
         }
 
-        OnAllClientsOnServerFinishedLoadingScenes?.Invoke(this, EventArgs.Empty);
+        if (timesToCheck <= 0) {
+            Debug.LogError("ERROR: SCENE NOT LOADING");
+        }
+
+        NotifyServerFinishedLoadingScenesServerRpc(base.LocalConnection);
     }
 
-    // Check if all clients on server have loaded scenes
-    private bool HaveClientsLoadedScenes(SceneName[] scenes) {
-        Dictionary<UnityEngine.SceneManagement.Scene, HashSet<NetworkConnection>> sceneConnections = InstanceFinder.SceneManager.SceneConnections;
-
-        foreach (SceneName sceneName in scenes) {
-            UnityEngine.SceneManagement.Scene currentScene = SceneHelper.GetScene(sceneName);
-            foreach (NetworkConnection conn in InstanceFinder.ClientManager.Clients.Values) {
-                if (!sceneConnections.ContainsKey(currentScene) || !sceneConnections[currentScene].Contains(conn)) {
-                    return false;
-                }
+    private bool CheckIfScenesAreLoaded(SceneName[] sceneNames) {
+        foreach (SceneName sceneName in sceneNames) {
+            if (!SceneHelper.GetScene(sceneName).isLoaded) {
+                return false;
             }
         }
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void NotifyServerFinishedLoadingScenesServerRpc(NetworkConnection conn) {
+        clientsLoaded[conn] = true;
+
+        foreach (bool current in clientsLoaded.Values) {
+            if (!current) {
+                return;
+            }
+        }
+
+        NotifyClientsFinishedLoadingLevelScenes();
+    }
+
+    [ObserversRpc]
+    private void NotifyClientsFinishedLoadingLevelScenes() {
+        OnAllClientsOnServerFinishedLoadingScenes?.Invoke(this, EventArgs.Empty);
     }
 }

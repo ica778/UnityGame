@@ -58,8 +58,6 @@ public class CaravanMovement : NetworkBehaviour {
             }
 
             SceneName[] testingSceneArr = new SceneName[] { this.destination };
-
-            StartCoroutine(GameSceneManager.Instance.WaitForAllClientsToLoad(testingSceneArr));
         }
     }
 
