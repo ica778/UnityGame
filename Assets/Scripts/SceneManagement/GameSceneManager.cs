@@ -16,7 +16,6 @@ public class GameSceneManager : NetworkBehaviour {
 
     public override void OnStartNetwork() {
         Instance = this;
-        
         if (base.IsServerInitialized) {
             StartGameAsHost();
         }

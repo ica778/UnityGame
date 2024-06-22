@@ -8,12 +8,36 @@ using UnityEngine;
 public class SceneLoading : NetworkBehaviour {
     public static SceneLoading Instance { get; private set; }
 
-    public event EventHandler OnFinishedLoadingInitialGameScenes;
+    public event EventHandler OnFinishedLoadingStartScenes;
     public event EventHandler OnFinishedLoadingLevelScenes;
     private Dictionary<NetworkConnection, bool> clientsLoaded;
 
     public override void OnStartNetwork() {
         Instance = this;
+
+        if (base.IsServerInitialized) {
+            base.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientFinishedLoadingStartScenes;
+            base.SceneManager.OnQueueEnd += SceneManager_OnQueueEnd;
+        }
+    }
+
+    private void SceneManager_OnQueueEnd() {
+        Debug.Log("HOST HAS FINISHED LOADING INITIAL SCENES=============");
+    }
+
+    public override void OnStopNetwork() {
+        if (base.IsServerInitialized) {
+            base.SceneManager.OnClientLoadedStartScenes -= SceneManager_OnClientFinishedLoadingStartScenes;
+        }
+    }
+
+    private void SceneManager_OnClientFinishedLoadingStartScenes(NetworkConnection arg1, bool arg2) {
+        ClientFinishedLoadingStartScenesTargetRpc(arg1);
+    }
+
+    [TargetRpc]
+    private void ClientFinishedLoadingStartScenesTargetRpc(NetworkConnection conn) {
+        OnFinishedLoadingStartScenes?.Invoke(this, EventArgs.Empty);
     }
 
     public void ResetClientsLoaded() {
@@ -71,15 +95,12 @@ public class SceneLoading : NetworkBehaviour {
             }
         }
 
+        // server notify all clients everyone is done loading level scenes
         NotifyClientsFinishedLoadingLevelScenes();
     }
 
     [ObserversRpc]
     private void NotifyClientsFinishedLoadingLevelScenes() {
         OnFinishedLoadingLevelScenes?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void SceneManager_OnClientLoadedStartScenes(NetworkConnection arg1, bool arg2) {
-        Debug.Log("CLIENT LOADED START SCENES WOOOO=====================");
     }
 }

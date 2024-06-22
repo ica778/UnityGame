@@ -20,6 +20,18 @@ public class CaravanMovement : NetworkBehaviour {
     // NOTE: THIS VARIABLE NOT IN USE YET, PLANNED TO USE THIS VARIABLE WHEN SELECTING CARAVAN DESTINATIONS IN GAME
     private SceneName destination;
 
+    public override void OnStartNetwork() {
+        if (base.IsServerInitialized) {
+            SceneLoading.Instance.OnFinishedLoadingLevelScenes += SceneLoading_OnFinishedLoadingLevelScenes;
+        }
+    }
+
+    public override void OnStopNetwork() {
+        if (base.IsServerInitialized) {
+            SceneLoading.Instance.OnFinishedLoadingLevelScenes -= SceneLoading_OnFinishedLoadingLevelScenes;
+        }
+    }
+
     public void StartMovingCaravan() {
         if (base.IsServerInitialized && !caravanMovingLock) {
             caravanMovingLock = true;
@@ -80,17 +92,5 @@ public class CaravanMovement : NetworkBehaviour {
     // NOTE: this event will only fire on the server
     private void SceneLoading_OnFinishedLoadingLevelScenes(object sender, EventArgs e) {
         ResumeMovingCaravanObserversRpc();
-    }
-
-    public override void OnStartNetwork() {
-        if (base.IsServerInitialized) {
-            SceneLoading.Instance.OnFinishedLoadingLevelScenes += SceneLoading_OnFinishedLoadingLevelScenes;
-        }
-    }
-
-    public override void OnStopNetwork() {
-        if (base.IsServerInitialized) {
-            SceneLoading.Instance.OnFinishedLoadingLevelScenes -= SceneLoading_OnFinishedLoadingLevelScenes;
-        }
     }
 }
