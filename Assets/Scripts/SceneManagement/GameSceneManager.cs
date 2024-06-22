@@ -28,20 +28,16 @@ public class GameSceneManager : NetworkBehaviour {
         SceneName[] startingSceneNames = new SceneName[] { SceneName.GamePersistentObjectsScene, SceneName.CaravanScene, SceneName.GameScene1 };
         SceneLoading.Instance.WaitForHostToLoadStartScenes(startingSceneNames);
 
-        SceneLoadData sld = new SceneLoadData(SceneName.GamePersistentObjectsScene.ToString());
-        base.SceneManager.LoadGlobalScenes(sld);
-        sldList.Add(sld);
+        for (int i = 0; i < startingSceneNames.Length; i++) {
+            SceneLoadData sld = new SceneLoadData(startingSceneNames[i].ToString());
+            base.SceneManager.LoadGlobalScenes(sld);
+            sldList.Add(sld);
 
-        sld = new SceneLoadData(SceneName.CaravanScene.ToString());
-        base.SceneManager.LoadGlobalScenes(sld);
-        sldList.Add(sld);
-
-        sld = new SceneLoadData(SceneName.GameScene1.ToString());
-        base.SceneManager.LoadGlobalScenes(sld);
-        sldList.Add(sld);
-
-        SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
-        sld.PreferredActiveScene = new PreferredScene(slud);
+            if (i == startingSceneNames.Length - 1) {
+                SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
+                sld.PreferredActiveScene = new PreferredScene(slud);
+            }
+        }
     }
 
     // NOTE: this function works with the assumption the last scene is the current level scene
