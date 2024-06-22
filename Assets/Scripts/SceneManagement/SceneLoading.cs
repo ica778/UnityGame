@@ -8,21 +8,19 @@ using UnityEngine;
 public class SceneLoading : NetworkBehaviour {
     public static SceneLoading Instance { get; private set; }
 
+    public event EventHandler OnHostFinishedLoadingStartScenes;
     public event EventHandler OnFinishedLoadingStartScenes;
     public event EventHandler OnFinishedLoadingLevelScenes;
     private Dictionary<NetworkConnection, bool> clientsLoaded;
+
+    private int timesToCheckIfLoadingComplete = 20;
 
     public override void OnStartNetwork() {
         Instance = this;
 
         if (base.IsServerInitialized) {
             base.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientFinishedLoadingStartScenes;
-            base.SceneManager.OnQueueEnd += SceneManager_OnQueueEnd;
         }
-    }
-
-    private void SceneManager_OnQueueEnd() {
-        Debug.Log("HOST HAS FINISHED LOADING INITIAL SCENES=============");
     }
 
     public override void OnStopNetwork() {
@@ -31,10 +29,35 @@ public class SceneLoading : NetworkBehaviour {
         }
     }
 
+    /// <summary>
+    /// Wait for host to finish loading start scenes.
+    /// </summary>
+    /// <param name="sceneNames">Integer array of SceneNames of start scenes</param>
+    public void WaitForHostToLoadStartScenes(SceneName[] sceneNames) {
+        StartCoroutine(WaitForHostToLoadStartScenesAsync(sceneNames));
+    }
+
+    private IEnumerator WaitForHostToLoadStartScenesAsync(SceneName[] sceneNames) {
+        int timesToCheck = timesToCheckIfLoadingComplete;
+        while (!CheckIfScenesAreLoaded(sceneNames) && timesToCheck > 0) {
+            timesToCheck--;
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if (timesToCheck <= 0) {
+            Debug.LogError("ERROR: SCENE NOT LOADING");
+        }
+
+        OnHostFinishedLoadingStartScenes?.Invoke(this, EventArgs.Empty);
+    }
+
     private void SceneManager_OnClientFinishedLoadingStartScenes(NetworkConnection arg1, bool arg2) {
         ClientFinishedLoadingStartScenesTargetRpc(arg1);
     }
 
+    /// <summary>
+    /// Notify client of NetworkConnection conn that they are done loading start scenes.
+    /// </summary>
     [TargetRpc]
     private void ClientFinishedLoadingStartScenesTargetRpc(NetworkConnection conn) {
         OnFinishedLoadingStartScenes?.Invoke(this, EventArgs.Empty);
@@ -64,7 +87,7 @@ public class SceneLoading : NetworkBehaviour {
     }
 
     private IEnumerator WaitForClientToLoadScenes(SceneName[] sceneNames) {
-        int timesToCheck = 20;
+        int timesToCheck = timesToCheckIfLoadingComplete;
         while (!CheckIfScenesAreLoaded(sceneNames) && timesToCheck > 0) {
             timesToCheck--;
             yield return new WaitForSeconds(0.5f);

@@ -14,14 +14,20 @@ public class GameSceneManager : NetworkBehaviour {
 
     private List<SceneLoadData> sldList = new();
 
-    public override void OnStartNetwork() {
+    private void Awake() {
         Instance = this;
+    }
+
+    public override void OnStartClient() {
         if (base.IsServerInitialized) {
             StartGameAsHost();
         }
     }
 
     private void StartGameAsHost() {
+        SceneName[] startingSceneNames = new SceneName[] { SceneName.GamePersistentObjectsScene, SceneName.CaravanScene, SceneName.GameScene1 };
+        SceneLoading.Instance.WaitForHostToLoadStartScenes(startingSceneNames);
+
         SceneLoadData sld = new SceneLoadData(SceneName.GamePersistentObjectsScene.ToString());
         base.SceneManager.LoadGlobalScenes(sld);
         sldList.Add(sld);
