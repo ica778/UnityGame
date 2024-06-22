@@ -15,7 +15,7 @@ public class PlayerManager : NetworkBehaviour {
     }
 
     public override void OnStartClient() {
-        NetworkConnection conn = base.ClientManager.Connection;
+        NetworkConnection conn = base.LocalConnection;
 
         SpawnPlayerServerRpc(conn);
     }

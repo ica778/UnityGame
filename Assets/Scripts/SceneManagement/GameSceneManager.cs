@@ -46,7 +46,6 @@ public class GameSceneManager : NetworkBehaviour {
         }
 
         SceneLoading.Instance.ResetClientsLoaded();
-
         SceneLoading.Instance.WaitForClientsToLoadScenes(new int[] {sceneToSwitchTo.GetHashCode()});
 
         SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);

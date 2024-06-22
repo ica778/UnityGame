@@ -78,4 +78,8 @@ public class SceneLoading : NetworkBehaviour {
     private void NotifyClientsFinishedLoadingLevelScenes() {
         OnFinishedLoadingLevelScenes?.Invoke(this, EventArgs.Empty);
     }
+
+    private void SceneManager_OnClientLoadedStartScenes(NetworkConnection arg1, bool arg2) {
+        Debug.Log("CLIENT LOADED START SCENES WOOOO=====================");
+    }
 }
