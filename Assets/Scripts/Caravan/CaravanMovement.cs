@@ -78,19 +78,19 @@ public class CaravanMovement : NetworkBehaviour {
     }
 
     // NOTE: this event will only fire on the server
-    private void GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes(object sender, EventArgs e) {
+    private void SceneLoading_OnFinishedLoadingLevelScenes(object sender, EventArgs e) {
         ResumeMovingCaravanObserversRpc();
     }
 
     public override void OnStartNetwork() {
         if (base.IsServerInitialized) {
-            GameSceneManager.Instance.OnAllClientsOnServerFinishedLoadingScenes += GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes;
+            SceneLoading.Instance.OnFinishedLoadingLevelScenes += SceneLoading_OnFinishedLoadingLevelScenes;
         }
     }
 
     public override void OnStopNetwork() {
         if (base.IsServerInitialized) {
-            GameSceneManager.Instance.OnAllClientsOnServerFinishedLoadingScenes -= GameSceneManager_OnAllClientsOnServerFinishedLoadingScenes;
+            SceneLoading.Instance.OnFinishedLoadingLevelScenes -= SceneLoading_OnFinishedLoadingLevelScenes;
         }
     }
 }
