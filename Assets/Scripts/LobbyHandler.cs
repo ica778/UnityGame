@@ -14,8 +14,11 @@ public class LobbyHandler : MonoBehaviour {
 
     [SerializeField] private LobbyManager lobbyManager;
 
-    private void Start () {
+    private void Awake() {
         Instance = this;
+    }
+
+    private void Start () {
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);

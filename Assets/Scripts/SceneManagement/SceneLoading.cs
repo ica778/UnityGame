@@ -15,9 +15,11 @@ public class SceneLoading : NetworkBehaviour {
 
     private int timesToCheckIfLoadingComplete = 20;
 
-    public override void OnStartNetwork() {
+    private void Awake() {
         Instance = this;
+    }
 
+    public override void OnStartNetwork() {
         if (base.IsServerInitialized) {
             base.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientFinishedLoadingStartScenes;
         }
