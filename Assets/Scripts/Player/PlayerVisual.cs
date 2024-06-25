@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerVisual : NetworkBehaviour {
     private MeshRenderer[] meshRenderers;
 
-    private void Update() {
+    public override void OnStartClient() {
         if (!base.IsOwner) {
             return;
         }
