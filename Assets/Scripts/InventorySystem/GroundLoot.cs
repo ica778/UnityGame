@@ -9,7 +9,7 @@ public class GroundLoot : InteractableObjectBase {
     public int Count { get; private set; }
 
     private void Awake() {
-        Id = item.GetID();
+        Id = item.GetId();
         base.Type = InteractableObjectType.GroundLoot;
     }
 

@@ -10,13 +10,14 @@ public enum ItemType {
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Scriptable Objects/Create New Item")]
 public class ItemSO : ScriptableObject {
-    [SerializeField] private int ID;
+    [SerializeField] private int Id;
     [SerializeField] private string itemName;
     [SerializeField] private Sprite sprite;
     [SerializeField] ItemType itemType;
     [SerializeField] private bool stackable = false;
     [SerializeField] private int maxStackCount;
     [SerializeField] private GameObject groundLootPrefab;
+    [SerializeField] private GameObject equippedPrefab;
 
     public string GetItemName() {
         return itemName;
@@ -41,11 +42,15 @@ public class ItemSO : ScriptableObject {
         return -1;
     }
 
-    public GameObject GetGroundLootPrefab() {
+    public GameObject GetGroundLootObject() {
         return groundLootPrefab;
     }
 
-    public int GetID() {
-        return ID;
+    public GameObject GetEquippedObject() {
+        return equippedPrefab;
+    }
+
+    public int GetId() {
+        return Id;
     }
 }

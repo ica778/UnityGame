@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour {
 
     public event EventHandler<OnSelectedItemChangedEventArgs> OnSelectedItemChanged;
     public class OnSelectedItemChangedEventArgs : EventArgs { 
-        public int idOfItemMesh;
+        public int itemId;
     }
 
     private void Awake() {
@@ -55,13 +55,13 @@ public class InventoryManager : MonoBehaviour {
         if (inventorySlots[selectedSlotIndex].GetComponentInChildren<InventoryItem>()) {
             OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                 //meshFilter = GetSelectedItem(false).GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
-                idOfItemMesh = GetSelectedItem(false).GetID()
+                itemId = GetSelectedItem(false).GetId()
             });
         }
         else {
             OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                 //meshFilter = null
-                idOfItemMesh = -1
+                itemId = -1
             });
         }
     }
@@ -108,7 +108,7 @@ public class InventoryManager : MonoBehaviour {
                 if (i == selectedSlotIndex) {
                     OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                         //meshFilter = item.GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
-                        idOfItemMesh = item.GetID()
+                        itemId = item.GetId()
                     });
                 }
                 return true;
@@ -134,7 +134,7 @@ public class InventoryManager : MonoBehaviour {
                     Destroy(inventoryItemInSlot.gameObject);
                     OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                         //meshFilter = null
-                        idOfItemMesh = -1
+                        itemId = -1
                     });
                 }
                 else {

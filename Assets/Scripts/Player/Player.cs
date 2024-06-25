@@ -12,7 +12,7 @@ public class Player : NetworkBehaviour {
 
     public override void OnStartNetwork() {
         PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
-        Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
+        Debug.Log("CLIENT CONNECTED WITH Id: " + Owner.ClientId);
 
         if (!Owner.IsLocalClient) {
             foreach (Behaviour obj in clientSideScripts) {
