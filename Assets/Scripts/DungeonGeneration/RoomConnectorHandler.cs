@@ -13,11 +13,13 @@ public class RoomConnectorHandler : MonoBehaviour {
     public void OpenEntrance() {
         entranceway.SetActive(true);
         wall.SetActive(false);
+        doorwayCollider.gameObject.SetActive(false);
     }
 
     public void CloseEntrance() {
         entranceway.SetActive(false);
         wall.SetActive(true);
+        doorwayCollider.gameObject.SetActive(true);
     }
 
     public GameObject GetEntranceway() {

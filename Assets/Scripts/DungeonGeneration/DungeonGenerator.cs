@@ -1,9 +1,10 @@
 using FishNet.Object;
-using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private GameObject[] rooms;
@@ -15,7 +16,9 @@ public class DungeonGenerator : NetworkBehaviour {
     [SerializeField] private NavMeshSurface navMeshSurface;
 
     private Stack<RoomConnectorHandler> stack = new Stack<RoomConnectorHandler>();
-    private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>(); 
+    private HashSet<RoomConnectorHandler> connectors = new HashSet<RoomConnectorHandler>();
+
+    public event EventHandler OnFinishDungeonGenerate;
 
     private int maxRooms = 50;
     private int currentRoomCount = 0;
@@ -35,16 +38,26 @@ public class DungeonGenerator : NetworkBehaviour {
     }
 
     private IEnumerator GenerateDungeonAsync(int seed) {
-        Random.InitState(seed);
+        UnityEngine.Random.InitState(seed);
 
         yield return StartCoroutine(DungeonGenerationAsync());
         yield return StartCoroutine(ConnectRoomsAsync());
-        navMeshSurface.BuildNavMesh();
+        yield return StartCoroutine(BakeNavMeshAsync());
+
+        OnFinishDungeonGenerate?.Invoke(this, EventArgs.Empty);
     }
 
+    // NOTE: UpdateNavMesh REBUILDS THE ENTIRE SCENE. FIND A WAY TO MAKE IT ONLY BAKE THE PART WITH THE DUNGEON
+    private IEnumerator BakeNavMeshAsync() {
+        AsyncOperation asyncOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+    }
 
     private int CreateSeed() {
-        return Random.Range(int.MinValue, int.MaxValue);
+        return UnityEngine.Random.Range(int.MinValue, int.MaxValue);
     }
 
     private IEnumerator DungeonGenerationAsync() {
@@ -128,12 +141,12 @@ public class DungeonGenerator : NetworkBehaviour {
                 bool alreadyAddedConnector = false;
                 foreach (RoomConnectorHandler i in roomHandler.GetRoomConnectors()) {
                     if (alreadyAddedConnector) {
-                        if (Random.Range(0, 10) < 2) {
+                        if (UnityEngine.Random.Range(0, 10) < 2) {
                             stack.Push(i);
                         }
                     }
                     else {
-                        if (Random.Range(0, 10) < 7) {
+                        if (UnityEngine.Random.Range(0, 10) < 7) {
                             stack.Push(i);
                             alreadyAddedConnector = true;
                         }
@@ -144,7 +157,7 @@ public class DungeonGenerator : NetworkBehaviour {
             }
             
         }
-        Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
+        //Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " +  currentRoomCount);
     }
 
     // TODO: you might be able to optimize this by reducing potential duplicates
@@ -173,11 +186,12 @@ public class DungeonGenerator : NetworkBehaviour {
                 newDoorwayObject.transform.SetParent(dungeonParent);
             }
         }
+        Debug.Log("TESTING DUNGEON GENERATION STACK SIZE: " + stack.Count + " | CURRENT ROOM COUNT: " + currentRoomCount);
     }
 
     private void ShuffleArray<T>(T[] array) {
         for (int i = array.Length - 1; i > 0; i--) {
-            int j = Random.Range(0, i + 1);
+            int j = UnityEngine.Random.Range(0, i + 1);
             T temp = array[i];
             array[i] = array[j];
             array[j] = temp;

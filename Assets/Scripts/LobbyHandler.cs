@@ -14,8 +14,11 @@ public class LobbyHandler : MonoBehaviour {
 
     [SerializeField] private LobbyManager lobbyManager;
 
-    private void Start () {
+    private void Awake() {
         Instance = this;
+    }
+
+    private void Start () {
         HeathenEngineering.SteamworksIntegration.API.Overlay.Client.EventGameLobbyJoinRequested.AddListener(OnJoinRequestAccepted);
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
@@ -31,23 +34,9 @@ public class LobbyHandler : MonoBehaviour {
         }
     }
 
+    // TODO: add proper error handling for hosting and joining games
     private void OnJoinLobbySuccess(LobbyData lobbyData) {
-        if (ConnectionManager.Instance.StartConnectionAsGuest(lobbyData.Owner.user.id)) {
-            StartCoroutine(StartGameScenes());
-        }
-    }
-
-    // NOTE: maybe duplicate code
-    private IEnumerator StartGameScenes() {
-        UnityEngine.AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("MainMenuScene");
-
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("GameScene"));
+        ConnectionManager.Instance.StartGameAsClientSteam(lobbyData.Owner.user.id);
     }
 
     private void OnAskedToLeave() {

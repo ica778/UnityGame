@@ -9,10 +9,12 @@ public class GameInput : MonoBehaviour {
 
     private PlayerInputActions playerInputActions;
 
-    public event EventHandler OnJumpAction;
-    public event EventHandler OnCrouchAction;
+    public event EventHandler OnJumpStartedAction;
+    public event EventHandler OnJumpCanceledAction;
+    public event EventHandler OnCrouchStartedAction;
+    public event EventHandler OnCrouchCanceledAction;
     public event EventHandler OnSprintStartedAction;
-    public event EventHandler OnSprintCancelledAction;
+    public event EventHandler OnSprintCanceledAction;
     public event EventHandler OnPauseAction;
     public event EventHandler OnInteractAction;
     public event EventHandler OnInteractAlternateAction;
@@ -28,10 +30,15 @@ public class GameInput : MonoBehaviour {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
 
-        playerInputActions.Player.Jump.performed += Jump_performed;
-        playerInputActions.Player.Crouch.performed += Crouch_performed;
+        playerInputActions.Player.Jump.started += Jump_started;
+        playerInputActions.Player.Jump.canceled += Jump_canceled;
+
+        playerInputActions.Player.Crouch.started += Crouch_started;
+        playerInputActions.Player.Crouch.canceled += Crouch_canceled;
+
         playerInputActions.Player.Sprint.started += Sprint_started;
         playerInputActions.Player.Sprint.canceled += Sprint_canceled;
+
         playerInputActions.Player.Pause.performed += Pause_performed;
 
         playerInputActions.Player.Interact.performed += Interact_performed;
@@ -79,19 +86,27 @@ public class GameInput : MonoBehaviour {
     }
 
     private void Sprint_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        OnSprintCancelledAction?.Invoke(this, EventArgs.Empty);
+        OnSprintCanceledAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Sprint_started(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         OnSprintStartedAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Crouch_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        OnCrouchAction?.Invoke(this, EventArgs.Empty);
+    private void Crouch_started(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnCrouchStartedAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        OnJumpAction?.Invoke(this, EventArgs.Empty);
+    private void Crouch_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnCrouchCanceledAction?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Jump_started(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnJumpStartedAction?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Jump_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnJumpCanceledAction?.Invoke(this, EventArgs.Empty);
     }
 
     public void LockCursor() {
@@ -111,6 +126,7 @@ public class GameInput : MonoBehaviour {
         else {
             return 0f;
         }
+        //return playerInputActions.Player.Look.ReadValue<Vector2>().x;
     }
 
     public float GetLookY() {
@@ -120,14 +136,17 @@ public class GameInput : MonoBehaviour {
         else {
             return 0f;
         }
+        //return playerInputActions.Player.Look.ReadValue<Vector2>().y;
     }
     public Vector2 GetMoveVector() {
         return playerInputActions.Player.Move.ReadValue<Vector2>();
     }
 
     private void OnDestroy() {
-        playerInputActions.Player.Jump.performed -= Jump_performed;
-        playerInputActions.Player.Crouch.performed -= Crouch_performed;
+        playerInputActions.Player.Jump.started -= Jump_started;
+        playerInputActions.Player.Jump.canceled -= Jump_canceled;
+        playerInputActions.Player.Crouch.started -= Crouch_started;
+        playerInputActions.Player.Crouch.canceled -= Crouch_canceled;
         playerInputActions.Player.Sprint.started -= Sprint_started;
         playerInputActions.Player.Sprint.canceled -= Sprint_canceled;
         playerInputActions.Player.Pause.performed -= Pause_performed;

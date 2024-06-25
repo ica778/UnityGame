@@ -1,128 +1,36 @@
 using FishNet.Object;
-using KinematicCharacterController;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class Player : NetworkBehaviour {
-    [SerializeField] private PlayerLook playerLook;
-    [SerializeField] private MyCharacterController characterController;
-    [SerializeField] private Animator animator;
-    [SerializeField] private InteractionSystem interactionSystem;
-    [SerializeField] private PlayerInventoryHandler playerInventoryHandler;
+    [SerializeField] private List<Behaviour> clientSideScripts = new List<Behaviour>();
+    [SerializeField] private List<GameObject> clientSideObjects = new List<GameObject>();
 
     private int playerId;
-
-    // Looking
-    private float lookSensitivity = 20f;
-    private float lookXInput;
-    private float lookYInput;
-
-    // Movement
-    private Vector3 moveDirection;
-
-    // Animations
-    private const string IS_WALKING = "IsWalking";
-    private const string IS_SPRINTING = "IsSprinting";
 
     public override void OnStartNetwork() {
         PlayerManager.Instance.AddPlayer(Owner.ClientId, GetComponent<Player>());
         Debug.Log("CLIENT CONNECTED WITH ID: " + Owner.ClientId);
 
         if (!Owner.IsLocalClient) {
+            foreach (Behaviour obj in clientSideScripts) {
+                obj.enabled = false;
+            }
+
+            foreach (GameObject obj in clientSideObjects) {
+                obj.SetActive(false);
+            }
+
             this.enabled = false;
             return;
         }
 
         playerId = Owner.ClientId;
-        GameInput.Instance.OnJumpAction += GameInput_OnJumpAction;
-        GameInput.Instance.OnCrouchAction += GameInput_OnCrouchAction;
-        GameInput.Instance.OnSprintStartedAction += GameInput_OnSprintStartedAction;
-        GameInput.Instance.OnSprintCancelledAction += GameInput_OnSprintCancelledAction;
-
-        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
-        GameInput.Instance.OnDropAction += GameInput_OnDropAction;
-    }
-
-    private void Update() {
-        HandleCharacterMovementInput();
-        HandleMovementAnimation();
-    }
-
-    private void LateUpdate() {
-        HandleCameraInput();
-    }
-
-    private void GameInput_OnDropAction(object sender, System.EventArgs e) {
-        playerInventoryHandler.DropCurrentItem();
-    }
-
-    private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
-        interactionSystem.InteractWithObject();
-    }
-
-    private void GameInput_OnSprintStartedAction(object sender, System.EventArgs e) {
-        characterController.RequestSprint();
-    }
-
-    private void GameInput_OnSprintCancelledAction(object sender, System.EventArgs e) {
-        characterController.RequestWalk();
-    }
-
-    private void GameInput_OnCrouchAction(object sender, System.EventArgs e) {
-        ToggleCrouchingState();
-    }
-
-    private void GameInput_OnJumpAction(object sender, System.EventArgs e) {
-        characterController.RequestJump();
-    }
-
-    // TODO: CURRENT SYSTEM OF HANDLING ANIMATIONS IS EXTREMELY GHETTO. FIND BETTER WAY OF DOING IT.
-    private void HandleMovementAnimation() {
-        if (moveDirection.magnitude > 0) {
-            animator.SetBool(IS_WALKING, characterController.CurrentCharacterMovementState == CharacterMovementState.Walking);
-            animator.SetBool(IS_SPRINTING, characterController.CurrentCharacterMovementState == CharacterMovementState.Sprinting);
-        }
-        else {
-            animator.SetBool(IS_WALKING, false);
-            animator.SetBool(IS_SPRINTING, false);
-        }
-    }
-
-    private void ToggleCrouchingState() {
-        if (!characterController.IsCrouching) {
-            characterController.RequestCrouch();
-        }
-        else {
-            characterController.RequestUncrouch();
-        }
-    }
-
-    private void HandleCameraInput() {
-        lookXInput = GameInput.Instance.GetLookX() * lookSensitivity;
-        lookYInput = GameInput.Instance.GetLookY() * lookSensitivity;
-
-        playerLook.UpdateWithInput(lookXInput, lookYInput, Time.deltaTime);
-        playerLook.RotateCamera();
-        characterController.SetLookRotationInput(playerLook.GetYRotation());
-    }
-
-    private void HandleCharacterMovementInput() {
-        Transform orientation = characterController.transform;
-        moveDirection = orientation.forward * GameInput.Instance.GetMoveVector().y + orientation.right * GameInput.Instance.GetMoveVector().x;
-        characterController.SetMovementVectorInput(moveDirection);
     }
 
     public int GetPlayerID() {
         return playerId;
-    }
-
-    private void OnDestroy() {
-        GameInput.Instance.OnJumpAction -= GameInput_OnJumpAction;
-        GameInput.Instance.OnCrouchAction -= GameInput_OnCrouchAction;
-        GameInput.Instance.OnSprintStartedAction -= GameInput_OnSprintStartedAction;
-        GameInput.Instance.OnSprintCancelledAction -= GameInput_OnSprintCancelledAction;
-
-        GameInput.Instance.OnInteractAction -= GameInput_OnInteractAction;
-        GameInput.Instance.OnDropAction -= GameInput_OnDropAction;
     }
 }

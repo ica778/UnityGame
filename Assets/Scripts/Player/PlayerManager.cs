@@ -1,11 +1,7 @@
 using FishNet.Connection;
-using FishNet.Demo.AdditiveScenes;
-using FishNet;
 using FishNet.Object;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FishNet.Object.Synchronizing;
 
 public class PlayerManager : NetworkBehaviour {
     public static PlayerManager Instance { get; private set; }
@@ -19,19 +15,19 @@ public class PlayerManager : NetworkBehaviour {
     }
 
     public override void OnStartClient() {
-        NetworkConnection conn = base.ClientManager.Connection;
+        NetworkConnection conn = base.LocalConnection;
 
         SpawnPlayerServerRpc(conn);
     }
     
-    // TODO: CONFIRM THIS IS THE BEST WAY OF SPAWNING PLAYER OBJECTS IN THE CORRECT SCENE
+    // TODO: CONFIRM THIS IS THE BEST WAY OF SPAWNING PLAYER OBJECTS IN THE CORRECT SCENE AND ALSO NEED TO SET OWNER
     [ServerRpc(RequireOwnership = false)]
     private void SpawnPlayerServerRpc(NetworkConnection conn) {
 
         GameObject newPlayer = Instantiate(playerPrefab);
-        base.NetworkManager.ServerManager.Spawn(newPlayer, conn, UnityEngine.SceneManagement.SceneManager.GetSceneByName("GamePersistentObjectsScene"));
+        base.NetworkManager.ServerManager.Spawn(newPlayer, conn);
 
-        MovePlayersToCorrectSceneObserversRpc(newPlayer);
+        //MovePlayersToCorrectSceneObserversRpc(newPlayer);
     }
 
     [ObserversRpc]

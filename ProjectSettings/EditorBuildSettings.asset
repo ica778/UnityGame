@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameBootstrapScene.unity
     guid: fa28865a14c8b534f80923b0db1f7a33
   - enabled: 1
+    path: Assets/Scenes/CaravanScene.unity
+    guid: 8a70c762425c6714dbe81b1166ea6429
+  - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
