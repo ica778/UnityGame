@@ -227,6 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c25818385487d1040aa0d26bca6f7ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 6021816000444340041}
+  _networkObjectCache: {fileID: 6021816000444340041}
 --- !u!1 &5163955700483961121
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +520,7 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 4569738459640763470}
   - {fileID: 4113152434554990693}
+  - {fileID: 0}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 1574910502800467918}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
@@ -787,6 +791,7 @@ MonoBehaviour:
   - {fileID: 1574910502800467918}
   - {fileID: 6714845835883628587}
   - {fileID: 4687929469016957086}
+  - {fileID: 8584078716771819282}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField:
   - {fileID: 2626170685400011861}

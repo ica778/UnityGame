@@ -8,7 +8,7 @@ public class PlayerManager : NetworkBehaviour {
 
     [SerializeField] private GameObject playerPrefab;
 
-    private Dictionary<int, Player> players = new Dictionary<int, Player>();
+    private Dictionary<NetworkConnection, Player> players = new();
 
     private void Awake() {
         Instance = this;
@@ -37,19 +37,19 @@ public class PlayerManager : NetworkBehaviour {
         }
     }
     
-    public bool HasPlayer(int playerId) {
-        return players.ContainsKey(playerId);
+    public bool HasPlayer(NetworkConnection conn) {
+        return players.ContainsKey(conn);
     }
 
-    public Player GetPlayer(int playerId) {
-        return players[playerId];
+    public Player GetPlayer(NetworkConnection conn) {
+        return players[conn];
     }
 
-    public void AddPlayer(int playerId, Player player) {
-        players.Add(playerId, player);
+    public void AddPlayer(NetworkConnection conn, Player player) {
+        players.Add(conn, player);
     }
 
-    public void RemovePlayer(int playerId) {
-        players.Remove(playerId);
+    public void RemovePlayer(NetworkConnection conn) {
+        players.Remove(conn);
     }
 }
