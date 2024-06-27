@@ -24,19 +24,6 @@ public class InventoryManager : MonoBehaviour {
         ChangeSelectedSlotIndex(0);
     }
 
-    private void Start() {
-        GameInput.Instance.OnScrollUpAction += GameInput_OnScrollUpAction;
-        GameInput.Instance.OnScrollDownAction += GameInput_OnScrollDownAction;
-        GameInput.Instance.OnLeftClickPressedAction += GameInput_OnLeftClickPressedAction;
-    }
-
-    private void GameInput_OnLeftClickPressedAction(object sender, System.EventArgs e) {
-        ItemSO equippedItem = GetSelectedItem(false);
-        if (equippedItem) {
-            Debug.Log("TESTING: USING ITEM " + equippedItem.GetItemName());
-        }
-    }
-
     private void GameInput_OnScrollUpAction(object sender, System.EventArgs e) {
         DecrementSelectedSlotIndex();
     }
@@ -146,9 +133,13 @@ public class InventoryManager : MonoBehaviour {
         return null;
     }
 
-    private void OnDestroy() {
+    private void OnEnable() {
+        GameInput.Instance.OnScrollUpAction += GameInput_OnScrollUpAction;
+        GameInput.Instance.OnScrollDownAction += GameInput_OnScrollDownAction;
+    }
+
+    private void OnDisable() {
         GameInput.Instance.OnScrollUpAction -= GameInput_OnScrollUpAction;
         GameInput.Instance.OnScrollDownAction -= GameInput_OnScrollDownAction;
-        GameInput.Instance.OnLeftClickPressedAction -= GameInput_OnLeftClickPressedAction;
     }
 }

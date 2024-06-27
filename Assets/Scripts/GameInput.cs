@@ -22,37 +22,15 @@ public class GameInput : MonoBehaviour {
     public event EventHandler OnDropAction;
     public event EventHandler OnScrollUpAction;
     public event EventHandler OnScrollDownAction;
-    public event EventHandler OnLeftClickPressedAction;
+    public event EventHandler OnLeftClickStartedAction;
+    public event EventHandler OnLeftClickCanceledAction;
 
-    private void Awake() {
-        Instance = this;
-
-        playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Enable();
-
-        playerInputActions.Player.Jump.started += Jump_started;
-        playerInputActions.Player.Jump.canceled += Jump_canceled;
-
-        playerInputActions.Player.Crouch.started += Crouch_started;
-        playerInputActions.Player.Crouch.canceled += Crouch_canceled;
-
-        playerInputActions.Player.Sprint.started += Sprint_started;
-        playerInputActions.Player.Sprint.canceled += Sprint_canceled;
-
-        playerInputActions.Player.Pause.performed += Pause_performed;
-
-        playerInputActions.Player.Interact.performed += Interact_performed;
-        playerInputActions.Player.InteractAlternate.performed += InteractAlternate_performed;
-
-        playerInputActions.Player.Inventory.performed += Inventory_performed;
-        playerInputActions.Player.Drop.performed += Drop_performed;
-
-        playerInputActions.Player.Scrolling.performed += Scrolling_performed;
-        playerInputActions.Player.LeftClick.performed += LeftClick_performed;
+    private void LeftClick_started(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnLeftClickStartedAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void LeftClick_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        OnLeftClickPressedAction?.Invoke(this, EventArgs.Empty);
+    private void LeftClick_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnLeftClickCanceledAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Scrolling_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
@@ -142,22 +120,57 @@ public class GameInput : MonoBehaviour {
         return playerInputActions.Player.Move.ReadValue<Vector2>();
     }
 
-    private void OnDestroy() {
+    private void OnEnable() {
+        Instance = this;
+
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Player.Enable();
+
+        playerInputActions.Player.Jump.started += Jump_started;
+        playerInputActions.Player.Jump.canceled += Jump_canceled;
+
+        playerInputActions.Player.Crouch.started += Crouch_started;
+        playerInputActions.Player.Crouch.canceled += Crouch_canceled;
+
+        playerInputActions.Player.Sprint.started += Sprint_started;
+        playerInputActions.Player.Sprint.canceled += Sprint_canceled;
+
+        playerInputActions.Player.Pause.performed += Pause_performed;
+
+        playerInputActions.Player.Interact.performed += Interact_performed;
+        playerInputActions.Player.InteractAlternate.performed += InteractAlternate_performed;
+
+        playerInputActions.Player.Inventory.performed += Inventory_performed;
+        playerInputActions.Player.Drop.performed += Drop_performed;
+
+        playerInputActions.Player.Scrolling.performed += Scrolling_performed;
+
+        playerInputActions.Player.LeftClick.started += LeftClick_started;
+        playerInputActions.Player.LeftClick.canceled += LeftClick_canceled;
+    }
+
+    private void OnDisable() {
         playerInputActions.Player.Jump.started -= Jump_started;
         playerInputActions.Player.Jump.canceled -= Jump_canceled;
+
         playerInputActions.Player.Crouch.started -= Crouch_started;
         playerInputActions.Player.Crouch.canceled -= Crouch_canceled;
+
         playerInputActions.Player.Sprint.started -= Sprint_started;
         playerInputActions.Player.Sprint.canceled -= Sprint_canceled;
+
         playerInputActions.Player.Pause.performed -= Pause_performed;
 
         playerInputActions.Player.Interact.performed -= Interact_performed;
         playerInputActions.Player.InteractAlternate.performed -= InteractAlternate_performed;
+
         playerInputActions.Player.Inventory.performed -= Inventory_performed;
         playerInputActions.Player.Drop.performed -= Drop_performed;
 
         playerInputActions.Player.Scrolling.performed -= Scrolling_performed;
-        playerInputActions.Player.LeftClick.performed -= LeftClick_performed;
+
+        playerInputActions.Player.LeftClick.started -= LeftClick_started;
+        playerInputActions.Player.LeftClick.canceled -= LeftClick_canceled;
 
         playerInputActions.Dispose();
     }
