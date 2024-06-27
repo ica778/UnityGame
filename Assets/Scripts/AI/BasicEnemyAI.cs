@@ -33,21 +33,13 @@ public class BasicEnemyAI : NetworkBehaviour {
         new Vector3(0, -0.4f, 0),
     };
 
-    private void Awake() {
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        currentTransform = transform;
-        this.enabled = false;
-    }
-
     // This makes AI script run only on the host
     public override void OnStartNetwork() {
-        EnableScriptForServerRpc();
-    }
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        currentTransform = transform;
 
-    [ServerRpc(RequireOwnership = false)]
-    private void EnableScriptForServerRpc() {
-        if (base.IsHostInitialized) {
-            this.enabled = true;
+        if (!base.IsServerInitialized) {
+            this.enabled = false;
         }
     }
 
