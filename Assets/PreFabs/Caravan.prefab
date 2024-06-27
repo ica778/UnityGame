@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5484615835859191870}
   - component: {fileID: 2742201597581166348}
+  - component: {fileID: 3261093021775617615}
   m_Layer: 11
   m_Name: Collider
   m_TagString: Untagged
@@ -53,6 +54,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7, y: 4, z: 16}
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &3261093021775617615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335776731610400928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f101a0d22a2cde346901d16ec78e8879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interiorCollider: {fileID: 2742201597581166348}
+  caravanContentsParent: {fileID: 2683022533523348988}
 --- !u!1 &1368436111218965855
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,7 +1069,6 @@ GameObject:
   - component: {fileID: 7379942657238242510}
   - component: {fileID: 3953391746376552805}
   - component: {fileID: 8112429731769856999}
-  - component: {fileID: 5041363375553047864}
   m_Layer: 0
   m_Name: Caravan
   m_TagString: Untagged
@@ -1210,20 +1224,6 @@ MonoBehaviour:
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17110967233017107723
---- !u!114 &5041363375553047864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8683575928059354002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f101a0d22a2cde346901d16ec78e8879, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interiorCollider: {fileID: 2742201597581166348}
-  caravanContentsParent: {fileID: 2683022533523348988}
 --- !u!1 &8886931940538628284
 GameObject:
   m_ObjectHideFlags: 0
