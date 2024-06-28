@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e513dac8f8b49545abbe98db33731ce, type: 3}
+  m_Script: {fileID: 11500000, guid: e254640676af4c44a8cdab24a3a79e95, type: 3}
   m_Name: IronSword
   m_EditorClassIdentifier: 
   Id: 0

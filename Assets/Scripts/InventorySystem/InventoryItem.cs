@@ -17,7 +17,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void InitialiseItem(ItemSO newItem) {
         item = newItem;
-        image.sprite = newItem.GetSprite();
+        image.sprite = newItem.Sprite;
         UpdateCount();
     }
 
@@ -70,7 +70,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     public bool IsStackable() {
-        return item.IsStackable();
+        return item.IsStackable;
     }
 
     public int GetMaxStackCount() {

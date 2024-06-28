@@ -42,7 +42,7 @@ public class InventoryManager : MonoBehaviour {
         if (inventorySlots[selectedSlotIndex].GetComponentInChildren<InventoryItem>()) {
             OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                 //meshFilter = GetSelectedItem(false).GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
-                itemId = GetSelectedItem(false).GetId()
+                itemId = GetSelectedItem(false).Id
             });
         }
         else {
@@ -95,7 +95,7 @@ public class InventoryManager : MonoBehaviour {
                 if (i == selectedSlotIndex) {
                     OnSelectedItemChanged?.Invoke(this, new OnSelectedItemChangedEventArgs {
                         //meshFilter = item.GetGroundLootPrefab().GetComponentInChildren<MeshFilter>()
-                        itemId = item.GetId()
+                        itemId = item.Id
                     });
                 }
                 return true;

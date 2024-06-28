@@ -21,10 +21,14 @@ public class WeaponCollisionDetector : MonoBehaviour {
     }
 
     public void DisableCollider() {
-        weaponCollider.enabled = false;
+        if (weaponCollider != null) {
+            weaponCollider.enabled = false;
+        }
     }
 
     public void EnableCollider() {
-        weaponCollider.enabled = true;
+        if (weaponCollider != null) {
+            weaponCollider.enabled = true;
+        }
     }
 }

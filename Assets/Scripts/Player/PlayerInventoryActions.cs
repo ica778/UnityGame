@@ -21,11 +21,11 @@ public class PlayerInventoryActions : NetworkBehaviour {
         if (item) {
             Vector3 dropItemPosition = cameraTarget.transform.position + (cameraTarget.transform.forward * 1.5f);
             if (!Physics.Raycast(cameraTarget.transform.position, cameraTarget.transform.forward, 1.5f, layersYouCantDropItemInto)) {
-                DropItemServerRpc(item.GetGroundLootObject(), dropItemPosition, cameraTarget.transform.rotation);
+                DropItemServerRpc(item.GroundLootObject, dropItemPosition, cameraTarget.transform.rotation);
             }
             else {
                 dropItemPosition = cameraTarget.transform.position;
-                DropItemServerRpc(item.GetGroundLootObject(), dropItemPosition, cameraTarget.transform.rotation);
+                DropItemServerRpc(item.GroundLootObject, dropItemPosition, cameraTarget.transform.rotation);
             }
         }
     }

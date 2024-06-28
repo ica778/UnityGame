@@ -26,8 +26,8 @@ public class ItemHolder : NetworkBehaviour {
         }
         else {
             currentItem = ItemDatabase.Instance.GetItem(e.itemId);
-            currentItemObject = Instantiate(currentItem.GetEquippedObject(), rightHand);
-            switch (currentItem.GetItemType()) {
+            currentItemObject = Instantiate(currentItem.EquippedObject, rightHand);
+            switch (currentItem.ItemType) {
                 case (ItemType.Weapon):
                     wcd = currentItemObject.GetComponent<WeaponCollisionDetector>();
                     break;
@@ -40,7 +40,7 @@ public class ItemHolder : NetworkBehaviour {
             return;
         }
 
-        switch (currentItem.GetItemType()) {
+        switch (currentItem.ItemType) {
             case (ItemType.Weapon):
                 AttackWithWeapon();
                 break;
