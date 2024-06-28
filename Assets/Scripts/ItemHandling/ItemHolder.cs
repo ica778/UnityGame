@@ -3,7 +3,7 @@ using FishNet.Demo.AdditiveScenes;
 using FishNet.Object;
 using UnityEngine;
 
-public class PlayerItemHolder : NetworkBehaviour {
+public class ItemHolder : NetworkBehaviour {
     [SerializeField] private Transform rightHand;
     [SerializeField] private Animator rightHandAnimator;
 
