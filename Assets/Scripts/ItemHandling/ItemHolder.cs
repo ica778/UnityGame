@@ -30,6 +30,7 @@ public class ItemHolder : NetworkBehaviour {
             switch (currentItem.ItemType) {
                 case (ItemType.Weapon):
                     wcd = currentItemObject.GetComponent<WeaponCollisionDetector>();
+                    wcd.SetWeaponItemSO(currentItem as WeaponItemSO);
                     break;
             }
         }

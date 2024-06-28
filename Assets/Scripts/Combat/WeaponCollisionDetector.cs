@@ -7,15 +7,21 @@ using UnityEngine;
 public class WeaponCollisionDetector : MonoBehaviour {
     [SerializeField] private Collider weaponCollider;
 
+    private WeaponItemSO weaponItemSO;
+
     private void Awake() {
         DisableCollider();
+    }
+
+    public void SetWeaponItemSO(WeaponItemSO weaponItemSO) {
+        this.weaponItemSO = weaponItemSO;
     }
 
     private void OnTriggerEnter(Collider other) {
         Debug.Log("TESTING 123: " + other.gameObject.layer.ToString());
         DamageReceiver damageReceiver = other.GetComponent<DamageReceiver>();
         if (damageReceiver) {
-            damageReceiver.ReceiveHit(10);
+            damageReceiver.ReceiveHit(weaponItemSO.Damage);
         }
         
     }
