@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ItemHolder : NetworkBehaviour {
     [SerializeField] private Transform rightHand;
-    [SerializeField] private Animator rightHandAnimator;
+    [SerializeField] private Animator animator;
 
     private ItemSO currentItem;
     private GameObject currentItemObject;
@@ -29,7 +29,7 @@ public class ItemHolder : NetworkBehaviour {
             currentItemObject = Instantiate(currentItem.GetEquippedObject(), rightHand);
             switch (currentItem.GetItemType()) {
                 case (ItemType.Weapon):
-                    wcd = GetComponentInChildren<WeaponCollisionDetector>();
+                    wcd = currentItemObject.GetComponent<WeaponCollisionDetector>();
                     break;
             }
         }
@@ -48,7 +48,15 @@ public class ItemHolder : NetworkBehaviour {
     }
 
     private void AttackWithWeapon() {
-        rightHandAnimator.SetTrigger(TRIGGER_ATTACK);
+        animator.SetTrigger(TRIGGER_ATTACK);
+    }
+
+    public void DisableWeaponCollider() {
+        wcd.DisableCollider();
+    }
+
+    public void EnableWeaponCollider() {
+        wcd.EnableCollider(); 
     }
 
     private void OnEnable() {

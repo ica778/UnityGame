@@ -11,7 +11,7 @@ public class Player : NetworkBehaviour {
 
     public override void OnStartNetwork() {
         PlayerManager.Instance.AddPlayer(Owner, GetComponent<Player>());
-        Debug.Log("CLIENT CONNECTED WITH Id: " + Owner.ToString());
+        Debug.Log("(THIS PRINT CAUSES A SERVER SOCKET WARNING ON CLIENTS) CLIENT CONNECTED WITH Id: " + Owner.ToString());
 
         if (!Owner.IsLocalClient) {
             foreach (Behaviour obj in clientSideScripts) {
