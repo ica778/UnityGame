@@ -48,6 +48,7 @@ public class ItemHolder : NetworkBehaviour {
     }
 
     private void AttackWithWeapon() {
+        wcd.ClearAlreadyHitDamageReceivers();
         animator.SetTrigger(TRIGGER_ATTACK);
     }
 

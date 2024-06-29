@@ -8,6 +8,8 @@ public class WeaponCollisionDetector : MonoBehaviour {
     [SerializeField] private Collider weaponCollider;
     [SerializeField] private WeaponItemSO weaponItemSO;
 
+    private HashSet<DamageReceiver> alreadyHitDamageReceivers = new();
+
     private void Awake() {
         DisableCollider();
 
@@ -19,8 +21,9 @@ public class WeaponCollisionDetector : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         Debug.Log("TESTING 123: " + other.gameObject.layer.ToString());
         DamageReceiver damageReceiver = other.GetComponentInParent<DamageReceiver>();
-        if (damageReceiver) {
+        if (damageReceiver && !alreadyHitDamageReceivers.Contains(damageReceiver)) {
             damageReceiver.ReceiveHit(weaponItemSO.Damage);
+            alreadyHitDamageReceivers.Add(damageReceiver);
         }
         
     }
@@ -35,5 +38,9 @@ public class WeaponCollisionDetector : MonoBehaviour {
         if (weaponCollider != null) {
             weaponCollider.enabled = true;
         }
+    }
+
+    public void ClearAlreadyHitDamageReceivers() {
+        alreadyHitDamageReceivers.Clear();
     }
 }
