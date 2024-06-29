@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponCollider: {fileID: 359538643433922206}
+  weaponItemSO: {fileID: 11400000, guid: 5bef630bbab62c748971dc29fb397a70, type: 2}
 --- !u!54 &6506642529797629823
 Rigidbody:
   m_ObjectHideFlags: 0

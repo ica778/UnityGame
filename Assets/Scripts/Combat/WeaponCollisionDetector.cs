@@ -6,20 +6,19 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class WeaponCollisionDetector : MonoBehaviour {
     [SerializeField] private Collider weaponCollider;
-
-    private WeaponItemSO weaponItemSO;
+    [SerializeField] private WeaponItemSO weaponItemSO;
 
     private void Awake() {
         DisableCollider();
-    }
 
-    public void SetWeaponItemSO(WeaponItemSO weaponItemSO) {
-        this.weaponItemSO = weaponItemSO;
+        if (!weaponItemSO) {
+            Debug.LogError("ERROR: weaponItemSO NOT ASSIGNED");
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
         Debug.Log("TESTING 123: " + other.gameObject.layer.ToString());
-        DamageReceiver damageReceiver = other.GetComponent<DamageReceiver>();
+        DamageReceiver damageReceiver = other.GetComponentInParent<DamageReceiver>();
         if (damageReceiver) {
             damageReceiver.ReceiveHit(weaponItemSO.Damage);
         }

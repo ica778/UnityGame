@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e513dac8f8b49545abbe98db33731ce, type: 3}
   m_Name: IronShield
   m_EditorClassIdentifier: 
-  Id: 1
+  id: 1
   itemName: Iron Shield
   sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   itemType: 2

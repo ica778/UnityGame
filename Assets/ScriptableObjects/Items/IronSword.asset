@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254640676af4c44a8cdab24a3a79e95, type: 3}
   m_Name: IronSword
   m_EditorClassIdentifier: 
-  Id: 0
+  id: 0
   itemName: Iron Sword
   sprite: {fileID: 21300000, guid: dd2a76027478bf540b7194d78248edf8, type: 3}
   itemType: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     type: 3}
   equippedPrefab: {fileID: 7975794990563563834, guid: a1c72eb8d2561b049b78bced4463e773,
     type: 3}
+  damage: 69
+  attackSpeed: 1
