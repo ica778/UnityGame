@@ -484,9 +484,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496da4e4c589faf459fb00745f8f35be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 1125660683}
   _networkObjectCache: {fileID: 1125660683}
+  characterHealth: {fileID: 1125660684}
 --- !u!1 &198536299
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,6 +1648,8 @@ GameObject:
   - component: {fileID: 1125660680}
   - component: {fileID: 1125660679}
   - component: {fileID: 1125660683}
+  - component: {fileID: 1125660684}
+  - component: {fileID: 1125660685}
   m_Layer: 12
   m_Name: Target
   m_TagString: Untagged
@@ -1736,7 +1739,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
-  - {fileID: 0}
+  - {fileID: 1125660684}
+  - {fileID: 161194036}
   <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
   <NestedRootNetworkBehaviours>k__BackingField: []
   SerializedTransformProperties:
@@ -1767,6 +1771,37 @@ MonoBehaviour:
   _scenePathHash: 619921907
   <SceneId>k__BackingField: 2662544320508973561
   <AssetPathHash>k__BackingField: 0
+--- !u!114 &1125660684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125660677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f61503b4c9d4dfe4bbfc29f2ac4104b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 1125660683}
+  _networkObjectCache: {fileID: 1125660683}
+  health: 100
+--- !u!114 &1125660685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125660677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c71fd7f855ec523429999fc4e14a1928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _overrideType: 3
+  _updateHostVisibility: 1
+  _observerConditions: []
 --- !u!1 &1299498075
 GameObject:
   m_ObjectHideFlags: 0
