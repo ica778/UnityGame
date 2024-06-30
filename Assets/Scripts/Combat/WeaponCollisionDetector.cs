@@ -10,12 +10,14 @@ public class WeaponCollisionDetector : MonoBehaviour {
 
     private HashSet<DamageReceiver> alreadyHitDamageReceivers = new();
 
+    private void OnValidate() {
+        if (!weaponItemSO) {
+            Debug.LogError("weaponItemSO is not assigned", this);
+        }
+    }
+
     private void Awake() {
         DisableCollider();
-
-        if (!weaponItemSO) {
-            Debug.LogError("ERROR: weaponItemSO NOT ASSIGNED");
-        }
     }
 
     private void OnTriggerEnter(Collider other) {

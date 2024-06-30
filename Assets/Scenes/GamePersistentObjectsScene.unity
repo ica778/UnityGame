@@ -6370,8 +6370,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryManager: {fileID: 1763516418}
   itemsToPickup:
-  - {fileID: 11400000, guid: 5bef630bbab62c748971dc29fb397a70, type: 2}
   - {fileID: 11400000, guid: 32e20f5e2bc27714c907285f42c76f3d, type: 2}
+  - {fileID: 11400000, guid: 5bef630bbab62c748971dc29fb397a70, type: 2}
 --- !u!1 &1953036594
 GameObject:
   m_ObjectHideFlags: 0
@@ -7430,7 +7430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5b2cc0d15ba54469817c12545adc42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemList:
+  items:
   - {fileID: 11400000, guid: 5bef630bbab62c748971dc29fb397a70, type: 2}
   - {fileID: 11400000, guid: 32e20f5e2bc27714c907285f42c76f3d, type: 2}
 --- !u!4 &2133596426
