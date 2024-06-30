@@ -17,8 +17,6 @@ public class ConnectionManager : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
-
-        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
     }
 
     private void ClientManager_OnAuthenticated() {
@@ -130,5 +128,13 @@ public class ConnectionManager : MonoBehaviour {
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
         }
+    }
+
+    private void OnEnable() {
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+    }
+
+    private void OnDisable() {
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated -= ClientManager_OnAuthenticated;
     }
 }
