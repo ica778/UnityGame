@@ -3,14 +3,15 @@ using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 // NOTE: PUT THIS SCRIPT ON THE HITBOXES PARENT. SO THE GAME OBJECT THIS SCRIPT IS ON SHOULD BE PARENT OF COLLIDERS WHICH ARE HITBOXES.
 public class DamageReceiver : NetworkBehaviour {
     [SerializeField] private CharacterHealth characterHealth;
 
-    private void Awake() {
+    protected override void OnValidate() {
         if (!characterHealth) {
-            Debug.LogError("ERROR: FIELD characterHealth NOT ASSIGNED");
+            Debug.LogError("characterHealth is not assigned!", this);
         }
     }
 

@@ -8,6 +8,12 @@ public class GroundLoot : InteractableObjectBase {
     public int Id { get; private set; }
     public int Count { get; private set; }
 
+    private void OnValidate() {
+        if (!item) {
+            Debug.LogError("item is not assigned!", this);
+        }
+    }
+
     private void Awake() {
         Id = item.Id;
         base.Type = InteractableObjectType.GroundLoot;

@@ -1,8 +1,3 @@
-using FishNet.Connection;
-using FishNet.Object;
-using FishNet.Object.Synchronizing;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterHealth : MonoBehaviour {
@@ -13,6 +8,12 @@ public class CharacterHealth : MonoBehaviour {
         set {
             health = value;
             CheckIfCharacterDead();
+        }
+    }
+
+    private void OnValidate() {
+        if (health <= 0) {
+            Debug.LogError("health is not assigned a correct value!", this);
         }
     }
 
