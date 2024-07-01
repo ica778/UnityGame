@@ -49,6 +49,7 @@ public class LobbyHandler : MonoBehaviour {
 
     private void OnLobbyCreateSuccess(LobbyData lobbyData) {
         lobbyData.Name = lobbyData.Owner.user.Name + "'s Lobby";
+        ConnectionManager.Instance.StartGameAsHostSteam();
     }
 
     // This is what you use to join game, dont need to go into ConnectionManager, just call this function
@@ -56,6 +57,7 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.Join(lobbyData);
     }
 
+    // This is what you use to create a game as host. Dont need to go into ConnectionManager, just call this function
     public void CreateLobby() {
         lobbyManager.Create();
     }

@@ -711,7 +711,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 554049353}
   m_HandleRect: {fileID: 554049352}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2260,8 +2260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c462e9261846bfb4ca2717132be14348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerObject: {fileID: 1905778609659339781, guid: ae643d837ed1a8d498539c646d254669,
-    type: 3}
+  defaultMenuUI: {fileID: 1738950956}
 --- !u!1 &1840613339
 GameObject:
   m_ObjectHideFlags: 0
