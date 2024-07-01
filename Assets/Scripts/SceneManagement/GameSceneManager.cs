@@ -66,12 +66,11 @@ public class GameSceneManager : NetworkBehaviour {
         StartCoroutine(QuitGameAsync());
     }
 
+    // TODO: MAKE MORE RELIABLE
     private IEnumerator QuitGameAsync() {
-        yield return StartCoroutine(UnloadAllGameScenesClientSideAsync());
-
-        ConnectionManager.Instance.Disconnect();
-        GameInput.Instance.UnlockCursor();
         LobbyHandler.Instance.Leave();
+        yield return StartCoroutine(UnloadAllGameScenesClientSideAsync());
+        BootstrapManager.Instance.LoadMainMenuSceneFromGameScene();
     }
 
     private IEnumerator UnloadAllGameScenesClientSideAsync() {

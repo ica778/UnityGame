@@ -1,5 +1,6 @@
 using HeathenEngineering.SteamworksIntegration;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class LobbyHandler : MonoBehaviour {
@@ -16,7 +17,6 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
         lobbyManager.evtCreated.AddListener(OnLobbyCreateSuccess);
-        lobbyManager.evtLeave.AddListener(OnLeaveLobby);
     }
 
     public void Testing() {
@@ -73,21 +73,6 @@ public class LobbyHandler : MonoBehaviour {
                 }
             }
         }
-    }
-
-    private void OnLeaveLobby() {
-        StartCoroutine(GoBackToMainMenu());
-
-    }
-
-    private IEnumerator GoBackToMainMenu() {
-        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneHelper.GetScene(SceneName.GameBootstrapScene));
-
-        while (!asyncOperation.isDone) {
-            yield return null;
-        }
-
-        BootstrapManager.Instance.LoadMainMenuScene();
     }
 
     public void DestroySelf() {

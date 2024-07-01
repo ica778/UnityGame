@@ -24,4 +24,25 @@ public class BootstrapManager : MonoBehaviour {
 
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(SceneHelper.GetScene(SceneName.MainMenuScene));
     }
+
+    private IEnumerator UnloadGameBootstrapScene() {
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneName.GameBootstrapScene.ToString());
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+    }
+
+    public void LoadMainMenuSceneFromGameScene() {
+        StartCoroutine(LoadMainMenuSceneFromGameSceneAsync());
+    }
+
+    private IEnumerator LoadMainMenuSceneFromGameSceneAsync() {
+        yield return StartCoroutine(LoadMainMenuSceneAsync());
+        yield return StartCoroutine(UnloadGameBootstrapScene());
+
+        ConnectionManager.Instance.Disconnect();
+        GameInput.Instance.UnlockCursor();
+    }
+
 }
