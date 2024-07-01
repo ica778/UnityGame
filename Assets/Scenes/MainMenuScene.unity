@@ -2392,8 +2392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075b4f20effba09499ef9072a6bf7546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMenuUI: {fileID: 1738950954}
-  lobbyBrowserUI: {fileID: 2125465771}
+  defaultMenuUI: {fileID: 1738950956}
+  lobbyBrowserUI: {fileID: 2125465773}
 --- !u!4 &1873035762
 Transform:
   m_ObjectHideFlags: 0
@@ -2715,6 +2715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffa61345770067419126865276ef65b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobbyBrowserUI: {fileID: 2125465773}
   lobbyListingPrefab: {fileID: 7208694819540687315, guid: cb1c63ba4f6dfda4eb460f34fc5e2a9c,
     type: 3}
   scrollViewContentBox: {fileID: 64136877}

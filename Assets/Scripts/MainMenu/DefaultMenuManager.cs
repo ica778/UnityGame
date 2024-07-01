@@ -10,10 +10,6 @@ public class DefaultMenuManager : MonoBehaviour {
         LobbyHandler.Instance.CreateLobby();
     }
 
-    private void DefaultMenuUI_OnJoinButtonClick(object sender, System.EventArgs e) {
-        MainMenuManager.Instance.ShowLobbyBrowser();
-    }
-
     // NOTE: this is for testing multiplayer without steam
     private void DefaultMenuUI_OnTestHostButtonClick(object sender, System.EventArgs e) {
         ConnectionManager.Instance.StartGameAsHostOffline();
@@ -32,14 +28,12 @@ public class DefaultMenuManager : MonoBehaviour {
 
     private void OnEnable() {
         defaultMenuUI.OnHostButtonClick += DefaultMenuUI_OnHostButtonClick;
-        defaultMenuUI.OnJoinButtonClick += DefaultMenuUI_OnJoinButtonClick;
         defaultMenuUI.OnTestHostButtonClick += DefaultMenuUI_OnTestHostButtonClick;
         defaultMenuUI.OnTestJoinButtonClick += DefaultMenuUI_OnTestJoinButtonClick;
     }
 
     private void OnDisable() {
         defaultMenuUI.OnHostButtonClick -= DefaultMenuUI_OnHostButtonClick;
-        defaultMenuUI.OnJoinButtonClick -= DefaultMenuUI_OnJoinButtonClick;
         defaultMenuUI.OnTestHostButtonClick -= DefaultMenuUI_OnTestHostButtonClick;
         defaultMenuUI.OnTestJoinButtonClick -= DefaultMenuUI_OnTestJoinButtonClick;
     }

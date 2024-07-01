@@ -3,30 +3,43 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour {
-    public static MainMenuManager Instance { get; private set; }
-
-    [SerializeField] private GameObject defaultMenuUI;
-    [SerializeField] private GameObject lobbyBrowserUI;
+    [SerializeField] private DefaultMenuUI defaultMenuUI;
+    [SerializeField] private LobbyBrowserUI lobbyBrowserUI;
 
     private void Awake() {
-        Instance = this;
         ShowDefaultMenu();
     }
 
     private void CloseUI() {
-        defaultMenuUI.SetActive(false);
-        lobbyBrowserUI.SetActive(false);
+        defaultMenuUI.gameObject.SetActive(false);
+        lobbyBrowserUI.gameObject.SetActive(false);
     }
 
-    public void ShowDefaultMenu() {
+    private void ShowDefaultMenu() {
         CloseUI();
-        defaultMenuUI.SetActive(true);
+        defaultMenuUI.gameObject.SetActive(true);
     }
 
-    public void ShowLobbyBrowser() {
+    private void ShowLobbyBrowser() {
         CloseUI();
-        lobbyBrowserUI.SetActive(true);
+        lobbyBrowserUI.gameObject.SetActive(true);
     }
 
+    private void LobbyBrowserUI_OnBackButtonClick(object sender, System.EventArgs e) {
+        ShowDefaultMenu();
+    }
 
+    private void DefaultMenuUI_OnJoinButtonClick(object sender, System.EventArgs e) {
+        ShowLobbyBrowser();
+    }
+
+    private void OnEnable() {
+        lobbyBrowserUI.OnBackButtonClick += LobbyBrowserUI_OnBackButtonClick;
+        defaultMenuUI.OnJoinButtonClick += DefaultMenuUI_OnJoinButtonClick;
+    }
+
+    private void OnDisable() {
+        lobbyBrowserUI.OnBackButtonClick -= LobbyBrowserUI_OnBackButtonClick;
+        defaultMenuUI.OnJoinButtonClick -= DefaultMenuUI_OnJoinButtonClick;
+    }
 }

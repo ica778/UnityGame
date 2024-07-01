@@ -5,15 +5,12 @@ using UnityEngine;
 public class LobbyBrowserManager : MonoBehaviour {
     private List<LobbyData> lobbies = new List<LobbyData>();
 
+    [SerializeField] private LobbyBrowserUI lobbyBrowserUI;
     [SerializeField] private GameObject lobbyListingPrefab;
     [SerializeField] private RectTransform scrollViewContentBox;
 
     private float lobbyListingHeight = 100f;
     private float lobbyListingSpawnHeight;
-
-    private void OnEnable() {
-        FindLobbies();
-    }
 
     private void RequestLobbyListCallback(LobbyData[] lobbyDatas, bool success) {
         foreach (LobbyData lobbyData in lobbyDatas) {
@@ -54,8 +51,16 @@ public class LobbyBrowserManager : MonoBehaviour {
         HeathenEngineering.SteamworksIntegration.API.Matchmaking.Client.RequestLobbyList(RequestLobbyListCallback);
     }
 
-    public void OnClickBackButton() {
-        MainMenuManager.Instance.ShowDefaultMenu();
+    private void LobbyBrowserUI_OnBackButtonClick(object sender, System.EventArgs e) {
         ClearLobbyListings();
+    }
+
+    private void OnEnable() {
+        lobbyBrowserUI.OnBackButtonClick += LobbyBrowserUI_OnBackButtonClick;
+        FindLobbies();
+    }
+
+    private void OnDisable() {
+        lobbyBrowserUI.OnBackButtonClick -= LobbyBrowserUI_OnBackButtonClick;
     }
 }
