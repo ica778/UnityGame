@@ -40,7 +40,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnAskedToLeave() {
-        GameManager.Instance.QuitGame();
+        GameSceneManager.Instance.QuitGame();
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
@@ -63,7 +63,6 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     public void InvitePlayer(UserData userData) {
-        lobbyManager.Lobby.ClearKickList();
         lobbyManager.Invite(userData);
     }
 
@@ -71,7 +70,7 @@ public class LobbyHandler : MonoBehaviour {
         return lobbyManager;
     }
 
-    public void DestroySelf() {
+    private void KickEveryone() {
         if (lobbyManager.IsPlayerOwner) {
             foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
                 if (!lobbyMemberData.IsOwner) {
@@ -80,9 +79,18 @@ public class LobbyHandler : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void DestroySelf() {
+        KickEveryone();
+
         lobbyManager.Leave();
         Destroy(gameObject);
         Instance = null;
+    }
+
+    public void Leave() {
+        lobbyManager.Leave();
     }
 
 }

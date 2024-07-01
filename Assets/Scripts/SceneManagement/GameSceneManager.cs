@@ -12,7 +12,7 @@ using System;
 public class GameSceneManager : NetworkBehaviour {
     public static GameSceneManager Instance { get; private set; }
 
-    private List<SceneLoadData> sldList = new();
+    private Stack<SceneLoadData> gameSceneSLDList = new();
 
     private void Awake() {
         Instance = this;
@@ -31,7 +31,7 @@ public class GameSceneManager : NetworkBehaviour {
         for (int i = 0; i < startingSceneNames.Length; i++) {
             SceneLoadData sld = new SceneLoadData(startingSceneNames[i].ToString());
             base.SceneManager.LoadGlobalScenes(sld);
-            sldList.Add(sld);
+            gameSceneSLDList.Push(sld);
 
             if (i == startingSceneNames.Length - 1) {
                 SceneLookupData slud = new SceneLookupData(SceneName.GameScene1.ToString());
@@ -49,16 +49,43 @@ public class GameSceneManager : NetworkBehaviour {
         SceneLoading.Instance.ResetClientsLoaded();
         SceneLoading.Instance.WaitForClientsToLoadScenes(new int[] {sceneToSwitchTo.GetHashCode()});
 
-        SceneUnloadData sud = new SceneUnloadData(sldList[sldList.Count - 1].SceneLookupDatas);
+        SceneUnloadData sud = new SceneUnloadData(gameSceneSLDList.Peek().SceneLookupDatas);
         base.SceneManager.UnloadGlobalScenes(sud);
 
-        sldList.RemoveAt(sldList.Count - 1);
+        gameSceneSLDList.Pop();
 
         SceneLoadData sld = new SceneLoadData(sceneToSwitchTo.ToString());
         base.SceneManager.LoadGlobalScenes(sld);
-        sldList.Add(sld);
+        gameSceneSLDList.Push(sld);
 
         SceneLookupData slud = new SceneLookupData(sceneToSwitchTo.ToString());
         sld.PreferredActiveScene = new PreferredScene(slud);
     }
+
+    public void QuitGame() {
+        StartCoroutine(QuitGameAsync());
+    }
+
+    private IEnumerator QuitGameAsync() {
+        yield return StartCoroutine(UnloadAllGameScenesClientSideAsync());
+
+        ConnectionManager.Instance.Disconnect();
+        GameInput.Instance.UnlockCursor();
+        LobbyHandler.Instance.Leave();
+
+        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneHelper.GetScene(SceneName.GameBootstrapScene));
+    }
+
+    private IEnumerator UnloadAllGameScenesClientSideAsync() {
+        AsyncOperation asyncOperation;
+        while (gameSceneSLDList.Count > 0) {
+            UnityEngine.SceneManagement.Scene currentScene = gameSceneSLDList.Pop().GetFirstLookupScene();
+
+            asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(currentScene);
+            while (!asyncOperation.isDone) {
+                yield return null;
+            }
+        }
+    }
+
 }

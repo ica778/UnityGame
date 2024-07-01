@@ -1,5 +1,6 @@
 using HeathenEngineering.SteamworksIntegration;
 using HeathenEngineering.SteamworksIntegration.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,17 +11,18 @@ public class PauseMenuUI : MonoBehaviour {
     [SerializeField] private Button quitButton;
     [SerializeField] private Button testButton;
     [SerializeField] private FriendInviteDropDown friendInviteDropDown;
-    [SerializeField] private PauseMenuManager pauseMenuManager;
+
+    public event EventHandler OnQuitButtonClick;
 
     private void Start() {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
 
-        quitButton.onClick.AddListener(() => { 
-            pauseMenuManager.QuitGame();
+        quitButton.onClick.AddListener(() => {
+            OnQuitButtonClick?.Invoke(this, EventArgs.Empty);
         });
 
         testButton.onClick.AddListener(() => {
-            LobbyHandler.Instance.Testing();
+            //LobbyHandler.Instance.Testing();
         });
 
         friendInviteDropDown.Invited.AddListener((UserData userData) => {
