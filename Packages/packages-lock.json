@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.heathen.steamworkscomplete": {
+      "version": "file:com.heathen.steamworkscomplete",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.heathen.systemcore": {
       "version": "https://github.com/heathen-engineering/SystemCore.git?path=/com.heathen.systemcore",
       "depth": 0,

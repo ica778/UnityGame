@@ -28,7 +28,7 @@ namespace HeathenEngineering.DEMO
 
         private void OnDestroy()
         {
-            if (m_LobbyManager != null)
+            if(m_LobbyManager != null)
             {
                 m_LobbyManager.evtEnterFailed.RemoveListener(HandleEnterFail);
                 m_LobbyManager.evtEnterSuccess.RemoveListener(HandleEnterSuccess);
