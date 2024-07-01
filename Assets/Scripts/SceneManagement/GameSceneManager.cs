@@ -72,8 +72,6 @@ public class GameSceneManager : NetworkBehaviour {
         ConnectionManager.Instance.Disconnect();
         GameInput.Instance.UnlockCursor();
         LobbyHandler.Instance.Leave();
-
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneHelper.GetScene(SceneName.GameBootstrapScene));
     }
 
     private IEnumerator UnloadAllGameScenesClientSideAsync() {

@@ -1,13 +1,6 @@
-using FishNet.Managing.Scened;
-using FishNet;
 using HeathenEngineering.SteamworksIntegration;
-using HeathenEngineering.SteamworksIntegration.API;
-using Steamworks;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static HeathenEngineering.SteamworksIntegration.SteamSettings;
-using System.ComponentModel;
 
 public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
@@ -23,6 +16,7 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.evtAskedToLeave.AddListener(OnAskedToLeave);
         lobbyManager.evtEnterSuccess.AddListener(OnJoinLobbySuccess);
         lobbyManager.evtCreated.AddListener(OnLobbyCreateSuccess);
+        lobbyManager.evtLeave.AddListener(OnLeaveLobby);
     }
 
     public void Testing() {
@@ -79,6 +73,21 @@ public class LobbyHandler : MonoBehaviour {
                 }
             }
         }
+    }
+
+    private void OnLeaveLobby() {
+        StartCoroutine(GoBackToMainMenu());
+
+    }
+
+    private IEnumerator GoBackToMainMenu() {
+        AsyncOperation asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(SceneHelper.GetScene(SceneName.GameBootstrapScene));
+
+        while (!asyncOperation.isDone) {
+            yield return null;
+        }
+
+        BootstrapManager.Instance.LoadMainMenuScene();
     }
 
     public void DestroySelf() {
