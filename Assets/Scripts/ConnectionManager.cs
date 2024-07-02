@@ -135,11 +135,12 @@ public class ConnectionManager : MonoBehaviour {
 
     private void ClientManager_OnClientConnectionState(FishNet.Transporting.ClientConnectionStateArgs obj) {
         if (isConnected && obj.ConnectionState == FishNet.Transporting.LocalConnectionState.Stopped) {
-            Debug.Log("TESTING DISCONNECT BY EVENT ====================");
+            /*
             LobbyHandler.Instance.Leave();
             Disconnect();
             ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
             OnNetworkTimeout?.Invoke(this, EventArgs.Empty);
+            */
         }
     }
 
