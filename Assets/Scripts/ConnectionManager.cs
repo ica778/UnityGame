@@ -17,7 +17,6 @@ public class ConnectionManager : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
-        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
     }
 
     private void ClientManager_OnAuthenticated() {
@@ -132,7 +131,11 @@ public class ConnectionManager : MonoBehaviour {
         }
     }
 
-    private void OnDestroy() {
+    private void OnEnable() {
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+    }
+
+    private void OnDisable() {
         InstanceFinder.NetworkManager.ClientManager.OnAuthenticated -= ClientManager_OnAuthenticated;
     }
 }
