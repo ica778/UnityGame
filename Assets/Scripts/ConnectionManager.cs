@@ -1,7 +1,7 @@
 using FishNet;
-using FishNet.Managing;
 using HeathenEngineering.SteamworksIntegration;
 using Steamworks;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +10,8 @@ public class ConnectionManager : MonoBehaviour {
 
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
+    public event EventHandler OnNetworkTimeout;
+
     private bool isHost = false;
     private bool isConnected = false;
 
@@ -17,10 +19,6 @@ public class ConnectionManager : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
-    }
-
-    private void ClientManager_OnAuthenticated() {
-        isConnected = true;
     }
 
     private IEnumerator StartGameAsHostSteamAsync() {
@@ -76,13 +74,13 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     public void Disconnect() {
+        isConnected = false;
         if (isHost) {
             fishySteamworks.Shutdown();
         }
         else {
             fishySteamworks.StopConnection(false);
         }
-        isConnected = false;
         isHost = false;
     }
 
@@ -131,11 +129,27 @@ public class ConnectionManager : MonoBehaviour {
         }
     }
 
+    private void ClientManager_OnAuthenticated() {
+        isConnected = true;
+    }
+
+    private void ClientManager_OnClientConnectionState(FishNet.Transporting.ClientConnectionStateArgs obj) {
+        if (isConnected && obj.ConnectionState == FishNet.Transporting.LocalConnectionState.Stopped) {
+            Debug.Log("TESTING DISCONNECT BY EVENT ====================");
+            LobbyHandler.Instance.Leave();
+            Disconnect();
+            ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
+            OnNetworkTimeout?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     private void OnEnable() {
         InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+        InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
     }
 
     private void OnDisable() {
         InstanceFinder.NetworkManager.ClientManager.OnAuthenticated -= ClientManager_OnAuthenticated;
+        InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
     }
 }

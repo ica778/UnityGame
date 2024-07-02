@@ -64,6 +64,7 @@ public class GameSceneManager : NetworkBehaviour {
 
     public void QuitGame() {
         LobbyHandler.Instance.Leave();
+        Debug.Log("TESTING DISCONNECT BY QUIT BUTTON ====================");
         ConnectionManager.Instance.Disconnect();
         ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
     }
