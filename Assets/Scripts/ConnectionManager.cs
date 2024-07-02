@@ -17,6 +17,7 @@ public class ConnectionManager : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
     }
 
     private void ClientManager_OnAuthenticated() {
@@ -63,7 +64,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -82,8 +83,8 @@ public class ConnectionManager : MonoBehaviour {
         else {
             fishySteamworks.StopConnection(false);
         }
-        isHost = false;
         isConnected = false;
+        isHost = false;
     }
 
     // NOTE: this is for testing multiplayer without having to use steam
@@ -131,11 +132,7 @@ public class ConnectionManager : MonoBehaviour {
         }
     }
 
-    private void OnEnable() {
-        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
-    }
-
-    private void OnDisable() {
+    private void OnDestroy() {
         InstanceFinder.NetworkManager.ClientManager.OnAuthenticated -= ClientManager_OnAuthenticated;
     }
 }
