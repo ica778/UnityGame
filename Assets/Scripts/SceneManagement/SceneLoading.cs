@@ -54,7 +54,9 @@ public class SceneLoading : NetworkBehaviour {
     }
 
     private void SceneManager_OnClientFinishedLoadingStartScenes(NetworkConnection arg1, bool arg2) {
-        ClientFinishedLoadingStartScenesTargetRpc(arg1);
+        if (!arg2) {
+            ClientFinishedLoadingStartScenesTargetRpc(arg1);
+        }
     }
 
     /// <summary>

@@ -11,6 +11,7 @@ public class CaravanLeverInteractableObject : InteractableObjectBase {
     }
 
     public void Trigger() {
+        Debug.Log("TESTING LEVER PULLED ================================");
         OnLeverPulled?.Invoke(this, EventArgs.Empty);
     }
 }
