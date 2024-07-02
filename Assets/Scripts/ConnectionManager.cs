@@ -35,7 +35,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -63,7 +63,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -83,6 +83,7 @@ public class ConnectionManager : MonoBehaviour {
             fishySteamworks.StopConnection(false);
         }
         isHost = false;
+        isConnected = false;
     }
 
     // NOTE: this is for testing multiplayer without having to use steam
@@ -102,7 +103,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -123,7 +124,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            MainMenuToGameSceneHandler.LoadIntoGame(false);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");

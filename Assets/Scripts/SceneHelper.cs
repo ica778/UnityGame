@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,5 +18,9 @@ public enum SceneName {
 public static class SceneHelper {
     public static UnityEngine.SceneManagement.Scene GetScene(SceneName sceneName) {
         return UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName.ToString());
+    }
+
+    public static UnityEngine.SceneManagement.Scene GetScene(string sceneName) {
+        return UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName);
     }
 }

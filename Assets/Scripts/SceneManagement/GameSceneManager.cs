@@ -63,26 +63,9 @@ public class GameSceneManager : NetworkBehaviour {
     }
 
     public void QuitGame() {
-        StartCoroutine(QuitGameAsync());
-    }
-
-    // TODO: MAKE MORE RELIABLE
-    private IEnumerator QuitGameAsync() {
         LobbyHandler.Instance.Leave();
-        yield return StartCoroutine(UnloadAllGameScenesClientSideAsync());
-        BootstrapManager.Instance.LoadMainMenuSceneFromGameScene();
-    }
-
-    private IEnumerator UnloadAllGameScenesClientSideAsync() {
-        AsyncOperation asyncOperation;
-        while (gameSceneSLDList.Count > 0) {
-            UnityEngine.SceneManagement.Scene currentScene = gameSceneSLDList.Pop().GetFirstLookupScene();
-
-            asyncOperation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(currentScene);
-            while (!asyncOperation.isDone) {
-                yield return null;
-            }
-        }
+        ConnectionManager.Instance.Disconnect();
+        ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
     }
 
 }
