@@ -133,14 +133,13 @@ public class ConnectionManager : MonoBehaviour {
         isConnected = true;
     }
 
+    // NOTE: FOR SOME REASON CANT USE OnClientTimeOut SO I HAVE TO USE THIS
     private void ClientManager_OnClientConnectionState(FishNet.Transporting.ClientConnectionStateArgs obj) {
         if (isConnected && obj.ConnectionState == FishNet.Transporting.LocalConnectionState.Stopped) {
-            /*
             LobbyHandler.Instance.Leave();
             Disconnect();
             ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
             OnNetworkTimeout?.Invoke(this, EventArgs.Empty);
-            */
         }
     }
 

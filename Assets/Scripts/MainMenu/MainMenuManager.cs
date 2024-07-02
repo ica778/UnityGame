@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField] private LobbyBrowserUI lobbyBrowserUI;
 
     private void Awake() {
+        GameInput.Instance.UnlockCursor();
         ShowDefaultMenu();
     }
 
