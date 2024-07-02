@@ -1,13 +1,7 @@
-using FishNet.Managing.Scened;
-using FishNet;
 using HeathenEngineering.SteamworksIntegration;
-using HeathenEngineering.SteamworksIntegration.API;
-using Steamworks;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static HeathenEngineering.SteamworksIntegration.SteamSettings;
-using System.ComponentModel;
 
 public class LobbyHandler : MonoBehaviour {
     public static LobbyHandler Instance { get; private set; }
@@ -40,7 +34,7 @@ public class LobbyHandler : MonoBehaviour {
     }
 
     private void OnAskedToLeave() {
-        GameManager.Instance.QuitGame();
+        GameSceneManager.Instance.QuitGame();
     }
 
     private void OnJoinRequestAccepted(LobbyData lobbyData, UserData userData) {
@@ -49,6 +43,7 @@ public class LobbyHandler : MonoBehaviour {
 
     private void OnLobbyCreateSuccess(LobbyData lobbyData) {
         lobbyData.Name = lobbyData.Owner.user.Name + "'s Lobby";
+        ConnectionManager.Instance.StartGameAsHostSteam();
     }
 
     // This is what you use to join game, dont need to go into ConnectionManager, just call this function
@@ -56,12 +51,12 @@ public class LobbyHandler : MonoBehaviour {
         lobbyManager.Join(lobbyData);
     }
 
+    // This is what you use to create a game as host. Dont need to go into ConnectionManager, just call this function
     public void CreateLobby() {
         lobbyManager.Create();
     }
 
     public void InvitePlayer(UserData userData) {
-        lobbyManager.Lobby.ClearKickList();
         lobbyManager.Invite(userData);
     }
 
@@ -69,7 +64,7 @@ public class LobbyHandler : MonoBehaviour {
         return lobbyManager;
     }
 
-    public void DestroySelf() {
+    private void KickEveryone() {
         if (lobbyManager.IsPlayerOwner) {
             foreach (LobbyMemberData lobbyMemberData in lobbyManager.Members) {
                 if (!lobbyMemberData.IsOwner) {
@@ -78,9 +73,18 @@ public class LobbyHandler : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void DestroySelf() {
+        KickEveryone();
+
         lobbyManager.Leave();
         Destroy(gameObject);
         Instance = null;
+    }
+
+    public void Leave() {
+        lobbyManager.Leave();
     }
 
 }

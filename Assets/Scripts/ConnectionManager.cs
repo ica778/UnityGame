@@ -1,7 +1,7 @@
 using FishNet;
-using FishNet.Managing;
 using HeathenEngineering.SteamworksIntegration;
 using Steamworks;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +10,8 @@ public class ConnectionManager : MonoBehaviour {
 
     [SerializeField] private FishySteamworks.FishySteamworks fishySteamworks;
 
+    public event EventHandler OnNetworkTimeout;
+
     private bool isHost = false;
     private bool isConnected = false;
 
@@ -17,12 +19,6 @@ public class ConnectionManager : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
-
-        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
-    }
-
-    private void ClientManager_OnAuthenticated() {
-        isConnected = true;
     }
 
     private IEnumerator StartGameAsHostSteamAsync() {
@@ -37,7 +33,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -65,7 +61,7 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -78,6 +74,7 @@ public class ConnectionManager : MonoBehaviour {
     }
 
     public void Disconnect() {
+        isConnected = false;
         if (isHost) {
             fishySteamworks.Shutdown();
         }
@@ -104,7 +101,7 @@ public class ConnectionManager : MonoBehaviour {
         }
         if (isConnected) {
             isHost = true;
-            MainMenuToGameSceneHandler.LoadIntoGame(true);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(true);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
@@ -125,10 +122,34 @@ public class ConnectionManager : MonoBehaviour {
             yield return null;
         }
         if (isConnected) {
-            MainMenuToGameSceneHandler.LoadIntoGame(false);
+            ClientSideGameSceneManager.Instance.LoadIntoGame(false);
         }
         else {
             Debug.LogError("ERROR: DID NOT CONNECT TO SERVER IN TIME====================================");
         }
+    }
+
+    private void ClientManager_OnAuthenticated() {
+        isConnected = true;
+    }
+
+    // NOTE: FOR SOME REASON CANT USE OnClientTimeOut SO I HAVE TO USE THIS
+    private void ClientManager_OnClientConnectionState(FishNet.Transporting.ClientConnectionStateArgs obj) {
+        if (isConnected && obj.ConnectionState == FishNet.Transporting.LocalConnectionState.Stopped) {
+            LobbyHandler.Instance.Leave();
+            Disconnect();
+            ClientSideGameSceneManager.Instance.QuitGameBackToMainMenu();
+            OnNetworkTimeout?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void OnEnable() {
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated += ClientManager_OnAuthenticated;
+        InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
+    }
+
+    private void OnDisable() {
+        InstanceFinder.NetworkManager.ClientManager.OnAuthenticated -= ClientManager_OnAuthenticated;
+        InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
     }
 }
